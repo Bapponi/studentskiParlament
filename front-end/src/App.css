@@ -4,7 +4,7 @@
   --primary-color: #A60932;
   --secondary-color: #FFFFFF;
   --accent-color: #D78A2F; 
-  --neutral-color: #B3A687;
+  --neutral-color: #999999;
   --complementary-color: #EBDBB3;
   --text-color: #000000;
   --background-color: #F3F3F3;
@@ -15,10 +15,9 @@
 }
 
 main{
-  margin: 20px;
   display: flex;
   justify-content: center;
-  min-height: 80vh;
+  min-height: calc(100vh - 200px);
 }
   
 h1, h2, h3, h4, h5, h6 {

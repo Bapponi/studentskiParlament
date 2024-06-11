@@ -1,0 +1,13 @@
+.home-main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+    gap: 30px;
+}
+
+.news{
+    height: 400px;
+    width: 300px;
+    background-color: aqua;
+}

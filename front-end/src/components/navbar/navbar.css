@@ -39,6 +39,7 @@
     color: var(--text-color);
     transition: 0.1s;
     padding-bottom: 2px;
+    font-size: 1.2em;
 }
 
 .nav-page:hover{

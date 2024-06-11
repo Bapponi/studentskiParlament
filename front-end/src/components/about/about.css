@@ -1,0 +1,33 @@
+.about{
+    max-width: 800px;
+    height: 530px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0px 30px;
+    background-color: var(--secondary-color);
+    box-shadow: 0px 4px 24px 0px #0000001A;
+}
+
+.about h2{
+    color: var(--primary-color);
+}
+
+.what-is{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    text-align: justify;
+}
+
+.what-is__text{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.how-members{
+    text-align: justify;
+}

@@ -6,9 +6,9 @@
   --accent-color: #D78A2F; 
   --neutral-color: #999999;
   --complementary-color: #EBDBB3;
-  --text-color: #000000;
+  --text-color: #1E1E1E;
   --background-color: #F3F3F3;
-  font-size: 18px;
+  font-size: 16px;
   color: var(--text-color);
   background-color: var(--background-color);
   font-family: 'Open Sans', sans-serif;

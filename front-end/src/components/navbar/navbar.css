@@ -17,6 +17,7 @@
     gap: 10px;
     text-decoration: none;
     color: var(--text-color);
+    z-index: 10000;
 }
 
 .etf-logo{
@@ -46,4 +47,123 @@
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);
     padding-bottom: 0px;
+}
+
+.nav-mobile{
+    display: none;
+    flex-direction: column;
+    gap: 0.6em;
+    z-index: 9999;
+    height: 100px;
+    justify-content: center;
+}
+
+.burger-bar {
+    height: .6em;
+    width: 4.5em;
+    background-color: var(--primary-color);
+
+    transition: transform .2s ease-in-out, opacity .2s linear;
+    -webkit-transition: transform .2s ease-in-out, opacity .2s linear;
+    -moz-transition: transform .2s ease-in-out, opacity .2s linear;
+    -o-transition: transform .2s ease-in-out, opacity .2s linear;
+}
+
+.mobile-menu__container{
+    position: fixed;
+    display: flex;
+    height: 100vh;
+    width: 65vw;
+    top: 0;
+    left: 0;
+    padding-left: 5em;
+    background-color: var(--secondary-color);
+    z-index: 9999;
+
+    transform: translateX(-100%);
+
+    transition: transform .2s ease-in-out;
+    -webkit-transition: transform .2s ease-in-out;
+    -moz-transition: transform .2s ease-in-out;
+    -o-transition: transform .2s ease-in-out;
+}
+
+.mobile-menu__container.active{
+    transform: translateX(0);
+}
+
+.mobile-menu {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2em;
+}
+
+.mobile-menu__shadow {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: rgba(0, 0, 0, .4);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transform: translateX(-100%);
+  
+    transition: opacity .2s ease-in-out;
+    -webkit-transition: opacity .2s ease-in-out;
+    -moz-transition: opacity .2s ease-in-out;
+    -o-transition: opacity .2s ease-in-out;
+}
+  
+.mobile-menu__shadow.active {
+    display: block;
+    background-color: rgba(0, 0, 0, .4);
+    backdrop-filter: blur(4px);
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.top.active {
+    transform: translateY(200%) rotate(45deg);
+}
+
+.center.active {
+    opacity: 0;
+}
+
+.bottom.active {
+    transform: translateY(-200%) rotate(-45deg);
+}
+
+.stop-scrolling{
+    height: 100%;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 1260px) {
+   
+.nav-bar{
+    padding: 0 10px;
+}    
+
+.nav-mobile{
+    display: flex;
+}
+
+.link-bar{
+    display: none;
+}
+
+.logo-part{
+    width: auto;
+}
+
 }

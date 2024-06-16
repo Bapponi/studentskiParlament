@@ -1,13 +1,16 @@
 .home-main{
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     margin: 30px;
     gap: 30px;
 }
 
-.news{
-    height: 400px;
-    width: 300px;
-    background-color: aqua;
+@media screen and (max-width: 850px) {
+
+.home-main{
+    margin: 30px 5%;
+}
+
 }

@@ -1,16 +1,23 @@
 .about{
     max-width: 800px;
-    height: 530px;
+    min-height: 490px;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    padding: 0px 30px;
+    padding: 20px 30px;
     background-color: var(--secondary-color);
     box-shadow: 0px 4px 24px 0px #0000001A;
 }
 
 .about h2{
     color: var(--primary-color);
+    text-align: left;
+}
+
+.about-image{
+    width: 290px;
+    margin: 20px 0 30px 20px;
+    box-shadow: 0px 4px 24px 0px #0000001A;
 }
 
 .what-is{
@@ -30,4 +37,20 @@
 
 .how-members{
     text-align: justify;
+}
+
+@media screen and (max-width: 850px) {
+
+.about{
+    width: 100%;
+}
+   
+.what-is{
+    flex-direction: column;
+}
+
+.about-image{
+    width: 100%;
+}
+
 }

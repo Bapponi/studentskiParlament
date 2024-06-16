@@ -7,7 +7,7 @@ import TopNews from '../../components/top-news/TopNews';
 function Home() {
   return (
     <div>
-      <Banner/>
+      <Banner title='ДОБРОДОШЛИ' bannerImg='ztf.png'/>
       <div className='home-main'>
         <About/>
         <TopNews/>

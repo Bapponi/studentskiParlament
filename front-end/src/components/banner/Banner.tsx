@@ -1,14 +1,19 @@
 import React from 'react';
 import './banner.css';
 
-function Banner() {
+interface BannerProps {
+  title: string;
+  bannerImg: string;
+}
+
+const Banner: React.FC<BannerProps> = ({ title, bannerImg }) => {
   return (
     <div className='banner'>
       <div className='banner-filter'/>
       <div className='banner-text'>
-        <p><b>ДОБРОДОШЛИ</b></p>
+        <p><b>{title}</b></p>
       </div>  
-      <img src="ztf.png" alt="ztf" className='banner-image'/>
+      <img src={bannerImg} alt="ztf" className='banner-image'/>
     </div>
   );
 }

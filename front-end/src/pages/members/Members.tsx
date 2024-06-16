@@ -1,9 +1,10 @@
 import React from 'react';
+import Banner from '../../components/banner/Banner';
 
 function Members() {
   return (
     <div>
-        Clanovi
+      <Banner title='ЧЛАНОВИ' bannerImg='ztf.png'/>
     </div>
   );
 }

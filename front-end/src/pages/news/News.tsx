@@ -1,9 +1,10 @@
 import React from 'react';
+import Banner from '../../components/banner/Banner';
 
 function News() {
   return (
     <div>
-        Vesti
+      <Banner title='ВЕСТИ' bannerImg='ztf.png'/>
     </div>
   );
 }

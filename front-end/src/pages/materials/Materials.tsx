@@ -1,9 +1,10 @@
 import React from 'react';
+import Banner from '../../components/banner/Banner';
 
 function Materials() {
   return (
     <div>
-        Materijali
+      <Banner title='МАТЕРИЈАЛИ' bannerImg='ztf.png'/>
     </div>
   );
 }

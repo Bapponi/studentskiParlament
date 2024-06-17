@@ -1,5 +1,4 @@
 .new-element__button{
-    cursor: pointer;
     border-radius: 15px;
     border: 2px dashed var(--text-color);
     /* padding: 5px; */
@@ -8,6 +7,7 @@
     align-items: center;
     min-width: 300px;
     transition: 0.3s;
+    flex-direction: column;
 }
 
 .add-element{
@@ -17,9 +17,10 @@
     gap: 5px;
     width: 100%;
     height: 100%;
-    padding: 10px;
+    padding: 10px 0;
     border-radius: 15px;
     transition: 0.3s;
+    cursor: pointer;
 }
 
 .add-element:hover{
@@ -45,6 +46,7 @@
     align-items: center;
     gap: 10px;
     padding: 5px;
+    cursor: pointer;
 }
 
 .add-option{
@@ -60,4 +62,42 @@
 
 .add-option:hover{
     background-color: var(--complementary-color);
+}
+
+.header-input,
+.text-input,
+.picture-input,
+.video-input{
+    display: none;
+}
+
+.header-input.active,
+.text-input.active,
+.picture-input.active,
+.video-input.active{
+    width: 96%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 5px 0;
+}
+
+.option-header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.option-name{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.input-area{
+    width: 100%;
 }

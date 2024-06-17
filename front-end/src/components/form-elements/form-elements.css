@@ -1,0 +1,9 @@
+.input-field{
+    height: 2em;
+    border-radius: 10px;
+    border: solid 2px var(--text-color);
+    padding-left: 1em;
+    font-family: Montserrat;
+    font-size: 1.5em;
+    width: 95%;
+}

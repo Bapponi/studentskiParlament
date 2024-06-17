@@ -9,6 +9,7 @@ import Members from './pages/members/Members';
 import Materials from './pages/materials/Materials';
 import Links from './pages/links/Links';
 import Contact from './pages/contact/Contact';
+import AdminPanel from './pages/admin-panel/AdminPanel';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/materials" element={<Materials/>} />
             <Route path="/contact" element={<Contact/>} />
             <Route path="/links" element={<Links/>} />
+            <Route path="/admin-panel" element={<AdminPanel/>} />
           </Routes>
         </main>
         <Footer/>

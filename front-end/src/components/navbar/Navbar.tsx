@@ -42,6 +42,9 @@ function Navbar() {
         <Link to="/materials" className='nav-page'>МАТЕРИЈАЛИ</Link>
         <Link to="/contact" className='nav-page'>КОНТАКТ</Link>
         <Link to="/links" className='nav-page'>ЛИНКОВИ</Link>
+        <Link to="/admin-panel">
+          <img src="user.png" alt="admin" className='admin-icon' />
+        </Link>
       </nav>
       <div className="nav-mobile" onClick={toggleMenu}>
         <div className="burger-bar top"></div>

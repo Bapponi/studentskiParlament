@@ -1,4 +1,4 @@
-.new-elements-container,
+.new-elements__container,
 .component-list{
     width: 100%;
     display: flex;
@@ -47,6 +47,14 @@
 .cross-image:hover{
     background-color: var(--primary-color);
     border-radius: 50%;
+}
+
+.add-options__container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
 }
 
 .add-options{
@@ -102,4 +110,12 @@
 
 .input-area{
     width: 100%;
+}
+
+@media screen and (max-width: 700px) {
+    
+.add-options{
+    flex-wrap: wrap;
+}
+
 }

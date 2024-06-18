@@ -11,7 +11,7 @@ function NewElementButton() {
   };
 
   return (
-    <div className='new-elements-container'>
+    <div className='new-elements__container'>
       <div className="component-list">
         {elements.map((id) => (
           <ElementOptions key={id} id={id} />

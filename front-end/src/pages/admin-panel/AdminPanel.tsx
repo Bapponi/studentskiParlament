@@ -4,6 +4,7 @@ import Banner from '../../components/banner/Banner';
 import NewElementButton from '../../components/new-element__button/NewElementButton';
 import TextInput from '../../components/form-elements/TextInput';
 import PhotoUpload from '../../components/form-elements/PhotoUpload';
+import Button from '../../components/button/Button';
 
 function AdminPanel() {
   return (
@@ -26,6 +27,7 @@ function AdminPanel() {
           <PhotoUpload/>
         </div>
         <NewElementButton/>
+        <Button text='Објави вест'/>
       </div>
     </div>
   );

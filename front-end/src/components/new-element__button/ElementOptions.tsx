@@ -19,25 +19,27 @@ const ElementOptions: React.FC<{ id: number }> = ({ id }) => {
       {isVisible && (
         <div className='element-options'>
           {areOptionsVisible && (
-            <div className='add-options'>
-              <div className='add-option' id='header' onClick={() => {setIsHeaderVisible(true); setAreOptionsVisible(false);}}>
-                <h2>Заглавље</h2>
-                <img src="header.png" alt="header" className='add-image'/>
+            <div className='add-options__container'>
+              <div className='add-options'>
+                <div className='add-option' id='header' onClick={() => {setIsHeaderVisible(true); setAreOptionsVisible(false);}}>
+                  <h2>Заглавље</h2>
+                  <img src="header.png" alt="header" className='add-image'/>
+                </div>
+                <div className='add-option' id='text' onClick={() => {setIsTextVisible(true); setAreOptionsVisible(false);}}>
+                  <h2>Текст</h2>
+                  <img src="text.png" alt="text" className='add-image'/>
+                </div>
+                <div className='add-option' id='photo' onClick={() => {setIsPictureVisible(true); setAreOptionsVisible(false);}}>
+                  <h2>Слика</h2>
+                  <img src="photo.png" alt="galery" className='add-image'/>
+                </div>
+                <div className='add-option' id='video' onClick={() => {setIsVideoVisible(true); setAreOptionsVisible(false);}}>
+                  <h2>Видео</h2>
+                  <img src="video.png" alt="video" className='add-image'/>
+                </div>
               </div>
-              <div className='add-option' id='text' onClick={() => {setIsTextVisible(true); setAreOptionsVisible(false);}}>
-                <h2>Текст</h2>
-                <img src="text.png" alt="text" className='add-image'/>
-              </div>
-              <div className='add-option' id='photo' onClick={() => {setIsPictureVisible(true); setAreOptionsVisible(false);}}>
-                <h2>Слика</h2>
-                <img src="photo.png" alt="galery" className='add-image'/>
-              </div>
-              <div className='add-option' id='video' onClick={() => {setIsVideoVisible(true); setAreOptionsVisible(false);}}>
-                <h2>Видео</h2>
-                <img src="video.png" alt="video" className='add-image'/>
-              </div>
-              <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => {setIsVisible(false); setAreOptionsVisible(false);}}/>
-            </div>
+            <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => {setIsVisible(false); setAreOptionsVisible(false);}}/>
+          </div>
           )}
           {isHeaderVisible && (
             <div className='header-input'>

@@ -1,9 +1,40 @@
+.form-element__container{
+    width: 100%;
+}
+
 .input-field{
-    height: 2em;
     border-radius: 10px;
     border: solid 2px var(--text-color);
-    padding-left: 1em;
+    padding: 0.3em 1em;
     font-family: Montserrat;
     font-size: 1.5em;
-    width: 95%;
+    width: calc(100% - 2em);
+}
+
+.text-input__area{
+    border-radius: 10px;
+    border: solid 2px var(--text-color);
+    padding: 0.3em 1em;
+    font-family: Montserrat;
+    font-size: 1.5em;
+    width: calc(100% - 2em);
+    resize: vertical;
+}
+
+.video-upload,
+.photo-upload{
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: solid 2px var(--text-color);
+    padding: 0.3em 1em;
+    font-family: Montserrat;
+    font-size: 1.5em;
+    width: calc(100% - 2em);
+    gap: 20px;
+    height: 150px;
+}
+
+.upload-image{
+    width: 100px;
 }

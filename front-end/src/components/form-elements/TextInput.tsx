@@ -3,11 +3,11 @@ import './form-elements.css';
 
 function TextInput() {
   return (
-    <div>
+    <div className='form-element__container'>
       <input 
         type="text"
         className='input-field'
-        placeholder='Unesite naslov ovde' 
+        placeholder='Унесите наслов овде' 
       />
     </div>
   );

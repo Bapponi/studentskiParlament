@@ -5,7 +5,29 @@ import TextArea from '../form-elements/TextArea';
 import PhotoUpload from '../form-elements/PhotoUpload';
 import VideoUpload from '../form-elements/VideoUpload';
 
-const ElementOptions: React.FC<{ id: number }> = ({ id }) => {
+interface ElementOptionsProps {
+  id: number;
+  headerValue: string;
+  onHeaderChange: (id: number, value: string) => void;
+  textValue: string;
+  onTextChange: (id: number, value: string) => void;
+  uploadedFiles: File[];
+  onFilesChange: (id: number, files: File[]) => void;
+  uploadedVideos: File[];
+  onVideoFilesChange: (id: number, files: File[]) => void;
+}
+
+const ElementOptions: React.FC<ElementOptionsProps> = ({
+  id,
+  headerValue,
+  onHeaderChange,
+  textValue,
+  onTextChange,
+  uploadedFiles,
+  onFilesChange,
+  uploadedVideos,
+  onVideoFilesChange
+}) => {
 
   const [isVisible, setIsVisible] = useState(true);
   const [areOptionsVisible, setAreOptionsVisible] = useState(true);
@@ -14,25 +36,20 @@ const ElementOptions: React.FC<{ id: number }> = ({ id }) => {
   const [isPictureVisible, setIsPictureVisible] = useState(false);
   const [isVideoVisible, setIsVideoVisible] = useState(false);
 
-  const [headerValue, setHeaderValue] = useState('');
-  const [textValue, setTextValue] = useState('');
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [uploadedVideos, setUploadedVideos] = useState<File[]>([]);
-
   const handleHeaderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setHeaderValue(e.target.value);
+    onHeaderChange(id, e.target.value);
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextValue(e.target.value);
+    onTextChange(id, e.target.value);
   };
 
   const handleFilesChange = (files: File[]) => {
-    setUploadedFiles(files);
+    onFilesChange(id, files);
   };
 
   const handleVideoFilesChange = (files: File[]) => {
-    setUploadedVideos(files);
+    onVideoFilesChange(id, files);
   };
 
   return (

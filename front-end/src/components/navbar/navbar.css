@@ -43,6 +43,12 @@
     font-size: 1.2em;
 }
 
+.nav-page.active{
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0px;
+}
+
 .nav-page:hover{
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);

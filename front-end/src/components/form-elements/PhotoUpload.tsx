@@ -13,7 +13,7 @@ function PhotoUpload() {
   return (
     <div {...getRootProps()} className='photo-upload'>
       <input {...getInputProps()} />
-      <img src="photo-upload.png" alt="photo-upload" className='upload-image'/>
+      <img src="photo-upload.png" alt="upload" className='upload-image'/>
       {
         isDragActive ?
           <p>Убаци слику овде</p> :

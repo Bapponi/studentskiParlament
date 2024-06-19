@@ -1,6 +1,6 @@
 import React from 'react';
 import './navbar.css';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 function Navbar() {
 
@@ -36,15 +36,15 @@ function Navbar() {
         </div>
       </a>
       <nav className='link-bar'>
-        <Link to="/" className='nav-page'>ПОЧЕТНА</Link>
-        <Link to="/news" className='nav-page'>ВЕСТИ</Link>
-        <Link to="/members" className='nav-page'>ЧЛАНОВИ</Link>
-        <Link to="/materials" className='nav-page'>МАТЕРИЈАЛИ</Link>
-        <Link to="/contact" className='nav-page'>КОНТАКТ</Link>
-        <Link to="/links" className='nav-page'>ЛИНКОВИ</Link>
-        <Link to="/admin-panel">
+        <NavLink to="/" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ПОЧЕТНА</NavLink>
+        <NavLink to="/news" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ВЕСТИ</NavLink>
+        <NavLink to="/members" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ЧЛАНОВИ</NavLink>
+        <NavLink to="/materials" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>МАТЕРИЈАЛИ</NavLink>
+        <NavLink to="/contact" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>КОНТАКТ</NavLink>
+        <NavLink to="/links" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ЛИНКОВИ</NavLink>
+        <NavLink to="/admin-panel">
           <img src="user.png" alt="admin" className='admin-icon' />
-        </Link>
+        </NavLink>
       </nav>
       <div className="nav-mobile" onClick={toggleMenu}>
         <div className="burger-bar top"></div>
@@ -55,12 +55,12 @@ function Navbar() {
         <div className="mobile-menu__container">
           <nav className="mobile-menu">
             <div className="mobile-menu-links">
-              <Link to="/" className='nav-page'>ПОЧЕТНА</Link>
-              <Link to="/news" className='nav-page'>ВЕСТИ</Link>
-              <Link to="/members" className='nav-page'>ЧЛАНОВИ</Link>
-              <Link to="/materials" className='nav-page'>МАТЕРИЈАЛИ</Link>
-              <Link to="/contact" className='nav-page'>КОНТАКТ</Link>
-              <Link to="/links" className='nav-page'>ЛИНКОВИ</Link>
+              <NavLink to="/" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ПОЧЕТНА</NavLink>
+              <NavLink to="/news" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ВЕСТИ</NavLink>
+              <NavLink to="/members" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ЧЛАНОВИ</NavLink>
+              <NavLink to="/materials" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>МАТЕРИЈАЛИ</NavLink>
+              <NavLink to="/contact" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>КОНТАКТ</NavLink>
+              <NavLink to="/links" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ЛИНКОВИ</NavLink>
             </div>
           </nav>
         </div>

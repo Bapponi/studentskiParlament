@@ -2,13 +2,20 @@ import React, { useCallback } from 'react';
 import './form-elements.css';
 import { useDropzone } from 'react-dropzone';
 
-function VideoUpload() {
+interface VideoUploadProps {
+  files: File[];
+  onFilesChange: (files: File[]) => void;
+}
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+const VideoUpload: React.FC<VideoUploadProps> = ({ files, onFilesChange }) => {
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      onFilesChange([...files, ...acceptedFiles]);
+    },
+    [files, onFilesChange]
+  );
 
-  }, [])
-
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <div {...getRootProps()} className='video-upload'>
@@ -21,6 +28,6 @@ function VideoUpload() {
       }
     </div>
   );
-}
+};
 
 export default VideoUpload;

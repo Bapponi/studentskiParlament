@@ -14,6 +14,27 @@ const ElementOptions: React.FC<{ id: number }> = ({ id }) => {
   const [isPictureVisible, setIsPictureVisible] = useState(false);
   const [isVideoVisible, setIsVideoVisible] = useState(false);
 
+  const [headerValue, setHeaderValue] = useState('');
+  const [textValue, setTextValue] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedVideos, setUploadedVideos] = useState<File[]>([]);
+
+  const handleHeaderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setHeaderValue(e.target.value);
+  };
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTextValue(e.target.value);
+  };
+
+  const handleFilesChange = (files: File[]) => {
+    setUploadedFiles(files);
+  };
+
+  const handleVideoFilesChange = (files: File[]) => {
+    setUploadedVideos(files);
+  };
+
   return (
     <div>
       {isVisible && (
@@ -51,7 +72,7 @@ const ElementOptions: React.FC<{ id: number }> = ({ id }) => {
                 <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
                 </div>
                 <div className='input-area'>
-                <TextInput/>
+                <TextInput value={headerValue} onChange={handleHeaderChange}/>
                 </div>
             </div>
           )}
@@ -65,7 +86,7 @@ const ElementOptions: React.FC<{ id: number }> = ({ id }) => {
                 <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
                 </div>
                 <div className='input-area'>
-                <TextArea/>
+                <TextArea value={textValue} onChange={handleTextChange}/>
                 </div>
             </div>
           )}
@@ -79,7 +100,7 @@ const ElementOptions: React.FC<{ id: number }> = ({ id }) => {
                 <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
                 </div>
                 <div className='input-area'>
-                <PhotoUpload/>
+                <PhotoUpload files={uploadedFiles} onFilesChange={handleFilesChange}/>
                 </div>
             </div>
           )}
@@ -93,7 +114,7 @@ const ElementOptions: React.FC<{ id: number }> = ({ id }) => {
               <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
               </div>
               <div className='input-area'>
-              <VideoUpload/>
+              <VideoUpload files={uploadedVideos} onFilesChange={handleVideoFilesChange}/>
               </div>
           </div>
           )}

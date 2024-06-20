@@ -10,6 +10,7 @@ import Materials from './pages/materials/Materials';
 import Links from './pages/links/Links';
 import Contact from './pages/contact/Contact';
 import AdminPanel from './pages/admin-panel/AdminPanel';
+import Login from './pages/login/Login';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/contact" element={<Contact/>} />
             <Route path="/links" element={<Links/>} />
             <Route path="/admin-panel" element={<AdminPanel/>} />
+            <Route path="/login" element={<Login/>} />
           </Routes>
         </main>
         <Footer/>

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import './admin-panel.css'
 import Banner from '../../components/banner/Banner';
-import NewElementButton from '../../components/new-element__button/NewElementButton';
+import CreateNews from '../../components/create-news/CreateNews';
 
 function AdminPanel() {
 
   return (
     <div>
       <Banner title='АДМИН' bannerImg='ztf.png'/>
-      <NewElementButton/>
+      <CreateNews/>
     </div>
   );
 }

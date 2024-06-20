@@ -28,6 +28,8 @@ function CreateNews() {
   };
 
   const publishNews = () => {
+    console.log(uploadedBanner)
+    console.log(titleValue)
     console.log(elements, headerValues, textValues, uploadedFiles, uploadedVideos);
   };
 

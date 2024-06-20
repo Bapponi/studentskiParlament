@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './new-element-button.css'
+import './create-news.css'
 import TextInput from '../form-elements/TextInput';
 import TextArea from '../form-elements/TextArea';
 import PhotoUpload from '../form-elements/PhotoUpload';

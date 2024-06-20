@@ -4,13 +4,14 @@ import './form-elements.css';
 interface TextInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type: string;
 }
 
-const TextInput: React.FC<TextInputProps> = ({ value, onChange }) => {
+const TextInput: React.FC<TextInputProps> = ({ value, onChange, type }) => {
   return (
     <div className='form-element__container'>
       <input 
-        type="text"
+        type={type}
         className='input-field'
         placeholder='Унесите наслов овде' 
         onChange={onChange}

@@ -57,7 +57,7 @@ function CreateNews() {
             <h2>Наслов</h2>
             <img src="header.png" alt="header" className='add-image'/>  
         </div>
-        <TextInput value={titleValue} onChange={handleTitleChange}/>
+        <TextInput value={titleValue} onChange={handleTitleChange} type={"text"}/>
       </div>
       <div className='news-part'>
         <div className='name-icon'>

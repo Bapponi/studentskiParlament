@@ -36,3 +36,31 @@
     border-radius: 5px;
     border: 2px solid var(--text-color);
 }
+
+@media screen and (max-width: 1290px){
+    
+.other-members__column{
+    width: auto;
+}
+
+}
+
+@media screen and (max-width: 640px){
+    
+.other-members{
+    width: 95%;
+    gap: 10px;
+}
+
+.other-member{
+    padding: 5px 10px;
+}
+
+.other-members__column{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+}

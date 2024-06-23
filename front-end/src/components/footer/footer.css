@@ -15,3 +15,8 @@
 .contact{
     text-align: right;
 }
+
+.mail{
+    text-decoration: none;
+    color: var(--secondary-color);
+}

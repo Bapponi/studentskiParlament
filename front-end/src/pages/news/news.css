@@ -1,0 +1,45 @@
+.all-news{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 20px auto;
+    gap: 30px;
+    max-width: 1260px;
+}
+
+.all-news__button{
+    width: 1260px;
+}
+
+@media screen and (max-width: 1260px) {
+
+.all-news__button{
+    width: 830px;
+}
+
+}
+
+@media screen and (max-width: 900px) {
+    
+.all-news{
+    width: 90%;
+}
+
+.all-news__button{
+    width: 400px;
+}
+
+}
+
+@media screen and (max-width: 500px) {
+    
+.all-news{
+    width: 90%;
+}
+
+.all-news__button{
+    width: 100%;
+}
+
+}

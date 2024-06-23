@@ -12,10 +12,6 @@
     color: var(--secondary-color);
 }
 
-.linkedin{
-    display: flex;
-    justify-content: right;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
+.contact{
+    text-align: right;
 }

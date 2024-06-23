@@ -5,12 +5,10 @@ function Footer() {
   return (
     <div className='footer'>
       <img src="etf-logo.png" alt="etf-logo" style={{height: "70px"}}/>
-      <div>
-        <a href='https://www.linkedin.com/in/aleksandarbubalo/' target='blank' className='linkedin'>
-          <h4>Александар Бубало</h4>
-          <img src="linkedin.png" alt="etf-logo" style={{height: "1rem"}}/>
-        </a>
-        <h4>Сва права задржана 2024</h4>
+      <div className='contact'>
+        <h4>Булевар Краља Александра 73</h4>
+        <h4>11000 Београд - Србија</h4>
+        <h4>Е-пошта: info@parlament.etf.rs</h4>
       </div>
     </div>
   );

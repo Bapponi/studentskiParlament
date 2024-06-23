@@ -1,0 +1,38 @@
+.all-members{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 20px auto;
+    gap: 30px;
+    max-width: 1300px;
+}
+
+.main-members{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.other-members{
+    max-width: 1300px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.other-members__column{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: calc(100%/3 - 20px);
+}
+
+.other-member{
+    border-radius: 5px;
+    border: 2px solid var(--text-color);
+}

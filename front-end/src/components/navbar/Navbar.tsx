@@ -40,7 +40,6 @@ function Navbar() {
         <NavLink to="/news" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ВЕСТИ</NavLink>
         <NavLink to="/members" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ЧЛАНОВИ</NavLink>
         <NavLink to="/materials" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>МАТЕРИЈАЛИ</NavLink>
-        <NavLink to="/contact" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>КОНТАКТ</NavLink>
         <NavLink to="/links" className={({ isActive }) => isActive ? 'nav-page active' : 'nav-page'}>ЛИНКОВИ</NavLink>
         <NavLink to="/admin-panel">
           <img src="user.png" alt="admin" className='admin-icon' />

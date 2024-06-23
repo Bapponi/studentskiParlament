@@ -8,7 +8,6 @@ import News from './pages/news/News';
 import Members from './pages/members/Members';
 import Materials from './pages/materials/Materials';
 import Links from './pages/links/Links';
-import Contact from './pages/contact/Contact';
 import AdminPanel from './pages/admin-panel/AdminPanel';
 import Login from './pages/login/Login';
 
@@ -23,7 +22,6 @@ function App() {
             <Route path="/news" element={<News/>} />
             <Route path="/members" element={<Members/>} />
             <Route path="/materials" element={<Materials/>} />
-            <Route path="/contact" element={<Contact/>} />
             <Route path="/links" element={<Links/>} />
             <Route path="/admin-panel" element={<AdminPanel/>} />
             <Route path="/login" element={<Login/>} />

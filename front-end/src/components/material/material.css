@@ -1,0 +1,30 @@
+.material{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px;
+    border-radius: 15px;
+    border: 2px solid var(--text-color);
+    width: 400px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: 0.3s;
+}
+
+.material:hover{
+    border: 2px solid var(--primary-color);
+    background-color: var(--secondary-color);
+}
+
+.document-image{
+    height: 100px;
+}
+
+@media screen and (max-width: 500px) {
+    
+.material{
+    width: 90%;
+}
+
+}

@@ -1,0 +1,33 @@
+.link{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 10px;
+    border-radius: 15px;
+    border: 2px solid var(--text-color);
+    width: 400px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: 0.3s;
+}
+
+.link:hover{
+    border: 2px solid var(--primary-color);
+    background-color: var(--secondary-color);
+}
+
+.link-logo{
+    height: 100px;
+    width: 150px;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 500px) {
+    
+.link{
+    width: 90%;
+}
+
+}

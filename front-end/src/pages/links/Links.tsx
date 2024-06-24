@@ -42,8 +42,9 @@ function Links() {
     <div>
       <Banner title='ЛИНКОВИ' bannerImg='ztf.png' />
       <div className='links'>
-        {links.map((entry) => (
+        {links.map((entry, index) => (
           <LinkSite
+            key={index}
             logo={entry.logo}
             website={entry.website}
             name={entry.name}

@@ -36,8 +36,11 @@ function Materials() {
     <div>
       <Banner title='МАТЕРИЈАЛИ' bannerImg='ztf.png'/>
       <div className='materials'>
-        {materials.map((entry) => (
-          <Material documentLink={entry.documentLink} title={entry.title}/>
+        {materials.map((entry, index) => (
+          <Material 
+            key={index}
+            documentLink={entry.documentLink} 
+            title={entry.title}/>
         ))}
       </div>
     </div>

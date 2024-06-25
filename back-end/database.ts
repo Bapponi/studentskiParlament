@@ -8,13 +8,4 @@ const client = new Client({
     port: 5432
 })
 
-client.connect();
-
-client.query('SELECT * FROM test', (err, res) =>{
-    if(!err){
-        console.log(res.rows)
-    }else{
-        console.log(err.message)
-    }
-    client.end;
-})
+export default client

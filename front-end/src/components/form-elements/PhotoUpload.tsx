@@ -3,19 +3,24 @@ import './form-elements.css';
 import { useDropzone } from 'react-dropzone';
 
 interface PhotoUploadProps {
-  files: File[];
-  onFilesChange: (files: File[]) => void;
+  file: File | null;
+  onFileChange: (file: File | null) => void;
 }
 
-const PhotoUpload: React.FC<PhotoUploadProps> = ({ files, onFilesChange }) => {
+const PhotoUpload: React.FC<PhotoUploadProps> = ({ file, onFileChange }) => {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      onFilesChange([...files, ...acceptedFiles]);
+      if (acceptedFiles.length > 0) {
+        onFileChange(acceptedFiles[0]); // Only set the first file
+      }
     },
-    [files, onFilesChange]
+    [onFileChange]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false, // Disallow multiple files
+  });
 
   return (
     <div {...getRootProps()} className='photo-upload'>
@@ -26,6 +31,11 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({ files, onFilesChange }) => {
           <p>Убаци слику овде</p> :
           <p>Превуци слику овде, или кликни да би је изабрао</p>
       }
+      {file && (
+        <div>
+          <p>Selected file: {file.name}</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -117,7 +117,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                 <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
                 </div>
                 <div className='input-area'>
-                <PhotoUpload files={uploadedFiles} onFilesChange={handleFilesChange}/>
+                {/* <PhotoUpload files={uploadedFiles} onFilesChange={handleFilesChange}/> */}
                 </div>
             </div>
           )}

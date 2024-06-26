@@ -64,7 +64,7 @@ function CreateNews() {
             <h2>Слика Банера</h2>
             <img src="photo.png" alt="header" className='add-image'/>  
         </div>
-        <PhotoUpload files={uploadedBanner} onFilesChange={handleBannerChange}/>
+        {/* <PhotoUpload files={uploadedBanner} onFilesChange={handleBannerChange}/> */}
       </div>
       <div className='new-elements__container'>
         <div className="component-list">

@@ -1,16 +1,21 @@
+.link-container{
+    position: relative;
+}
+
 .link{
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
     padding: 10px;
-    border-radius: 15px;
+    border-radius: 10px;
     border: 2px solid var(--text-color);
     width: 400px;
     cursor: pointer;
     text-decoration: none;
     color: var(--text-color);
     transition: 0.3s;
+    position: relative;
 }
 
 .link:hover{
@@ -22,6 +27,34 @@
     height: 100px;
     width: 150px;
     object-fit: contain;
+}
+
+.link-admin{
+    top: 5px;
+    position: absolute;
+    width: 25px;
+    padding: 5px;
+    border: 2px solid var(--text-color);
+    border-radius: 5px;
+    transition: 0.3s;
+    background-color: var(--secondary-color);
+    z-index: 2;
+}
+
+.link-delete{
+    right: 5px;
+}
+
+.link-update{
+    right: 50px;
+}
+
+.link-delete:hover{
+    background-color: var(--primary-color);
+}
+
+.link-update:hover{
+    background-color: var(--complementary-color);
 }
 
 @media screen and (max-width: 500px) {

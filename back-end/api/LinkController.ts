@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import client from '../database';
 import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
 
-// Setup Multer storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Ensure this directory exists
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
@@ -15,6 +16,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 export class LinkController {
+
     public getAllLinks(req: Request, res: Response): void {
         client.query('SELECT * FROM links', (err, links) => {
             if (!err) {
@@ -45,7 +47,6 @@ export class LinkController {
                 return res.status(400).send('Website and name are required.');
             }
 
-            // Insert file metadata into the database
             const query = 'INSERT INTO links (logo, website, name) VALUES ($1, $2, $3) RETURNING *';
             const values = [fileData.logo, fileData.website, fileData.name];
 
@@ -55,6 +56,42 @@ export class LinkController {
                     return res.status(500).send('Database error.');
                 }
                 res.status(201).json(result.rows[0]);
+            });
+        });
+    }
+
+    public deleteLink(req: Request, res: Response): void {
+        const id = parseInt(req.params.id);
+
+        const selectQuery = 'SELECT logo FROM links WHERE id = $1';
+        client.query(selectQuery, [id], (err, result) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).send('Database error.');
+            }
+
+            if (result.rows.length === 0) {
+                return res.status(404).send('Link not found.');
+            }
+
+            const filePath = result.rows[0].logo;
+
+            const fileToDelete = path.join(__dirname, '..', '..', 'uploads', path.basename(filePath));
+            fs.unlink(fileToDelete, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                    return res.status(500).send('File deletion error.');
+                }
+
+                // Delete the link from the database
+                const deleteQuery = 'DELETE FROM links WHERE id = $1 RETURNING *';
+                client.query(deleteQuery, [id], (err, result) => {
+                    if (err) {
+                        console.error(err.message);
+                        return res.status(500).send('Database error.');
+                    }
+                    res.status(200).json(result.rows[0]);
+                });
             });
         });
     }

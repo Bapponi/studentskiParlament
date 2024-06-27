@@ -7,9 +7,11 @@ import './links.css';
 import TextInput from '../../components/form-elements/TextInput';
 
 interface LinkProps {
+  id: number;
   logo: string;
   website: string;
   name: string;
+  onDelete: (id: number) => void;
 }
 
 const Links: React.FC = () => {
@@ -76,11 +78,18 @@ const Links: React.FC = () => {
 
       if (!response.ok) {
         throw new Error('File upload failed');
+      }else{
+        const newLink: LinkProps = await response.json();
+        setLinks((prevLinks) => [...prevLinks, newLink]);
       }
       
     } catch (error) {
       console.error('Error uploading file:', error);
     }
+  };
+
+  const handleDelete = (id: number) => {
+    setLinks((prevLinks) => prevLinks.filter(link => link.id !== id));
   };
 
   if (isLoading) {
@@ -95,8 +104,8 @@ const Links: React.FC = () => {
     <div>
       <Banner title='ЛИНКОВИ' bannerImg='ztf.png'/>
       <div className='links'>
-        {links.map((entry, index) => (
-          <Link key={index} logo={entry.logo} website={entry.website} name={entry.name} />
+        {links.map((entry) => (
+          <Link key={entry.id} {...entry} onDelete={handleDelete} />
         ))}
       </div>
       <div className='create-link'>

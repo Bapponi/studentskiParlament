@@ -61,8 +61,12 @@ const Links: React.FC = () => {
       return;
     }
 
+    console.log(file)
+
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('website', website);
+    formData.append('name', name);
 
     try {
       const response = await fetch('http://localhost:8000/upload', {
@@ -73,8 +77,7 @@ const Links: React.FC = () => {
       if (!response.ok) {
         throw new Error('File upload failed');
       }
-
-      // Handle response if needed
+      
     } catch (error) {
       console.error('Error uploading file:', error);
     }

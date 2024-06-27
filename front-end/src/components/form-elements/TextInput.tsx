@@ -5,15 +5,16 @@ interface TextInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type: string;
+  placeholder: string | undefined;
 }
 
-const TextInput: React.FC<TextInputProps> = ({ value, onChange, type }) => {
+const TextInput: React.FC<TextInputProps> = ({ value, onChange, type, placeholder }) => {
   return (
     <div className='form-element__container'>
       <input 
         type={type}
         className='input-field'
-        placeholder='Унесите наслов овде' 
+        placeholder={placeholder} 
         onChange={onChange}
         value={value}
       />

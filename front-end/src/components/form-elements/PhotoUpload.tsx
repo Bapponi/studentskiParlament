@@ -5,9 +5,10 @@ import { useDropzone } from 'react-dropzone';
 interface PhotoUploadProps {
   file: File | null;
   onFileChange: (file: File | null) => void;
+  placeholder: string;
 }
 
-const PhotoUpload: React.FC<PhotoUploadProps> = ({ file, onFileChange }) => {
+const PhotoUpload: React.FC<PhotoUploadProps> = ({ file, onFileChange, placeholder }) => {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
@@ -28,12 +29,14 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({ file, onFileChange }) => {
       <img src="photo-upload.png" alt="upload" className='upload-image'/>
       {
         isDragActive ?
-          <p>Убаци слику овде</p> :
-          <p>Превуци слику овде, или кликни да би је изабрао</p>
+          <p>Убаци фајл овде</p> :
+        (!file && 
+          <p>{placeholder}</p>
+        )  
       }
       {file && (
         <div>
-          <p>Selected file: {file.name}</p>
+          <p>Изабран фајл: {file.name}</p>
         </div>
       )}
     </div>

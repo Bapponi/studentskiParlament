@@ -100,12 +100,27 @@ const Links: React.FC = () => {
         ))}
       </div>
       <div className='create-link'>
-        <PhotoUpload file={file} onFileChange={handleFileChange} />
+        <h2>Креирај нови линк</h2>
+        <PhotoUpload 
+          file={file} 
+          onFileChange={handleFileChange} 
+          placeholder='Превуци лого овде, или кликни да би га изабрао'
+        />
         {/* <input type="file" onChange={handleFileChange} /> */}
-        <TextInput value={website} onChange={handleWebsiteChange} type={"text"}/>
-        <TextInput value={name} onChange={handleNameChange} type={"text"}/>
+        <TextInput 
+          value={website} 
+          onChange={handleWebsiteChange} 
+          type={"text"} 
+          placeholder='Унеси линк овде типа https://...'
+        />
+        <TextInput 
+          value={name} 
+          onChange={handleNameChange} 
+          type={"text"}
+          placeholder='Унеси назив фајла'
+        />
         <div onClick={upload} style={{width: "100%"}}>
-          <Button text='Upload'/>
+          <Button text='Додај'/>
         </div>
       </div>
     </div>

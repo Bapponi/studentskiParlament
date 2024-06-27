@@ -33,6 +33,7 @@
     width: calc(100% - 2em);
     gap: 20px;
     height: 150px;
+    cursor: pointer;
 }
 
 .upload-image{

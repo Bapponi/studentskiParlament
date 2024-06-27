@@ -89,7 +89,12 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                 <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
                 </div>
                 <div className='input-area'>
-                <TextInput value={headerValue} onChange={handleHeaderChange} type={"text"}/>
+                <TextInput 
+                  value={headerValue} 
+                  onChange={handleHeaderChange} 
+                  type={"text"}
+                  placeholder='Унесите заглавље овде'
+                />
                 </div>
             </div>
           )}
@@ -103,7 +108,10 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                 <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
                 </div>
                 <div className='input-area'>
-                <TextArea value={textValue} onChange={handleTextChange}/>
+                <TextArea 
+                  value={textValue} 
+                  onChange={handleTextChange}
+                  placeholder='Унесите текст параграфа овде'/>
                 </div>
             </div>
           )}

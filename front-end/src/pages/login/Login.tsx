@@ -28,11 +28,21 @@ function Login() {
       <div className='login'>
         <div className='login-part'>
           <h2>Корисничко име</h2>
-          <TextInput value={userValue} onChange={handleUserChange} type={"text"}/>
+          <TextInput 
+            value={userValue} 
+            onChange={handleUserChange} 
+            type={"text"}
+            placeholder='Унеси корисничко име овде'
+          />
         </div>
         <div className='login-part'>
           <h2>Шифра</h2>
-          <TextInput value={passwordValue} onChange={handlePasswordChange} type={"password"}/>
+          <TextInput 
+            value={passwordValue} 
+            onChange={handlePasswordChange} 
+            type={"password"}
+            placeholder='Унеси шифру овде'
+          />
         </div>
         <div className='login-button' onClick={sendLoginInfo}>
           <Button text='Пошаљи'/>

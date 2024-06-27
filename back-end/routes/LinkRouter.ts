@@ -1,10 +1,10 @@
-import express, { Request, Response } from 'express';
+import { Router } from 'express';
 import { LinkController } from '../api/LinkController';
 
-const linkRouter = express.Router();
+const router = Router();
+const linkController = new LinkController();
 
-linkRouter.route('/').get((req: Request, res: Response) => {
-    new LinkController().getAllLinks(req, res);
-});
+router.get('/', linkController.getAllLinks.bind(linkController));
+router.post('/upload', linkController.uploadLinkFile.bind(linkController));
 
-export default linkRouter;
+export default router;

@@ -69,7 +69,7 @@ const Links: React.FC = () => {
     formData.append('name', name);
 
     try {
-      const response = await fetch('http://localhost:8000/upload', {
+      const response = await fetch('http://localhost:8000/link/upload', {
         method: 'POST',
         body: formData,
       });

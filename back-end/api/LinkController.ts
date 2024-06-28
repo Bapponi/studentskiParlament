@@ -95,4 +95,25 @@ export class LinkController {
             });
         });
     }
+
+    public updateLink(req: Request, res: Response): void {
+        const id = parseInt(req.params.id);
+        const { website, name } = req.body;
+
+        const query = 'UPDATE links SET website = $1, name = $2 WHERE id = $3 RETURNING *';
+        const values = [website, name, id];
+
+        client.query(query, values, (err, result) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).send('Database error.');
+            }
+
+            if (result.rows.length === 0) {
+                return res.status(404).send('Link not found.');
+            }
+
+            res.status(200).json(result.rows[0]);
+        });
+    }
 }

@@ -22,7 +22,7 @@ export class LinkController {
             if (!err) {
                 res.status(200).send(links.rows);
             } else {
-                console.log(err.message);
+                return res.status(500).send('Грешка у бази!');
             }
         });
     }
@@ -30,11 +30,11 @@ export class LinkController {
     public uploadLinkFile(req: Request, res: Response): void {
         upload.single('file')(req, res, (err) => {
             if (err) {
-                return res.status(400).send('File upload failed.');
+                return res.status(400).send('Није успело са сланјем логоа!');
             }
 
             if (!req.file) {
-                return res.status(400).send('No file uploaded.');
+                return res.status(400).send('Није послат лого!');
             }
 
             const fileData = {
@@ -43,8 +43,14 @@ export class LinkController {
                 name: req.body.name,
             };
 
-            if (!fileData.website || !fileData.name) {
-                return res.status(400).send('Website and name are required.');
+            if (fileData.website == "" || fileData.name == "") {
+                return res.status(400).send('Потребно је да се унесу и сајт и име!');
+            }
+
+            const urlPattern = /^(http:\/\/|https:\/\/).+/;
+
+            if (!urlPattern.test(fileData.website)) {
+                return res.status(400).send('Сајт мора почети са http:// или са https://');
             }
 
             const query = 'INSERT INTO links (logo, website, name) VALUES ($1, $2, $3) RETURNING *';
@@ -53,7 +59,7 @@ export class LinkController {
             client.query(query, values, (err, result) => {
                 if (err) {
                     console.error(err);
-                    return res.status(500).send('Database error.');
+                    return res.status(500).send('Greška u bazi!');
                 }
                 res.status(201).json(result.rows[0]);
             });
@@ -67,11 +73,11 @@ export class LinkController {
         client.query(selectQuery, [id], (err, result) => {
             if (err) {
                 console.error(err.message);
-                return res.status(500).send('Database error.');
+                return res.status(500).send('Греска у бази!');
             }
 
             if (result.rows.length === 0) {
-                return res.status(404).send('Link not found.');
+                return res.status(404).send('Линк није пронађен!');
             }
 
             const filePath = result.rows[0].logo;
@@ -80,7 +86,7 @@ export class LinkController {
             fs.unlink(fileToDelete, (err) => {
                 if (err) {
                     console.error('Error deleting file:', err);
-                    return res.status(500).send('File deletion error.');
+                    return res.status(500).send('Грешка приликом брисанја логоа!');
                 }
 
                 // Delete the link from the database
@@ -88,7 +94,7 @@ export class LinkController {
                 client.query(deleteQuery, [id], (err, result) => {
                     if (err) {
                         console.error(err.message);
-                        return res.status(500).send('Database error.');
+                        return res.status(500).send('Грешка у бази!');
                     }
                     res.status(200).json(result.rows[0]);
                 });
@@ -100,11 +106,11 @@ export class LinkController {
         
         upload.single('file')(req, res, (err) => {
             if (err) {
-                return res.status(400).send('File upload failed.');
+                return res.status(400).send('Није успело каченје фајла!');
             }
 
             if (!req.file) {
-                return res.status(400).send('No file uploaded.');
+                return res.status(400).send('Није окачен фајл!');
             }
 
             const fileData = {
@@ -114,8 +120,14 @@ export class LinkController {
             };
             const id = parseInt(req.params.id);
 
-            if (!fileData.website || !fileData.name) {
-                return res.status(400).send('Website and name are required.');
+            if (fileData.website == "" || fileData.name == "") {
+                return res.status(400).send('Потребно је да се унесу и сајт и име!');
+            }
+
+            const urlPattern = /^(http:\/\/|https:\/\/).+/;
+
+            if (!urlPattern.test(fileData.website)) {
+                return res.status(400).send('Сајт мора почети са http:// или са https://');
             }
 
             const query = 'UPDATE links SET website = $1, name = $2, logo = $3 WHERE id = $4 RETURNING *';
@@ -124,7 +136,7 @@ export class LinkController {
             client.query(query, values, (err, result) => {
                 if (err) {
                     console.error(err);
-                    return res.status(500).send('Database error.');
+                    return res.status(500).send('Грешка у бази!');
                 }
                 res.status(201).json(result.rows[0]);
             });

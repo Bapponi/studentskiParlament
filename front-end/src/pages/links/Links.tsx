@@ -59,11 +59,10 @@ const Links: React.FC = () => {
 
   const upload = async () => {
     if (!file) {
-      alert('Please select a file');
+      setError("Молим Вас да унесете лого")
       return;
     }
-
-    console.log(file)
+    setError(null)
 
     const formData = new FormData();
     formData.append('file', file);
@@ -77,10 +76,15 @@ const Links: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('File upload failed');
+        setError(await response.text())
+        throw new Error(await response.text());
       }else{
         const newLink: LinkProps = await response.json();
         setLinks((prevLinks) => [...prevLinks, newLink]);
+        setError(null)
+        setFile(null)
+        setName("")
+        setWebsite("")
       }
       
     } catch (error) {
@@ -96,7 +100,7 @@ const Links: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
+  if (error && isLoading) {
     return <div>Error: {error}</div>;
   }
 
@@ -131,6 +135,7 @@ const Links: React.FC = () => {
         <div onClick={upload} style={{width: "100%"}}>
           <Button text='Додај'/>
         </div>
+        {error && <h4 style={{color: "var(--primary-color)"}}>{error}</h4>}
       </div>
     </div>
   );

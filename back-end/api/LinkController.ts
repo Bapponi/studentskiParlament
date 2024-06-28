@@ -97,23 +97,37 @@ export class LinkController {
     }
 
     public updateLink(req: Request, res: Response): void {
-        const id = parseInt(req.params.id);
-        const { website, name } = req.body;
-
-        const query = 'UPDATE links SET website = $1, name = $2 WHERE id = $3 RETURNING *';
-        const values = [website, name, id];
-
-        client.query(query, values, (err, result) => {
+        
+        upload.single('file')(req, res, (err) => {
             if (err) {
-                console.error(err.message);
-                return res.status(500).send('Database error.');
+                return res.status(400).send('File upload failed.');
             }
 
-            if (result.rows.length === 0) {
-                return res.status(404).send('Link not found.');
+            if (!req.file) {
+                return res.status(400).send('No file uploaded.');
             }
 
-            res.status(200).json(result.rows[0]);
+            const fileData = {
+                logo: 'http://localhost:8000/uploads/' + req.file.filename,
+                website: req.body.website,
+                name: req.body.name,
+            };
+            const id = parseInt(req.params.id);
+
+            if (!fileData.website || !fileData.name) {
+                return res.status(400).send('Website and name are required.');
+            }
+
+            const query = 'UPDATE links SET website = $1, name = $2, logo = $3 WHERE id = $4 RETURNING *';
+            const values = [fileData.website, fileData.name, fileData.logo, id];
+
+            client.query(query, values, (err, result) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send('Database error.');
+                }
+                res.status(201).json(result.rows[0]);
+            });
         });
     }
 }

@@ -19,6 +19,7 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
   const [newName, setNewName] = useState(name);
   const [currentWebsite, setCurrentWebsite] = useState(website);
   const [currentName, setCurrentName] = useState(name);
+  const [currentLogo, setCurrentLogo] = useState(logo);
 
   const deleteLink = async () => {
     try {
@@ -46,24 +47,27 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
 
   const updateLink = async () => {
     try {
+      const formData = new FormData();
+      if (newFile) {
+        formData.append('file', newFile);
+      }
+      formData.append('website', newWebsite); // Ensure newWebsite is correctly set
+      formData.append('name', newName);
+  
       const response = await fetch(`http://localhost:8000/link/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          website: newWebsite,
-          name: newName,
-        }),
+        body: formData,
       });
-
+  
       if (!response.ok) {
         throw new Error('Неуспешно ажуриран линк!');
       } else {
-        setCurrentWebsite(newWebsite);
-        setCurrentName(newName);
+        const updatedLink = await response.json();
+        setCurrentWebsite(updatedLink.website);
+        setCurrentName(updatedLink.name);
+        setCurrentLogo(updatedLink.logo);
       }
-
+  
       setIsPopupVisible(false);
     } catch (error) {
       console.error('Грешка приликом ажурирања линка:', error);
@@ -85,7 +89,7 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
   return (
     <div className='link-container'>
       <a href={currentWebsite} target='_blank' className='link'>
-        <img src={logo} alt="link-logo" className='link-logo' />
+        <img src={currentLogo} alt="link-logo" className='link-logo' />
         <h2>{currentName}</h2>
       </a>
       <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={deleteLink} />

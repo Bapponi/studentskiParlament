@@ -5,6 +5,12 @@ import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
 import PhotoUpload from '../form-elements/PhotoUpload';
 
+enum FileType {
+  Photo = 1,
+  Video,
+  Pdf
+}
+
 function CreateNews() {
 
   const [titleValue, setTitleValue] = useState('');
@@ -72,7 +78,8 @@ function CreateNews() {
         <PhotoUpload 
           file={uploadedBanner} 
           onFileChange={handleBannerChange}
-          placeholder='Превуци банер овде, или кликни да би га изабрао'  
+          placeholder='Превуци банер овде, или кликни да би га изабрао'
+          fileType={FileType.Photo}  
         />
       </div>
       <div className='new-elements__container'>

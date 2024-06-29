@@ -6,6 +6,12 @@ import Button from '../../components/button/Button'; // Assuming you have a Butt
 import './links.css';
 import TextInput from '../../components/form-elements/TextInput';
 
+enum FileType {
+  Photo = 1,
+  Video,
+  Pdf
+}
+
 interface LinkProps {
   id: number;
   logo: string;
@@ -118,6 +124,7 @@ const Links: React.FC = () => {
           file={file} 
           onFileChange={handleFileChange} 
           placeholder='Превуци лого овде, или кликни да би га изабрао'
+          fileType={FileType.Photo}
         />
         {/* <input type="file" onChange={handleFileChange} /> */}
         <TextInput 

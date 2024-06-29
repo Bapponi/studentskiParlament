@@ -4,6 +4,12 @@ import TextInput from '../form-elements/TextInput';
 import PhotoUpload from '../form-elements/PhotoUpload';
 import Button from '../button/Button';
 
+enum FileType {
+  Photo = 1,
+  Video,
+  Pdf
+}
+
 interface LinkProps {
   id: number;
   logo: string;
@@ -103,6 +109,7 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
               file={newFile} 
               onFileChange={handleNewFileChange} 
               placeholder='Превуци нови лого овде, или кликни да би га изабрао'
+              fileType={FileType.Photo}
             />
             <TextInput 
               value={newWebsite} 

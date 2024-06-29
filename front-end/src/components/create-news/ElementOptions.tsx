@@ -5,6 +5,12 @@ import TextArea from '../form-elements/TextArea';
 import PhotoUpload from '../form-elements/PhotoUpload';
 import VideoUpload from '../form-elements/VideoUpload';
 
+enum FileType {
+  Photo = 1,
+  Video,
+  Pdf
+}
+
 interface ElementOptionsProps {
   id: number;
   headerValue: string;
@@ -129,6 +135,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   file={uploadedFiles} 
                   onFileChange={handleFilesChange}
                   placeholder='Превуци слику овде, или кликни да би је изабрао'
+                  fileType={FileType.Photo}
                 />
                 </div>
             </div>

@@ -2,17 +2,34 @@ import React, { useCallback } from 'react';
 import './form-elements.css';
 import { useDropzone } from 'react-dropzone';
 
+enum FileType {
+  Photo = 1,
+  Video,
+  Pdf
+}
+
 interface PhotoUploadProps {
   file: File | null;
   onFileChange: (file: File | null) => void;
   placeholder: string;
+  fileType: FileType;
 }
 
-const PhotoUpload: React.FC<PhotoUploadProps> = ({ file, onFileChange, placeholder }) => {
+const PhotoUpload: React.FC<PhotoUploadProps> = ({ file, onFileChange, placeholder, fileType }) => {
+  
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
+      
+      if (fileType === FileType.Photo) {
+        console.log("Photo");
+      } else if (fileType === FileType.Video) {
+        console.log("Video");
+      } else {
+        console.log("PDF");
+      }
+
       if (acceptedFiles.length > 0) {
-        onFileChange(acceptedFiles[0]); // Only set the first file
+        onFileChange(acceptedFiles[0]);
       }
     },
     [onFileChange]
@@ -20,7 +37,7 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({ file, onFileChange, placehold
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    multiple: false, // Disallow multiple files
+    multiple: false
   });
 
   return (

@@ -6,6 +6,7 @@
     margin: 20px auto;
     gap: 30px;
     max-width: 1340px;
+    z-index: -1;
 }
 
 .create-link{

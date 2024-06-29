@@ -8,19 +8,19 @@ import PhotoUpload from '../form-elements/PhotoUpload';
 function CreateNews() {
 
   const [titleValue, setTitleValue] = useState('');
-  const [uploadedBanner, setUploadedBanner] = useState<File[]>([]);
+  const [uploadedBanner, setUploadedBanner] = useState<File | null>(null);
   const [elements, setElements] = useState<number[]>([]);
   const [headerValues, setHeaderValues] = useState<{ [key: number]: string }>({});
   const [textValues, setTextValues] = useState<{ [key: number]: string }>({});
-  const [uploadedFiles, setUploadedFiles] = useState<{ [key: number]: File[] }>({});
+  const [uploadedFiles, setUploadedFiles] = useState<{ [key: number]: File | null }>({});
   const [uploadedVideos, setUploadedVideos] = useState<{ [key: number]: File[] }>({});
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitleValue(e.target.value);
   };
 
-  const handleBannerChange = (files: File[]) => {
-    setUploadedBanner(files);
+  const handleBannerChange = (file: File | null) => {
+    setUploadedBanner(file);
   };
 
   const addElement = () => {
@@ -41,7 +41,7 @@ function CreateNews() {
     setTextValues({ ...textValues, [id]: value });
   };
 
-  const handleFilesChange = (id: number, files: File[]) => {
+  const handleFilesChange = (id: number, files: File | null) => {
     setUploadedFiles({ ...uploadedFiles, [id]: files });
   };
 
@@ -69,7 +69,11 @@ function CreateNews() {
             <h2>Слика Банера</h2>
             <img src="photo.png" alt="header" className='add-image'/>  
         </div>
-        {/* <PhotoUpload files={uploadedBanner} onFilesChange={handleBannerChange}/> */}
+        <PhotoUpload 
+          file={uploadedBanner} 
+          onFileChange={handleBannerChange}
+          placeholder='Превуци банер овде, или кликни да би га изабрао'  
+        />
       </div>
       <div className='new-elements__container'>
         <div className="component-list">
@@ -81,8 +85,8 @@ function CreateNews() {
               onHeaderChange={handleHeaderChange}
               textValue={textValues[id] || ''}
               onTextChange={handleTextChange}
-              uploadedFiles={uploadedFiles[id] || []}
-              onFilesChange={handleFilesChange}
+              uploadedFiles={uploadedFiles[id] || null}
+              onFileChange={handleFilesChange}
               uploadedVideos={uploadedVideos[id] || []}
               onVideoFilesChange={handleVideoFilesChange}
             />

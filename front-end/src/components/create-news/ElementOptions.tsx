@@ -11,8 +11,8 @@ interface ElementOptionsProps {
   onHeaderChange: (id: number, value: string) => void;
   textValue: string;
   onTextChange: (id: number, value: string) => void;
-  uploadedFiles: File[];
-  onFilesChange: (id: number, files: File[]) => void;
+  uploadedFiles: File | null;
+  onFileChange: (id: number, files: File | null) => void;
   uploadedVideos: File[];
   onVideoFilesChange: (id: number, files: File[]) => void;
 }
@@ -24,7 +24,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
   textValue,
   onTextChange,
   uploadedFiles,
-  onFilesChange,
+  onFileChange,
   uploadedVideos,
   onVideoFilesChange
 }) => {
@@ -44,8 +44,8 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
     onTextChange(id, e.target.value);
   };
 
-  const handleFilesChange = (files: File[]) => {
-    onFilesChange(id, files);
+  const handleFilesChange = (files: File | null) => {
+    onFileChange(id, files);
   };
 
   const handleVideoFilesChange = (files: File[]) => {
@@ -125,7 +125,11 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                 <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
                 </div>
                 <div className='input-area'>
-                {/* <PhotoUpload files={uploadedFiles} onFilesChange={handleFilesChange}/> */}
+                <PhotoUpload 
+                  file={uploadedFiles} 
+                  onFileChange={handleFilesChange}
+                  placeholder='Превуци слику овде, или кликни да би је изабрао'
+                />
                 </div>
             </div>
           )}

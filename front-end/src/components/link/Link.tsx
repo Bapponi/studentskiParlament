@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './link.css';
 import TextInput from '../form-elements/TextInput';
-import PhotoUpload from '../form-elements/PhotoUpload';
+import PhotoUpload from '../form-elements/FileUpload';
 import Button from '../button/Button';
 
 enum FileType {

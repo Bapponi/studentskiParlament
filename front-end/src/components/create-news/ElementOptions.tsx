@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import './create-news.css'
 import TextInput from '../form-elements/TextInput';
 import TextArea from '../form-elements/TextArea';
-import PhotoUpload from '../form-elements/PhotoUpload';
-import VideoUpload from '../form-elements/VideoUpload';
+import FileUpload from '../form-elements/FileUpload';
 
 enum FileType {
   Photo = 1,
@@ -19,8 +18,8 @@ interface ElementOptionsProps {
   onTextChange: (id: number, value: string) => void;
   uploadedFiles: File | null;
   onFileChange: (id: number, files: File | null) => void;
-  uploadedVideos: File[];
-  onVideoFilesChange: (id: number, files: File[]) => void;
+  uploadedVideo: File | null;
+  onVideoFileChange: (id: number, files: File | null) => void;
 }
 
 const ElementOptions: React.FC<ElementOptionsProps> = ({
@@ -31,8 +30,8 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
   onTextChange,
   uploadedFiles,
   onFileChange,
-  uploadedVideos,
-  onVideoFilesChange
+  uploadedVideo,
+  onVideoFileChange
 }) => {
 
   const [isVisible, setIsVisible] = useState(true);
@@ -50,12 +49,12 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
     onTextChange(id, e.target.value);
   };
 
-  const handleFilesChange = (files: File | null) => {
+  const handleFileChange = (files: File | null) => {
     onFileChange(id, files);
   };
 
-  const handleVideoFilesChange = (files: File[]) => {
-    onVideoFilesChange(id, files);
+  const handleVideoFileChange = (files: File | null) => {
+    onVideoFileChange(id, files);
   };
 
   return (
@@ -131,9 +130,9 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                 <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
                 </div>
                 <div className='input-area'>
-                <PhotoUpload 
+                <FileUpload 
                   file={uploadedFiles} 
-                  onFileChange={handleFilesChange}
+                  onFileChange={handleFileChange}
                   placeholder='Превуци слику овде, или кликни да би је изабрао'
                   fileType={FileType.Photo}
                 />
@@ -150,7 +149,13 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
               <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)}/>
               </div>
               <div className='input-area'>
-              <VideoUpload files={uploadedVideos} onFilesChange={handleVideoFilesChange}/>
+              {/* <VideoUpload files={uploadedVideos} onFilesChange={handleVideoFilesChange}/> */}
+                <FileUpload 
+                  file={uploadedVideo} 
+                  onFileChange={handleVideoFileChange}
+                  placeholder='Превуци видео овде, или кликни да би га изабрао'
+                  fileType={FileType.Video}
+                />
               </div>
           </div>
           )}

@@ -3,7 +3,7 @@ import './create-news.css';
 import ElementOptions from './ElementOptions';
 import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
-import PhotoUpload from '../form-elements/PhotoUpload';
+import FileUpload from '../form-elements/FileUpload';
 
 enum FileType {
   Photo = 1,
@@ -19,7 +19,7 @@ function CreateNews() {
   const [headerValues, setHeaderValues] = useState<{ [key: number]: string }>({});
   const [textValues, setTextValues] = useState<{ [key: number]: string }>({});
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: number]: File | null }>({});
-  const [uploadedVideos, setUploadedVideos] = useState<{ [key: number]: File[] }>({});
+  const [uploadedVideo, setUploadedVideo] = useState<{ [key: number]: File | null }>({});
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitleValue(e.target.value);
@@ -36,7 +36,7 @@ function CreateNews() {
   const publishNews = () => {
     console.log(uploadedBanner)
     console.log(titleValue)
-    console.log(elements, headerValues, textValues, uploadedFiles, uploadedVideos);
+    console.log(elements, headerValues, textValues, uploadedFiles, uploadedVideo);
   };
 
   const handleHeaderChange = (id: number, value: string) => {
@@ -51,8 +51,8 @@ function CreateNews() {
     setUploadedFiles({ ...uploadedFiles, [id]: files });
   };
 
-  const handleVideoFilesChange = (id: number, files: File[]) => {
-    setUploadedVideos({ ...uploadedVideos, [id]: files });
+  const handleVideoFileChange = (id: number, files: File | null) => {
+    setUploadedVideo({ ...uploadedVideo, [id]: files });
   };
 
   return (
@@ -75,7 +75,7 @@ function CreateNews() {
             <h2>Слика Банера</h2>
             <img src="photo.png" alt="header" className='add-image'/>  
         </div>
-        <PhotoUpload 
+        <FileUpload 
           file={uploadedBanner} 
           onFileChange={handleBannerChange}
           placeholder='Превуци банер овде, или кликни да би га изабрао'
@@ -94,8 +94,8 @@ function CreateNews() {
               onTextChange={handleTextChange}
               uploadedFiles={uploadedFiles[id] || null}
               onFileChange={handleFilesChange}
-              uploadedVideos={uploadedVideos[id] || []}
-              onVideoFilesChange={handleVideoFilesChange}
+              uploadedVideo={uploadedVideo[id] || null}
+              onVideoFileChange={handleVideoFileChange}
             />
           ))}
         </div>

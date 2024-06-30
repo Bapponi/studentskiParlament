@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Banner from '../../components/banner/Banner';
 import Link from '../../components/link/Link';
-import PhotoUpload from '../../components/form-elements/FileUpload';
 import Button from '../../components/button/Button'; // Assuming you have a Button component
 import './links.css';
 import TextInput from '../../components/form-elements/TextInput';
+import FileUpload from '../../components/form-elements/FileUpload';
 
 enum FileType {
   Photo = 1,
@@ -120,7 +120,7 @@ const Links: React.FC = () => {
       </div>
       <div className='create-link'>
         <h2>Креирај нови линк</h2>
-        <PhotoUpload 
+        <FileUpload 
           file={file} 
           onFileChange={handleFileChange} 
           placeholder='Превуци лого овде, или кликни да би га изабрао'

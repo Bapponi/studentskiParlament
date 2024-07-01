@@ -1,4 +1,4 @@
 export interface Material{
     title: string,
-    documentLink: string
+    document_link: string
 }

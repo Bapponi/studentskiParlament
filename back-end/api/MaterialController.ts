@@ -4,9 +4,11 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 
+// snakeCaseToCamelCase
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, 'uploads/materials/');
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
@@ -15,12 +17,27 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+const toCamelCase = (str: string): string => {
+  return str.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
+};
+
+const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Record<string, any> => {
+  const newObj: Record<string, any> = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      newObj[toCamelCase(key)] = obj[key];
+    }
+  }
+  return newObj;
+};
+
 export class MaterialController {
 
     public getAllMaterials(req: Request, res: Response): void {
         client.query('SELECT * FROM materials', (err, links) => {
             if (!err) {
-                res.status(200).send(links.rows);
+                const camelCaseLinks = links.rows.map(convertKeysToCamelCase);
+                res.status(200).send(camelCaseLinks);
             } else {
                 return res.status(500).send('Грешка у бази!');
             }
@@ -38,16 +55,16 @@ export class MaterialController {
             }
 
             const fileData = {
-                logo: 'http://localhost:8000/uploads/' + req.file.filename,
-                name: req.body.name,
+                document_link: 'http://localhost:8000/uploads/materials/' + req.file.filename,
+                title: req.body.title,
             };
 
-            if (fileData.name == "") {
+            if (fileData.title == "") {
                 return res.status(400).send('Потребно је да се унесе име!');
             }
 
-            const query = 'INSERT INTO materials (file, name) VALUES ($1, $2) RETURNING *';
-            const values = [fileData.logo, fileData.name];
+            const query = 'INSERT INTO materials (document_link, title) VALUES ($1, $2) RETURNING *';
+            const values = [fileData.document_link, fileData.title];
 
             client.query(query, values, (err, result) => {
                 if (err) {
@@ -62,7 +79,7 @@ export class MaterialController {
     public deleteMaterial(req: Request, res: Response): void {
         const id = parseInt(req.params.id);
 
-        const selectQuery = 'SELECT file FROM materials WHERE id = $1';
+        const selectQuery = 'SELECT document_link FROM materials WHERE id = $1';
         client.query(selectQuery, [id], (err, result) => {
             if (err) {
                 console.error(err.message);
@@ -73,9 +90,9 @@ export class MaterialController {
                 return res.status(404).send('Материјал није пронађен!');
             }
 
-            const filePath = result.rows[0].file;
+            const filePath = result.rows[0].document_link;
 
-            const fileToDelete = path.join(__dirname, '..', '..', 'uploads', path.basename(filePath));
+            const fileToDelete = path.join(__dirname, '..', '..', 'uploads/materials', path.basename(filePath));
             fs.unlink(fileToDelete, (err) => {
                 if (err) {
                     console.error('Error deleting file:', err);
@@ -107,7 +124,7 @@ export class MaterialController {
             }
 
             const fileData = {
-                file: 'http://localhost:8000/uploads/' + req.file.filename,
+                document_link: 'http://localhost:8000/uploads/materials/' + req.file.filename,
                 name: req.body.name,
             };
             const id = parseInt(req.params.id);
@@ -117,7 +134,7 @@ export class MaterialController {
             }
 
             const query = 'UPDATE links SET name = $1, logo = $2 WHERE id = $3 RETURNING *';
-            const values = [fileData.name, fileData.file, id];
+            const values = [fileData.name, fileData.document_link, id];
 
             client.query(query, values, (err, result) => {
                 if (err) {

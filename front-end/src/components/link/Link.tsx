@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './link.css';
 import TextInput from '../form-elements/TextInput';
-import PhotoUpload from '../form-elements/FileUpload';
+import FileUpload from '../form-elements/FileUpload';
 import Button from '../button/Button';
 
 enum FileType {
@@ -105,7 +105,7 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
         <div className='popup'>
           <div className='popup-content'>
             <h2>Промени Линк</h2>
-            <PhotoUpload 
+            <FileUpload 
               file={newFile} 
               onFileChange={handleNewFileChange} 
               placeholder='Превуци нови лого овде, или кликни да би га изабрао'

@@ -112,7 +112,7 @@ function Materials() {
           <Material key={entry.id} {...entry} onDelete={handleDelete} />
         ))}
       </div>
-      <div className='create-link'>
+      <div className='create-material'>
         <h2>Креирај нови материјал</h2>
         <FileUpload 
           file={file} 

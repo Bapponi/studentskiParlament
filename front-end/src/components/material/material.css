@@ -1,3 +1,7 @@
+.material-container{
+    position: relative;
+}
+
 .material{
     display: flex;
     align-items: center;
@@ -19,6 +23,96 @@
 
 .document-image{
     height: 100px;
+}
+
+.material-admin{
+    top: 5px;
+    position: absolute;
+    width: 25px;
+    padding: 5px;
+    border: 2px solid var(--text-color);
+    border-radius: 5px;
+    transition: 0.3s;
+    background-color: var(--secondary-color);
+    z-index: 2;
+}
+
+.material-delete{
+    right: 5px;
+}
+
+.material-update{
+    right: 50px;
+}
+
+.material-delete:hover{
+    background-color: var(--primary-color);
+}
+
+.material-update:hover{
+    background-color: var(--complementary-color);
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+}
+  
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+    width: 500px; /* Adjust size as needed */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+}
+  
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.update-material__button{
+    width: 100%;
+}
+
+.material-cross{
+    position: absolute;
+    top: 5px;
+    right: 18px;
+    width: 50px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.material-cross:hover{
+    background-color: var(--primary-color);
+    border-radius: 50%;
+}
+
+@media screen and (max-width: 600px) {
+
+.popup-content {
+    width: 80%;
+}
+
 }
 
 @media screen and (max-width: 500px) {

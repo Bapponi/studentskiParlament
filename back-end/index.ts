@@ -3,6 +3,7 @@ import cors from 'cors';
 import client from './database';
 import linkRouter from './routes/LinkRouter';
 import materialRouter from './routes/MaterialRouter';
+import newsRouter from './routes/NewsRouter';
 
 const port = 8000;
 const app: Express = express();
@@ -15,6 +16,7 @@ app.use('/uploads', express.static('uploads'));
 
 app.use('/link', linkRouter);
 app.use('/material', materialRouter);
+app.use('/news', newsRouter);
 
 app.listen(port, () => {
   console.log('Server running at port:', port);

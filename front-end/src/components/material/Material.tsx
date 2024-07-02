@@ -66,9 +66,9 @@ interface MaterialProps {
         if (!response.ok) {
           throw new Error('Неуспешно ажуриран линк!');
         } else {
-          const updatedLink = await response.json();
-          setCurrentTitle(updatedLink.title);
-          setCurrentDocumentLink(updatedLink.documentLink);
+          const updatedMaterial = await response.json();
+          setCurrentTitle(updatedMaterial.title);
+          setCurrentDocumentLink(updatedMaterial.documentLink);
         }
     
         setIsPopupVisible(false);
@@ -87,9 +87,9 @@ interface MaterialProps {
   
     return (
     <div className='material-container'>
-      <a href={documentLink} target='blank' className='material'>
+      <a href={currentDocumentLink} target='blank' className='material'>
         <img src="document.png" alt="document" className='document-image'/>
-        <h2>{title}</h2>
+        <h2>{currentTitle}</h2>
       </a>
       <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={deleteMaterial} />
       <img src="refresh.png" alt="upload" className='material-admin material-update' onClick={updatePopUp} />
@@ -108,7 +108,7 @@ interface MaterialProps {
               value={newTitle} 
               onChange={handleNewTitleChange} 
               type={"text"} 
-              placeholder='Унеси нови линк овде типа https://...'
+              placeholder='Унеси нови наслов овде'
             />
             <div onClick={updateMaterial} className='update-material__button'>
               <Button text='Промени'/>

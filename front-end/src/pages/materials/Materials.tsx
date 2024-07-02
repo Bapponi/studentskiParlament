@@ -59,7 +59,7 @@ function Materials() {
   };
 
   const upload = async () => {
-    console.log(materials)
+
     if (!file) {
       setError("Молим Вас да унесете фајл")
       return;
@@ -81,7 +81,9 @@ function Materials() {
         throw new Error(await response.text());
       }else{
         const newMaterial: MaterialProps = await response.json();
+        console.log(newMaterial)
         setMaterials((prevMaterials) => [...prevMaterials, newMaterial]);
+        console.log(materials)
         setError(null)
         setFile(null)
         setTitle("")

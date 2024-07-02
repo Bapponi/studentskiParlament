@@ -70,8 +70,13 @@ export class MaterialController {
                 if (err) {
                     console.error(err);
                     return res.status(500).send('Greška u bazi!');
+                }else{
+                    console.log(result.rows[0])
+                    const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
+                    console.log("A: " + camelCaseLinks)
+                    return res.status(201).send(camelCaseLinks);
+                    // res.status(201).json(result.rows[0]);
                 }
-                res.status(201).json(result.rows[0]);
             });
         });
     }
@@ -125,23 +130,27 @@ export class MaterialController {
 
             const fileData = {
                 document_link: 'http://localhost:8000/uploads/materials/' + req.file.filename,
-                name: req.body.name,
+                title: req.body.title,
             };
             const id = parseInt(req.params.id);
 
-            if (fileData.name == "") {
+            if (fileData.title == "") {
                 return res.status(400).send('Потребно је да се унесе име!');
             }
 
-            const query = 'UPDATE links SET name = $1, logo = $2 WHERE id = $3 RETURNING *';
-            const values = [fileData.name, fileData.document_link, id];
+            const query = 'UPDATE materials SET title = $1, document_link = $2 WHERE id = $3 RETURNING *';
+            const values = [fileData.title, fileData.document_link, id];
+            console.log(fileData.document_link)
 
             client.query(query, values, (err, result) => {
                 if (err) {
                     console.error(err);
                     return res.status(500).send('Грешка у бази!');
+                }else{
+                    const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
+                    return res.status(201).send(camelCaseLinks);
+                    // res.status(200).json(result.rows[0]);
                 }
-                res.status(201).json(result.rows[0]);
             });
         });
     }

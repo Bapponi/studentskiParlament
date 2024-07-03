@@ -4,8 +4,6 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 
-// snakeCaseToCamelCase
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/materials/');
@@ -71,11 +69,8 @@ export class MaterialController {
                     console.error(err);
                     return res.status(500).send('Greška u bazi!');
                 }else{
-                    console.log(result.rows[0])
                     const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
-                    console.log("A: " + camelCaseLinks)
-                    return res.status(201).send(camelCaseLinks);
-                    // res.status(201).json(result.rows[0]);
+                    return res.status(201).send(camelCaseLinks[0]);
                 }
             });
         });
@@ -104,7 +99,6 @@ export class MaterialController {
                     return res.status(500).send('Грешка приликом брисанја фајла!');
                 }
 
-                // Delete the link from the database
                 const deleteQuery = 'DELETE FROM materials WHERE id = $1 RETURNING *';
                 client.query(deleteQuery, [id], (err, result) => {
                     if (err) {
@@ -144,12 +138,10 @@ export class MaterialController {
 
             client.query(query, values, (err, result) => {
                 if (err) {
-                    console.error(err);
                     return res.status(500).send('Грешка у бази!');
                 }else{
                     const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
-                    return res.status(201).send(camelCaseLinks);
-                    // res.status(200).json(result.rows[0]);
+                    return res.status(201).send(camelCaseLinks[0]);
                 }
             });
         });

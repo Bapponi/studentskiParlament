@@ -33,10 +33,44 @@ function CreateNews() {
     setElements([...elements, elements.length + 1]);
   };
 
-  const publishNews = () => {
+  const publishNews = async () => {
     console.log(uploadedBanner)
     console.log(titleValue)
     console.log(elements, headerValues, textValues, uploadedFiles, uploadedVideo);
+
+    const formData = new FormData();
+
+    if (uploadedBanner) {
+      formData.append('banner', uploadedBanner);
+    }
+
+    formData.append('title', titleValue);
+    formData.append('elements', JSON.stringify(elements));
+
+    for (const [key, value] of Object.entries(headerValues)) {
+      formData.append(`headerValues[${key}]`, value);
+    }
+
+    for (const [key, value] of Object.entries(textValues)) {
+      formData.append(`textValues[${key}]`, value);
+    }
+
+    for (const [key, file] of Object.entries(uploadedFiles)) {
+      if (file) {
+        formData.append(`uploadedFiles[${key}]`, file);
+      }
+    }
+
+    try{
+      const response = await fetch('http://localhost:8000/news/upload', {
+        method: 'POST',
+        body: formData
+      })
+      console.log(response)
+    }catch (error){
+
+    }
+    
   };
 
   const handleHeaderChange = (id: number, value: string) => {

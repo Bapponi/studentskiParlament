@@ -48,7 +48,7 @@ function Materials() {
     };
 
     fetchMaterials();
-  }, []);
+  }, [materials]);
 
   const handleFileChange = (file: File | null) => {
     setFile(file);
@@ -110,7 +110,7 @@ function Materials() {
     <div>
       <Banner title='МАТЕРИЈАЛИ' bannerImg='ztf.png'/>
       <div className='materials'>
-        {materials.map((entry) => (
+        {materials.map((entry, index) => (
           <Material key={entry.id} {...entry} onDelete={handleDelete} />
         ))}
       </div>

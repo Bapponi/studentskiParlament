@@ -40,7 +40,6 @@ function Materials() {
     uploadMaterial({file:file, title:title});
   }
 
-
   const handleDelete = (id: number) => {
     setMaterials((prevMaterials) => prevMaterials.filter(material => material.id !== id));
   };

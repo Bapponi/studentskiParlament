@@ -3,4 +3,4 @@ export interface MaterialProps {
     documentLink: string;
     title: string;
     onDelete: (id: number) => void;
-  }
+}

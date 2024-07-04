@@ -37,40 +37,48 @@ function CreateNews() {
     console.log(uploadedBanner)
     console.log(titleValue)
     console.log(elements, headerValues, textValues, uploadedFiles, uploadedVideo);
-
+  
     const formData = new FormData();
-
+  
     if (uploadedBanner) {
       formData.append('banner', uploadedBanner);
     }
-
+  
     formData.append('title', titleValue);
     formData.append('elements', JSON.stringify(elements));
-
-    for (const [key, value] of Object.entries(headerValues)) {
-      formData.append(`headerValues[${key}]`, value);
-    }
-
-    for (const [key, value] of Object.entries(textValues)) {
-      formData.append(`textValues[${key}]`, value);
-    }
+    formData.append('headerValues', JSON.stringify(headerValues));
+    formData.append('textValues', JSON.stringify(textValues));
+  
+    console.log("UF: ")
+    console.log(uploadedFiles)
 
     for (const [key, file] of Object.entries(uploadedFiles)) {
       if (file) {
         formData.append(`uploadedFiles[${key}]`, file);
       }
     }
-
-    try{
-      const response = await fetch('http://localhost:8000/news/upload', {
+  
+    // for (const [key, file] of Object.entries(uploadedVideo)) {
+    //   if (file) {
+    //     formData.append(`uploadedVideo[${key}]`, file);
+    //   }
+    // }
+  
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/upload`, {
         method: 'POST',
-        body: formData
-      })
-      console.log(response)
-    }catch (error){
-
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Failed to upload news: ${errorMessage}`);
+      }
+  
+      console.log(await response.json());
+    } catch (error) {
+      console.error('Error uploading news:', error);
     }
-    
   };
 
   const handleHeaderChange = (id: number, value: string) => {

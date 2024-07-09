@@ -43,7 +43,6 @@ function Members() {
           throw new Error('Failed to fetch data');
         }
         const data: MemberProps[] = await response.json();
-        console.log(data)
         setMembers(data);
       } catch (error) {
         if (error instanceof Error) {
@@ -63,7 +62,6 @@ function Members() {
           throw new Error('Failed to fetch data');
         }
         const data: MemberProps[] = await response.json();
-        console.log(data)
         setAdminMembers(data);
       } catch (error) {
         if (error instanceof Error) {
@@ -158,30 +156,12 @@ function Members() {
           {adminMembers.map((entry) => (
             <Member key={entry.id} {...entry} onDelete={handleDelete} />
           ))}
-          {/* <Member 
-            position='председник' 
-            name='Име Презиме' 
-            bio='Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas eos labore fugiat eaque facere ipsam provident! Quis distinctio expedita esse fugiat adipisci non, quas, voluptas debitis blanditiis amet asperiores? Deleniti commodi quidem suscipit asperiores qui vero ratione sed impedit animi?'
-            memberImg='person.png'
-          />
-          <Member 
-            position='под-председник' 
-            name='Име Презиме' 
-            bio='Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas eos labore fugiat eaque facere ipsam provident! Quis distinctio expedita esse fugiat adipisci non, quas, voluptas debitis blanditiis amet asperiores? Deleniti commodi quidem suscipit asperiores qui vero ratione sed impedit animi?'
-            memberImg='person.png'
-          /> */}
         </div>
         <div className='other-members'>
           {chunks.map((chunk, index) => (
             <div key={index} className='other-members__column'>
-              {chunk.map((member, idx) => (
-                <h2 key={idx} className='other-member'>
-                  <center>
-                    <span style={{color: "var(--primary-color)"}}>
-                      {member.name}
-                    </span> - члан
-                  </center>
-                </h2>
+              {chunk.map((entry, idx) => (
+                <Member key={idx} {...entry} onDelete={handleDelete} />
               ))}
             </div>
           ))}

@@ -7,13 +7,15 @@ interface MemberProps {
   name: string;
   bio: string;
   memberImg: string;
+  onDelete: (id: number) => void;
 }
   
 const Member: React.FC<MemberProps> = ({
     position,
     name,
     bio,
-    memberImg
+    memberImg,
+    onDelete
   }) => {
 
   return (

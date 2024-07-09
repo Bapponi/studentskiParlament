@@ -4,6 +4,7 @@ import client from './database';
 import linkRouter from './routes/LinkRouter';
 import materialRouter from './routes/MaterialRouter';
 import newsRouter from './routes/NewsRouter';
+import memberRouter from './routes/MemberRouter';
 
 const port = 8000;
 const app: Express = express();
@@ -17,7 +18,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/link', linkRouter);
 app.use('/material', materialRouter);
 app.use('/news', newsRouter);
-app.use('/member', newsRouter);
+app.use('/member', memberRouter);
 
 app.listen(port, () => {
   console.log('Server running at port:', port);

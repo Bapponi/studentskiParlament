@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import client from '../database';
 import multer from 'multer';
-import fs from 'fs';
+import fs, { link } from 'fs';
 import path from 'path';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/links/');
+    cb(null, 'uploads/members/');
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
@@ -15,12 +15,33 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+const toCamelCase = (str: string): string => {
+  return str.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
+};
+
+const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Record<string, any> => {
+  const newObj: Record<string, any> = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      newObj[toCamelCase(key)] = obj[key];
+    }
+  }
+  return newObj;
+};
+
 export class MemberController {
 
     public getAllMembers(req: Request, res: Response): void {
-        client.query('SELECT * FROM members', (err, links) => {
+        const roleId = parseInt(req.params.roleId);
+        console.log(roleId)
+
+        const query = 'SELECT * FROM members WHERE role_id = $1';
+        const values = [roleId]
+
+        client.query(query, values, (err, members) => {
             if (!err) {
-                res.status(200).send(links.rows);
+                const camelCaseLinks = members.rows.map(convertKeysToCamelCase);
+                res.status(200).send(camelCaseLinks);
             } else {
                 return res.status(500).send('Грешка у бази!');
             }

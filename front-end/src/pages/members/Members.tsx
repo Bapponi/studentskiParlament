@@ -18,6 +18,7 @@ interface MemberProps {
   name: string;
   position: string;
   bio: string;
+  memberImg: string;
   roleId: number;
   onDelete: (id: number) => void;
 }
@@ -25,6 +26,7 @@ interface MemberProps {
 function Members() {
 
   const [members, setMembers] = useState<MemberProps[]>([]);
+  const [adminMembers, setAdminMembers] = useState<MemberProps[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,13 +36,14 @@ function Members() {
   const [roleId, setRoleId] = useState<string>('');
 
   useEffect(() => {
-    const fetchLinks = async () => {
+    const fetchMembers = async () => {
       try {
-        const response = await fetch('http://localhost:8000/member');
+        const response = await fetch(`http://localhost:8000/member/3`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
         const data: MemberProps[] = await response.json();
+        console.log(data)
         setMembers(data);
       } catch (error) {
         if (error instanceof Error) {
@@ -53,29 +56,29 @@ function Members() {
       }
     };
 
-    fetchLinks();
-  }, []);
+    const fetchAdminMembers = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/member/1`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const data: MemberProps[] = await response.json();
+        console.log(data)
+        setAdminMembers(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const members1: string[] = [
-    'Име Презиме1',
-    'Име Презиме2',
-    'Име Презиме3',
-    'Име Презиме4',
-    'Име Презиме5',
-    'Име Презиме6',
-    'Име Презиме7',
-    'Име Презиме8',
-    'Име Презиме9',
-    'Име Презиме10',
-    'Име Презиме11',
-    'Име Презиме12',
-    'Име Презиме13',
-    'Име Презиме14',
-    'Име Презиме15',
-    'Име Презиме16',
-    'Име Презиме17',
-    'Име Презиме18',
-  ]
+    fetchAdminMembers();
+    fetchMembers();
+  }, []);
 
   const handleFileChange = (file: File | null) => {
     setFile(file);
@@ -122,7 +125,7 @@ function Members() {
         throw new Error(await response.text());
       }else{
         const newLink: MemberProps = await response.json();
-        // setMembers((prevLinks) => [...prevLinks, newLink]);
+        setMembers((prevLinks) => [...prevLinks, newLink]);
         setError(null)
         setFile(null)
         setName("")
@@ -136,15 +139,15 @@ function Members() {
     }
   };
 
-  // const handleDelete = (id: number) => {
-  //   setLinks((prevLinks) => prevLinks.filter(link => link.id !== id));
-  // };
+  const handleDelete = (id: number) => {
+    setAdminMembers((prevMembers) => prevMembers.filter(member => member.id !== id));
+  };
 
   const chunkSize = 6;
   const chunks = [];
 
-  for (let i = 0; i < members1.length; i += chunkSize) {
-    chunks.push(members1.slice(i, i + chunkSize));
+  for (let i = 0; i < members.length; i += chunkSize) {
+    chunks.push(members.slice(i, i + chunkSize));
   }
 
   return (
@@ -152,7 +155,10 @@ function Members() {
       <Banner title='ЧЛАНОВИ' bannerImg='ztf.png'/>
       <div className='all-members'>
         <div className='main-members'>
-          <Member 
+          {adminMembers.map((entry) => (
+            <Member key={entry.id} {...entry} onDelete={handleDelete} />
+          ))}
+          {/* <Member 
             position='председник' 
             name='Име Презиме' 
             bio='Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas eos labore fugiat eaque facere ipsam provident! Quis distinctio expedita esse fugiat adipisci non, quas, voluptas debitis blanditiis amet asperiores? Deleniti commodi quidem suscipit asperiores qui vero ratione sed impedit animi?'
@@ -163,7 +169,7 @@ function Members() {
             name='Име Презиме' 
             bio='Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas eos labore fugiat eaque facere ipsam provident! Quis distinctio expedita esse fugiat adipisci non, quas, voluptas debitis blanditiis amet asperiores? Deleniti commodi quidem suscipit asperiores qui vero ratione sed impedit animi?'
             memberImg='person.png'
-          />
+          /> */}
         </div>
         <div className='other-members'>
           {chunks.map((chunk, index) => (
@@ -172,7 +178,7 @@ function Members() {
                 <h2 key={idx} className='other-member'>
                   <center>
                     <span style={{color: "var(--primary-color)"}}>
-                      {member}
+                      {member.name}
                     </span> - члан
                   </center>
                 </h2>

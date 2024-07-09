@@ -1,9 +1,13 @@
-.member{
+.member-container{
+    position: relative;
+}
+
+.admin-member{
     display: flex;
     align-items: center;
     gap: 20px;
     padding: 10px;
-    border-radius: 15px;
+    border-radius: 10px;
     border: 2px solid var(--text-color);
     width: 600px;
 }
@@ -17,11 +21,16 @@
 .other-member{
     border-radius: 5px;
     border: 2px solid var(--text-color);
+    height: 35px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media screen and (max-width: 640px){
     
-.member{
+.admin-member{
     width: 90%;
 }
 

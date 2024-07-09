@@ -33,7 +33,6 @@ export class MemberController {
 
     public getAllMembers(req: Request, res: Response): void {
         const roleId = parseInt(req.params.roleId);
-        console.log(roleId)
 
         const query = 'SELECT * FROM members WHERE role_id = $1';
         const values = [roleId]
@@ -66,11 +65,11 @@ export class MemberController {
                 roleId: req.body.roleId,
             };
 
-            if (fileData.roleId = 3 && (fileData.position == "" || fileData.name == "")) {
+            if (fileData.roleId == 3 && (fileData.position == "" || fileData.name == "")) {
                 return res.status(400).send('Потребно је да се унесу и име и позиција члана!');
             }
             //promeniti ovo
-            if (fileData.roleId = 1 && (fileData.position == "" || fileData.name == "" || fileData.bio == "")) {
+            if (fileData.roleId == 1 && (fileData.position == "" || fileData.name == "" || fileData.bio == "")) {
                 return res.status(400).send('Потребно је да се унесу и име, позиција и биографија члана!');
             }
 
@@ -81,8 +80,10 @@ export class MemberController {
                 if (err) {
                     console.error(err);
                     return res.status(500).send('Greška u bazi!');
+                }else{
+                    const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
+                    return res.status(201).send(camelCaseLinks[0]);
                 }
-                res.status(201).json(result.rows[0]);
             });
         });
     }

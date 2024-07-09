@@ -113,7 +113,7 @@ function Members() {
     formData.append('roleId', roleId);
 
     try {
-      const response = await fetch('http://localhost:8000/link/upload', {
+      const response = await fetch('http://localhost:8000/member/upload', {
         method: 'POST',
         body: formData,
       });
@@ -122,8 +122,15 @@ function Members() {
         setError(await response.text())
         throw new Error(await response.text());
       }else{
-        const newLink: MemberProps = await response.json();
-        setMembers((prevLinks) => [...prevLinks, newLink]);
+        const newMember: MemberProps = await response.json();
+        if(parseInt(roleId) == 1){
+          setAdminMembers((prevMembers) => [...prevMembers, newMember]);
+        }else if(parseInt(roleId) == 3){
+          setMembers((prevMembers) => [...prevMembers, newMember]);
+        }else{
+          throw new Error('Унесена лоша рола');
+        }
+        
         setError(null)
         setFile(null)
         setName("")

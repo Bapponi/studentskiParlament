@@ -17,6 +17,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/link', linkRouter);
 app.use('/material', materialRouter);
 app.use('/news', newsRouter);
+app.use('/member', newsRouter);
 
 app.listen(port, () => {
   console.log('Server running at port:', port);

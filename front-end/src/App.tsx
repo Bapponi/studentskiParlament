@@ -10,6 +10,7 @@ import Materials from './pages/materials/Materials';
 import Links from './pages/links/Links';
 import AdminPanel from './pages/admin-panel/AdminPanel';
 import Login from './pages/login/Login';
+import OneNews from './pages/news/OneNews';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/news" element={<News/>} />
+            <Route path="/news/:id" element={<OneNews/>} />
             <Route path="/members" element={<Members/>} />
             <Route path="/materials" element={<Materials/>} />
             <Route path="/links" element={<Links/>} />

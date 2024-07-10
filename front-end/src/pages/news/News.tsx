@@ -14,53 +14,7 @@ interface NewsPanelProps {
 
 function News() {
 
-  const news1: NewsPanelProps[] = [
-    {
-      id: 1,
-      date: '26. 03. 2024.',
-      title: 'Одлука о расписивању избора за школску 2024-2025',
-      clip: 'Одлука о Избору за Студентски парламент и студента продекана Електротехничког факултета у Београду и делегате у Студентском парламенту Универзитета у Београду за школску 2024-2025',
-      banner: 'ztf.png'
-    },
-    {
-      id: 2,
-      date: '15. 04. 2024.',
-      title: 'Одлука о отказивању избора',
-      clip: 'Детаљи одлуке о отказивању избора са седнице одржане 13. априла 2024. године.',
-      banner: 'ztf.png'
-    },
-    {
-      id: 3,
-      date: '26. 03. 2024.',
-      title: 'Одлука о расписивању избора за школску 2024-2025',
-      clip: 'Одлука о Избору за Студентски парламент и студента продекана Електротехничког факултета у Београду и делегате у Студентском парламенту Универзитета у Београду за школску 2024-2025',
-      banner: 'ztf.png'
-    },
-    {
-      id: 4,
-      date: '15. 04. 2024.',
-      title: 'Одлука о отказивању избора',
-      clip: 'Детаљи одлуке о отказивању избора са седнице одржане 13. априла 2024. године.',
-      banner: 'ztf.png'
-    },
-    {
-      id: 5,
-      date: '26. 03. 2024.',
-      title: 'Одлука о расписивању избора за школску 2024-2025',
-      clip: 'Одлука о Избору за Студентски парламент и студента продекана Електротехничког факултета у Београду и делегате у Студентском парламенту Универзитета у Београду за школску 2024-2025',
-      banner: 'ztf.png'
-    },
-    {
-      id: 6,
-      date: '15. 04. 2024.',
-      title: 'Одлука о отказивању избора',
-      clip: 'Детаљи одлуке о отказивању избора са седнице одржане 13. априла 2024. године.',
-      banner: 'ztf.png'
-    }
-  ];
-
   const [news, setNews] = useState<NewsPanelProps[]>([]);
-  const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -95,13 +49,12 @@ function News() {
     <div>
       <Banner title='ВЕСТИ' bannerImg='ztf.png'/>
       <div className='all-news'>
-      {news.map((entry, index) => (
+      {news.map((entry) => (
           <NewsPanel key={entry.id} {...entry}/>
         ))}
         <div className='all-news__button' onClick={getMoreNews}>
           <Button text='Учитај још вест'/>
         </div>
-        
       </div>
       
     </div>

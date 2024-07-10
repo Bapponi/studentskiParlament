@@ -44,6 +44,24 @@ export class NewsController {
       });
     }
 
+    public getNewsWithId(req: Request, res: Response): void {
+
+      const id = parseInt(req.params.id);
+      const query = 'SELECT * FROM news WHERE id=$1';
+      const values = [id]
+      client.query(query, values, (err, news) => {
+          if (!err) {
+              const newsSend = news.rows.map(row => ({
+                ...row,
+                date: parseDate(row.date)
+              }));
+              return res.status(200).send(newsSend);
+          } else {
+              return res.status(500).send('Грешка у бази!');
+          }
+      });
+    }
+
     public uploadNewsFile(req: Request, res: Response): void {
 
       upload.fields([

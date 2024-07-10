@@ -81,6 +81,8 @@
 .news_panel__more{
     transition: 0.3s;
     cursor: pointer;
+    text-decoration: none;
+    color: var(--text-color);
 }
 
 .news_panel__more:hover{

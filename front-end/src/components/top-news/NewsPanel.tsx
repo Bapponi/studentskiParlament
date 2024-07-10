@@ -1,6 +1,7 @@
 import React from 'react';
 import Banner from '../../components/banner/Banner';
 import './top-news.css'
+import { Link } from 'react-router-dom';
 
 interface NewsPanelProps {
   id: number;
@@ -22,7 +23,9 @@ const NewsPanel: React.FC<NewsPanelProps> = ({ id, date, title, clip, banner}) =
           </div>
           <p>{clip}</p>
         </div>
-        <h3 className='news_panel__more'>Detaljnije...</h3>
+        <Link to={`/news/${id}`} className='news_panel__more'>
+          <h3>Detaljnije...</h3>
+        </Link>
       </div>
     </div>
   );

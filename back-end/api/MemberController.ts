@@ -95,10 +95,8 @@ export class MemberController {
 
     public deleteMember(req: Request, res: Response): void {
         const id = parseInt(req.params.id);
-        console.log("adsasd " + id)
         const selectQuery = 'SELECT member_img, role_id FROM members WHERE id = $1';
         client.query(selectQuery, [id], (err, result) => {
-            console.log("ROROROR: " + result.rows[0])
 
             if (err) {
                 console.error(err.message);
@@ -111,7 +109,6 @@ export class MemberController {
 
             if(result.rows[0].member_img == undefined){
                 const deleteQuery = 'DELETE FROM members WHERE id = $1 RETURNING *';
-                console.log("a")
                 client.query(deleteQuery, [id], (err, result) => {
                     if (err) {
                         console.error(err.message);
@@ -143,6 +140,7 @@ export class MemberController {
     }
 
     public updateMember(req: Request, res: Response): void {
+        console.log("khjkjhk")
         
         upload.single('file')(req, res, (err) => {
             if (err) {
@@ -151,33 +149,35 @@ export class MemberController {
     
             const roleId = parseInt(req.body.roleId);
     
-            if (!req.file && roleId == 1) {
-                return res.status(400).send('Није послат лого!');
-            }
-    
-            const memberImg = req.file ? 'http://localhost:8000/uploads/members/' + req.file.filename : null;
-            const bio = req.body.bio ? req.body.bio : null;
-    
             const fileData = {
-                memberImg: memberImg,
+                memberImg: req.body.memberImg,
                 name: req.body.name,
                 position: req.body.position,
-                bio: bio,
+                bio: req.body.bio,
                 roleId: roleId,
             };
+
+            console.log(fileData)
 
             const id = parseInt(req.params.id);
 
             if (fileData.roleId == 3 && (fileData.position == "" || fileData.name == "")) {
-                return res.status(400).send('Потребно је да се унесу и име и позиција члана!');
+                return res.status(400).send('Потребно постоје и име и позиција члана!');
             }
             //promeniti ovo
             if (fileData.roleId == 1 && (fileData.position == "" || fileData.name == "" || fileData.bio == "")) {
-                return res.status(400).send('Потребно је да се унесу и име, позиција и биографија члана!');
+                return res.status(400).send('Потребно је да постоје и име, позиција и биографија члана!');
             }
 
-            const query = 'UPDATE members SET name = $1, position = $2, bio = $3, member_img = $4, role_id = $5 WHERE id = $6 RETURNING *';
-            const values = [fileData.name, fileData.name, fileData.bio, fileData.memberImg, fileData.roleId, id];
+            let query, values
+            
+            if(fileData.memberImg == undefined){
+                query = 'UPDATE members SET name = $1, position = $2, bio = $3, role_id = $4 WHERE id = $5 RETURNING *';
+                values = [fileData.name, fileData.position, fileData.bio, fileData.roleId, id];
+            }else{
+                query = 'UPDATE members SET name = $1, position = $2, bio = $3, member_img = $4, role_id = $5 WHERE id = $6 RETURNING *';
+                values = [fileData.name, fileData.position, fileData.bio, fileData.memberImg, fileData.roleId, id];
+            }
 
             client.query(query, values, (err, result) => {
                 if (err) {

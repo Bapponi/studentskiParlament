@@ -78,7 +78,7 @@ const Member: React.FC<MemberProps> = ({
       formData.append('bio', newBio);
       formData.append('roleId', newRoleId.toString());
   
-      const response = await fetch(`http://localhost:8000/link/${id}`, {
+      const response = await fetch(`http://localhost:8000/member/${id}`, {
         method: 'PUT',
         body: formData,
       });
@@ -114,7 +114,7 @@ const Member: React.FC<MemberProps> = ({
   };
 
   const handleNewBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setNewName(e.target.value);
+    setNewBio(e.target.value);
   };
 
   //potencijalno greska
@@ -124,23 +124,23 @@ const Member: React.FC<MemberProps> = ({
 
   return (
     <div className='member-container'>
-      {roleId == 1 && (
+      {currentRoleId == 1 && (
         <div className='admin-member'>
           <img src={memberImg} alt="member" className='member-image'/>
           <div>
-              <h1 style={{color: "var(--primary-color)"}}>{name}</h1>
-              <h2>{position}</h2>
-              <p>{bio}</p>
+              <h1 style={{color: "var(--primary-color)"}}>{currentName}</h1>
+              <h2>{currentPosition}</h2>
+              <p>{currentBio}</p>
           </div>
         </div>
       )}
-      {roleId == 3 && (
+      {currentRoleId == 3 && (
         <div className='other-member'>
           <h2>
             <center>
               <span style={{color: "var(--primary-color)"}}>
-                {name}
-              </span> - {position}
+                {currentName}
+              </span> - {currentPosition}
             </center>
           </h2>
         </div>

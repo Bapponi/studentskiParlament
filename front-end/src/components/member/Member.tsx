@@ -84,7 +84,7 @@ const Member: React.FC<MemberProps> = ({
       });
   
       if (!response.ok) {
-        throw new Error('Неуспешно ажуриран линк!');
+        throw new Error('Неуспешно ажуриран члан!');
       } else {
         const updatedMember = await response.json();
         setCurrentPosition(updatedMember.position);
@@ -126,7 +126,7 @@ const Member: React.FC<MemberProps> = ({
     <div className='member-container'>
       {currentRoleId == 1 && (
         <div className='admin-member'>
-          <img src={memberImg} alt="member" className='member-image'/>
+          <img src={currentMemberImg} alt="member" className='member-image'/>
           <div>
               <h1 style={{color: "var(--primary-color)"}}>{currentName}</h1>
               <h2>{currentPosition}</h2>

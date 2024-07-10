@@ -118,7 +118,6 @@ export class MemberController {
                 });
             }else{
                 const filePath = result.rows[0].member_img;
-                console.log("b")
                 const fileToDelete = path.join(__dirname, '..', '..', 'uploads/members', path.basename(filePath));
                 fs.unlink(fileToDelete, (err) => {
                     if (err) {
@@ -140,7 +139,6 @@ export class MemberController {
     }
 
     public updateMember(req: Request, res: Response): void {
-        console.log("khjkjhk")
         
         upload.single('file')(req, res, (err) => {
             if (err) {
@@ -148,9 +146,10 @@ export class MemberController {
             }
     
             const roleId = parseInt(req.body.roleId);
+            const memberImg = req.file ? 'http://localhost:8000/uploads/members/' + req.file.filename : null;
     
             const fileData = {
-                memberImg: req.body.memberImg,
+                memberImg: memberImg,
                 name: req.body.name,
                 position: req.body.position,
                 bio: req.body.bio,
@@ -183,8 +182,10 @@ export class MemberController {
                 if (err) {
                     console.error(err);
                     return res.status(500).send('Грешка у бази!');
+                }else{
+                    const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
+                    return res.status(201).send(camelCaseLinks[0]);
                 }
-                res.status(201).json(result.rows[0]);
             });
         });
     }

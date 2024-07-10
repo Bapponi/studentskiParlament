@@ -99,14 +99,18 @@ function Members() {
   };
 
   const upload = async () => {
-    if (!file) {
+    if (!file && parseInt(roleId) == 1) {
       setError("Молим Вас да унесете лого")
       return;
     }
     setError(null)
 
+    // const tempFile = file ? file : 'null';
+
     const formData = new FormData();
-    formData.append('file', file);
+    if (file && parseInt(roleId) == 1) {
+      formData.append('file', file);
+    }
     formData.append('name', name);
     formData.append('position', position);
     formData.append('bio', bio);
@@ -145,6 +149,7 @@ function Members() {
   };
 
   const handleDelete = (id: number) => {
+    setMembers((prevMembers) => prevMembers.filter(member => member.id !== id));
     setAdminMembers((prevMembers) => prevMembers.filter(member => member.id !== id));
   };
 

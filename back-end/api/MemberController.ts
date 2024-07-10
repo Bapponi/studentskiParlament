@@ -52,35 +52,40 @@ export class MemberController {
             if (err) {
                 return res.status(400).send('Није успело са сланјем логоа!');
             }
-
-            if (!req.file) {
+    
+            const roleId = parseInt(req.body.roleId);
+    
+            if (!req.file && roleId == 1) {
                 return res.status(400).send('Није послат лого!');
             }
-
+    
+            const memberImg = req.file ? 'http://localhost:8000/uploads/members/' + req.file.filename : null;
+            const bio = req.body.bio ? req.body.bio : null;
+    
             const fileData = {
-                memberImg: 'http://localhost:8000/uploads/members/' + req.file.filename,
+                memberImg: memberImg,
                 name: req.body.name,
                 position: req.body.position,
-                bio: req.body.bio,
-                roleId: req.body.roleId,
+                bio: bio,
+                roleId: roleId,
             };
-
-            if (fileData.roleId == 3 && (fileData.position == "" || fileData.name == "")) {
+    
+            if (roleId == 3 && (fileData.position === "" || fileData.name === "")) {
                 return res.status(400).send('Потребно је да се унесу и име и позиција члана!');
             }
-            //promeniti ovo
-            if (fileData.roleId == 1 && (fileData.position == "" || fileData.name == "" || fileData.bio == "")) {
+    
+            if (roleId == 1 && (fileData.position === "" || fileData.name === "" || fileData.bio === "")) {
                 return res.status(400).send('Потребно је да се унесу и име, позиција и биографија члана!');
             }
-
+    
             const query = 'INSERT INTO members (name, position, bio, member_img, role_id) VALUES ($1, $2, $3, $4, $5) RETURNING *';
             const values = [fileData.name, fileData.position, fileData.bio, fileData.memberImg, fileData.roleId];
-
+    
             client.query(query, values, (err, result) => {
                 if (err) {
                     console.error(err);
                     return res.status(500).send('Greška u bazi!');
-                }else{
+                } else {
                     const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
                     return res.status(201).send(camelCaseLinks[0]);
                 }
@@ -90,29 +95,23 @@ export class MemberController {
 
     public deleteMember(req: Request, res: Response): void {
         const id = parseInt(req.params.id);
-
-        const selectQuery = 'SELECT member_img FROM members WHERE id = $1';
+        console.log("adsasd " + id)
+        const selectQuery = 'SELECT member_img, role_id FROM members WHERE id = $1';
         client.query(selectQuery, [id], (err, result) => {
+            console.log("ROROROR: " + result.rows[0])
+
             if (err) {
                 console.error(err.message);
                 return res.status(500).send('Грешка у бази!');
             }
 
-            if (result.rows.length === 0) {
+            if (result.rows.length === 0 && result.rows[0].role_id == 1) {
                 return res.status(404).send('Слика није пронађена!');
             }
 
-            const filePath = result.rows[0].logo;
-
-            const fileToDelete = path.join(__dirname, '..', '..', 'uploads/members', path.basename(filePath));
-            fs.unlink(fileToDelete, (err) => {
-                if (err) {
-                    console.error('Error deleting file:', err);
-                    return res.status(500).send('Грешка приликом брисанја слике!');
-                }
-
-                // Delete the link from the database
+            if(result.rows[0].member_img == undefined){
                 const deleteQuery = 'DELETE FROM members WHERE id = $1 RETURNING *';
+                console.log("a")
                 client.query(deleteQuery, [id], (err, result) => {
                     if (err) {
                         console.error(err.message);
@@ -120,7 +119,26 @@ export class MemberController {
                     }
                     res.status(200).json(result.rows[0]);
                 });
-            });
+            }else{
+                const filePath = result.rows[0].member_img;
+                console.log("b")
+                const fileToDelete = path.join(__dirname, '..', '..', 'uploads/members', path.basename(filePath));
+                fs.unlink(fileToDelete, (err) => {
+                    if (err) {
+                        console.error('Error deleting file:', err);
+                        return res.status(500).send('Грешка приликом брисанја слике!');
+                    }
+
+                    const deleteQuery = 'DELETE FROM members WHERE id = $1 RETURNING *';
+                    client.query(deleteQuery, [id], (err, result) => {
+                        if (err) {
+                            console.error(err.message);
+                            return res.status(500).send('Грешка у бази!');
+                        }
+                        res.status(200).json(result.rows[0]);
+                    });
+                });
+            }            
         });
     }
 
@@ -128,27 +146,33 @@ export class MemberController {
         
         upload.single('file')(req, res, (err) => {
             if (err) {
-                return res.status(400).send('Није успело каченје слике!');
+                return res.status(400).send('Није успело са сланјем логоа!');
             }
-
-            if (!req.file) {
-                return res.status(400).send('Није окачена слика!');
+    
+            const roleId = parseInt(req.body.roleId);
+    
+            if (!req.file && roleId == 1) {
+                return res.status(400).send('Није послат лого!');
             }
-
+    
+            const memberImg = req.file ? 'http://localhost:8000/uploads/members/' + req.file.filename : null;
+            const bio = req.body.bio ? req.body.bio : null;
+    
             const fileData = {
-                memberImg: 'http://localhost:8000/uploads/members/' + req.file.filename,
+                memberImg: memberImg,
                 name: req.body.name,
                 position: req.body.position,
-                bio: req.body.bio,
-                roleId: req.body.roleId
+                bio: bio,
+                roleId: roleId,
             };
+
             const id = parseInt(req.params.id);
 
-            if (fileData.roleId = 3 && (fileData.position == "" || fileData.name == "")) {
+            if (fileData.roleId == 3 && (fileData.position == "" || fileData.name == "")) {
                 return res.status(400).send('Потребно је да се унесу и име и позиција члана!');
             }
             //promeniti ovo
-            if (fileData.roleId = 1 && (fileData.position == "" || fileData.name == "" || fileData.bio == "")) {
+            if (fileData.roleId == 1 && (fileData.position == "" || fileData.name == "" || fileData.bio == "")) {
                 return res.status(400).send('Потребно је да се унесу и име, позиција и биографија члана!');
             }
 

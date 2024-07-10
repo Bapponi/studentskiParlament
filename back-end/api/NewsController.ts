@@ -15,10 +15,33 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+function parseDate(dateString: string): string {
+  const date = new Date(dateString);
+  date.setUTCDate(date.getUTCDate() + 1) //mozda izmeniti kasnije
+
+  const year = date.getUTCFullYear();
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+  const day = date.getUTCDate().toString().padStart(2, '0');
+
+  return `${day}. ${month}. ${year}.`;
+}
+
 export class NewsController {
 
     public getAllNews(req: Request, res: Response): void {
-        
+
+      const query = 'SELECT * FROM news';
+      client.query(query, (err, news) => {
+          if (!err) {
+              const newsSend = news.rows.map(row => ({
+                ...row,
+                date: parseDate(row.date)
+              }));
+              return res.status(200).send(newsSend);
+          } else {
+              return res.status(500).send('Грешка у бази!');
+          }
+      });
     }
 
     public uploadNewsFile(req: Request, res: Response): void {

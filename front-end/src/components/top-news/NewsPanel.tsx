@@ -6,11 +6,11 @@ interface NewsPanelProps {
   id: number;
   date: string;
   title: string;
-  description: string;
+  clip: string;
   banner: string;
 }
 
-const NewsPanel: React.FC<NewsPanelProps> = ({ id, date, title, description, banner}) => {
+const NewsPanel: React.FC<NewsPanelProps> = ({ id, date, title, clip, banner}) => {
   return (
     <div className='news-panel'>
       <img src={banner} alt="news-panel__banner" className='news-panel__baner'/>
@@ -20,7 +20,7 @@ const NewsPanel: React.FC<NewsPanelProps> = ({ id, date, title, description, ban
           <div className='news-panel__title'>
             <h2>{title}</h2>
           </div>
-          <p>{description}</p>
+          <p>{clip}</p>
         </div>
         <h3 className='news_panel__more'>Detaljnije...</h3>
       </div>

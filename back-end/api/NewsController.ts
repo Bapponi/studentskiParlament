@@ -28,6 +28,19 @@ function parseDate(dateString: string): string {
 
 export class NewsController {
 
+  public getNewsCount(req: Request, res: Response): void {
+    const countQuery = 'SELECT COUNT(*) FROM news';
+    
+    client.query(countQuery, (err, result) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        return res.status(500).send('Грешка у бази!');
+      }
+      const count = result.rows[0].count;
+      return res.status(200).json({ count });
+    });
+  }
+
   public getAllNews(req: Request, res: Response): void {
 
     const countQuery = 'SELECT COUNT(*) FROM news';
@@ -39,12 +52,12 @@ export class NewsController {
   
       const rowCount = parseInt(countResult.rows[0].count, 10);
 
-      const limit = parseInt(req.query.limit as string, rowCount) || rowCount; 
-      const offset = parseInt(req.query.offset as string, rowCount) || 0;
+      let limit = parseInt(req.query.limit as string, rowCount) || rowCount; 
+      let offset = parseInt(req.query.offset as string, rowCount) || 0;
   
       const fetchQuery = 'SELECT * FROM news ORDER BY id DESC LIMIT $1 OFFSET $2';
       const values = [limit, offset]
-      
+
       client.query(fetchQuery, values, (err, newsResult) => {
         if (!err) {
           const newsSend = newsResult.rows.map(row => ({

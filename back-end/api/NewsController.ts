@@ -28,21 +28,37 @@ function parseDate(dateString: string): string {
 
 export class NewsController {
 
-    public getAllNews(req: Request, res: Response): void {
+  public getAllNews(req: Request, res: Response): void {
 
-      const query = 'SELECT * FROM news';
-      client.query(query, (err, news) => {
-          if (!err) {
-              const newsSend = news.rows.map(row => ({
-                ...row,
-                date: parseDate(row.date)
-              }));
-              return res.status(200).send(newsSend);
-          } else {
-              return res.status(500).send('Грешка у бази!');
-          }
+    const countQuery = 'SELECT COUNT(*) FROM news';
+    client.query(countQuery, (err, countResult) => {
+      if (err) {
+        console.error(err.message);
+        return res.status(500).send('Грешка у бази!');
+      }
+  
+      const rowCount = parseInt(countResult.rows[0].count, 10);
+
+      const limit = parseInt(req.query.limit as string, rowCount) || rowCount; 
+      const offset = parseInt(req.query.offset as string, rowCount) || 0;
+  
+      const fetchQuery = 'SELECT * FROM news ORDER BY id DESC LIMIT $1 OFFSET $2';
+      const values = [limit, offset]
+      
+      client.query(fetchQuery, values, (err, newsResult) => {
+        if (!err) {
+          const newsSend = newsResult.rows.map(row => ({
+            ...row,
+            date: parseDate(row.date),
+          }));
+          return res.status(200).send(newsSend);
+        } else {
+          console.error(err.message);
+          return res.status(500).send('Грешка у бази!');
+        }
       });
-    }
+    });
+  }
 
     public getNewsWithId(req: Request, res: Response): void {
 

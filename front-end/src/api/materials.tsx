@@ -1,6 +1,6 @@
 import { MaterialProps } from "../pages/materials/helpers";
 
-export const fetchAllMaterials = async () => {
+export const fetchAllMaterialsAPI = async () => {
   try {
     const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/material`);
     if (!response.ok) {
@@ -63,12 +63,13 @@ export const deleteMaterialAPI = async ({
     });
 
     if (!response.ok) {
-      throw new Error('Неуспешно избрисан линк!');
+      throw new Error('Неуспешно избрисан материјал!');
     }
 
     return id;
   } catch (error) {
-    console.error('Грешка приликом брисанја линка:', error);
+    console.log("greska", error)
+    throw new Error(`Грешка приликом брисанја материјала: ${error}`);
   }
 };
 

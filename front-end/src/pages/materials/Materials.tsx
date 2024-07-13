@@ -22,7 +22,9 @@ interface MaterialProps {
 
 function Materials() {
 
-  const {materials: hookMaterials, loading:isLoading, error: hookError, uploadMaterial} = useMaterials();
+  const {materials: hookMaterials, 
+    // loading:isLoading, error: hookError,
+     uploadMaterial, deleteMaterial} = useMaterials();
   const [materials, setMaterials] = useState<MaterialProps[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -41,16 +43,16 @@ function Materials() {
   }
 
   const handleDelete = (id: number) => {
-    setMaterials((prevMaterials) => prevMaterials.filter(material => material.id !== id));
+    deleteMaterial({id});
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (error && isLoading) {
-    return <div>Error: {error}</div>;
-  }
+  // if (error && isLoading) {
+  //   return <div>Error: {error}</div>;
+  // }
 
   return (
     <div>

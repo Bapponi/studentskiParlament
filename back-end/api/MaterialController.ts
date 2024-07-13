@@ -81,12 +81,14 @@ export class MaterialController {
 
         const selectQuery = 'SELECT document_link FROM materials WHERE id = $1';
         client.query(selectQuery, [id], (err, result) => {
+            console.log(result)
             if (err) {
                 console.error(err.message);
                 return res.status(500).send('Грешка у бази!');
             }
 
             if (result.rows.length === 0) {
+                console.log(`Material with ID ${id} not found.`);
                 return res.status(404).send('Материјал није пронађен!');
             }
 

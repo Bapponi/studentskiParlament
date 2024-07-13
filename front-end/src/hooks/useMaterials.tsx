@@ -1,70 +1,65 @@
 import { useEffect, useState } from "react"
-import { deleteMaterialAPI, fetchAllMaterials, updateMaterialAPI, uploadMaterial } from "../api/materials";
+import { deleteMaterialAPI, updateMaterialAPI, uploadMaterial } from "../api/materials";
 import { MaterialProps } from "../pages/materials/helpers";
+import { useDeleteMaterials } from "./useDeleteMaterials";
+import { useFetchMaterials } from "./useFetchMaterials";
 
 
 export const useMaterials = () => {
-
-    const [materials, setMaterials]= useState<MaterialProps[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<undefined | any>(undefined);
+    
+    const {data: materials, error: fetchingError, isLoading: isLoadingFetch, refetch}= useFetchMaterials();
+    const {deleteMaterial, error: deleteError, isLoading: isLoadingDelete} = useDeleteMaterials();
 
     async function fetchMaterials(){
-        setLoading(true);
+        // setLoading(true);
         try{
-            const newMaterials = await fetchAllMaterials() as MaterialProps[];
-            setMaterials(newMaterials);
+            //const newMaterials = await fetchAllMaterials() as MaterialProps[];
+            //setMaterials(newMaterials);
         } catch(error){
-            setError(error);
+            // setError(error);
         }
-        setLoading(false);
+        // setLoading(false);
     }
 
     async function uploadNewMaterial({file, title}:{file: undefined | null |  File, title:string}){
-        setLoading(true);
+        // setLoading(true);
         try{
             const newMaterial = await uploadMaterial({file, title})
-            setMaterials((prevMaterials) => [...prevMaterials, newMaterial]);
+            // setMaterials((prevMaterials) => [...prevMaterials, newMaterial]);
         } catch(error){
-            setError(error)
+            // setError(error)
         }
-        setLoading(false)
-    }
-
-    async function deleteMaterial({id}:{id:number}){
-        setLoading(true);
-        try{
-            const deletedId = await deleteMaterialAPI({id})
-            // onDelete(id);
-        } catch(error){
-            setError(error)
-        }
-        setLoading(false)
+        // setLoading(false)
     }
 
     //insert
     async function updateMaterial({newFile, newTitle, id}:{newFile: undefined | null |  File, newTitle:string, id: number}){
-        setLoading(true);
+        // setLoading(true);
         try{
             const deletedId = await updateMaterialAPI({newFile, newTitle, id})
             //...
         } catch(error){
-            setError(error)
+            // setError(error)
         }
-        setLoading(false)
+        // setLoading(false)
     }
 
     useEffect(()=>{
         fetchMaterials(); 
     },[])
 
+    useEffect(()=>{
+        console.log('mat',materials); 
+    },[materials])
+
     return {
         materials,
         uploadMaterial : uploadNewMaterial,
-        loading,
-        error
+        // loading,
+        // error,
+        deleteMaterial,
+        deleteError,
+        isLoadingDelete,
     }
-
-
 
 }

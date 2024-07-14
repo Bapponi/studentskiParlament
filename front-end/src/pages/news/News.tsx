@@ -22,11 +22,12 @@ function News() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [totalCount, setTotalCount] = useState<number>(0); // State to track total count of news
+  const limit = 6
 
   const fetchNews = async () => {
     try {
       console.log(news.length);
-      const response = await fetch(`http://localhost:8000/news?limit=${2}&offset=${news.length}`);
+      const response = await fetch(`http://localhost:8000/news?limit=${limit}&offset=${news.length}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }

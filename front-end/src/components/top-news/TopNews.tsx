@@ -1,30 +1,47 @@
-import React, {useState} from 'react';
-import './top-news.css'
+import React, { useEffect, useState } from 'react';
+import './top-news.css';
 import NewsClip from './NewsClip';
 
 interface NewsClipProps {
   id: number;
   date: string;
   title: string;
-  description: string;
+  clip: string;
+  banner: string;
 }
 
 function TopNews() {
 
-  const news: NewsClipProps[] = [
-    {
-      id: 1,
-      date: '26. 03. 2024.',
-      title: 'Одлука о расписивању избора за школску 2024-2025',
-      description: 'Одлука о Избору за Студентски парламент и студента продекана Електротехничког факултета у Београду и делегате у Студентском парламенту Универзитета у Београду за школску 2024-2025',
-    },
-    {
-      id: 2,
-      date: '15. 04. 2024.',
-      title: 'Одлука о отказивању избора',
-      description: 'Детаљи одлуке о отказивању избора са седнице одржане 13. априла 2024. године.',
-    },
-  ];
+  const [news, setNews] = useState<NewsClipProps[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const limit = 2;
+  const offset = 0;
+
+  const fetchNews = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/news?limit=${limit}&offset=${offset}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data = await response.json();
+      setNews(data.news);
+      
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
 
   return (
     <div className='top-news'>
@@ -32,15 +49,21 @@ function TopNews() {
         <h2>НАЈНОВИЈЕ ВЕСТИ</h2>
       </div>
       <div className='the-top__news'>
-        {news.map((entry, index) => (
-          <NewsClip 
-            key={index}
-            id={entry.id}
-            date={entry.date}
-            title={entry.title}
-            description={entry.description}
-          />
-        ))}
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : (
+          news.map((entry) => (
+            <NewsClip 
+              key={entry.id}
+              id={entry.id}
+              date={entry.date}
+              title={entry.title}
+              description={entry.clip}
+            />
+          ))
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Banner from '../../components/banner/Banner';
-import './news.css'
+import './news.css';
 import NewsPanel from '../../components/top-news/NewsPanel';
 import Button from '../../components/button/Button';
 
@@ -12,40 +12,28 @@ interface NewsPanelProps {
   banner: string;
 }
 
-function News() {
+interface NewsResponse {
+  news: NewsPanelProps[];
+  totalCount: number;
+}
 
+function News() {
   const [news, setNews] = useState<NewsPanelProps[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [onLimit, setOnLimit] = useState<boolean>(true);
-
-  const fetchNewsCount = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/news/count');
-      if (!response.ok) {
-        throw new Error('Failed to fetch news count');
-      }
-      const data = await response.json();
-      console.log(data.count); // Log the count of news items
-      return data.count
-    } catch (error) {
-      console.error('Error fetching news count:', error);
-    }
-  };
+  const [totalCount, setTotalCount] = useState<number>(0); // State to track total count of news
 
   const fetchNews = async () => {
     try {
-      console.log(news.length)
-      const response = await fetch(`http://localhost:8000/news?limit=${6}&offset=${news.length}`);
+      console.log(news.length);
+      const response = await fetch(`http://localhost:8000/news?limit=${2}&offset=${news.length}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
-      const data: NewsPanelProps[] = await response.json();
-      const newPanels: NewsPanelProps[] = news.concat(data) 
+      const data: NewsResponse = await response.json();
+      const newPanels: NewsPanelProps[] = news.concat(data.news);
       setNews(newPanels);
-
-      const count = await fetchNewsCount()
-      setOnLimit(count === news.length);
+      setTotalCount(data.totalCount); // Set total count of news
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -63,20 +51,17 @@ function News() {
 
   return (
     <div>
-      <Banner title='ВЕСТИ' bannerImg='ztf.png'/>
+      <Banner title='ВЕСТИ' bannerImg='ztf.png' />
       <div className='all-news'>
-      {news.map((entry) => (
-          <NewsPanel key={entry.id} {...entry}/>
+        {news.map((entry) => (
+          <NewsPanel key={entry.id} {...entry} />
         ))}
-        {
-          !onLimit && (
-            <div className='all-news__button' onClick={fetchNews}>
-              <Button text='Учитај још вест'/>
-            </div>
-          )
-        }
+        {news.length < totalCount && ( // Check if more news are available
+          <div className='all-news__button' onClick={fetchNews}>
+            <Button text='Учитај још вест' />
+          </div>
+        )}
       </div>
-      
     </div>
   );
 }

@@ -28,35 +28,21 @@ function parseDate(dateString: string): string {
 
 export class NewsController {
 
-  public getNewsCount(req: Request, res: Response): void {
-    const countQuery = 'SELECT COUNT(*) FROM news';
-    
-    client.query(countQuery, (err, result) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).send('Грешка у бази!');
-      }
-      const count = result.rows[0].count;
-      return res.status(200).json({ count });
-    });
-  }
-
   public getAllNews(req: Request, res: Response): void {
-
     const countQuery = 'SELECT COUNT(*) FROM news';
     client.query(countQuery, (err, countResult) => {
       if (err) {
         console.error(err.message);
         return res.status(500).send('Грешка у бази!');
       }
-  
+
       const rowCount = parseInt(countResult.rows[0].count, 10);
 
-      let limit = parseInt(req.query.limit as string, rowCount) || rowCount; 
-      let offset = parseInt(req.query.offset as string, rowCount) || 0;
-  
+      let limit = parseInt(req.query.limit as string, 10) || rowCount;
+      let offset = parseInt(req.query.offset as string, 10) || 0;
+
       const fetchQuery = 'SELECT * FROM news ORDER BY id DESC LIMIT $1 OFFSET $2';
-      const values = [limit, offset]
+      const values = [limit, offset];
 
       client.query(fetchQuery, values, (err, newsResult) => {
         if (!err) {
@@ -64,7 +50,7 @@ export class NewsController {
             ...row,
             date: parseDate(row.date),
           }));
-          return res.status(200).send(newsSend);
+          return res.status(200).send({ news: newsSend, totalCount: rowCount });
         } else {
           console.error(err.message);
           return res.status(500).send('Грешка у бази!');
@@ -73,57 +59,55 @@ export class NewsController {
     });
   }
 
-    public getNewsWithId(req: Request, res: Response): void {
+  public getNewsWithId(req: Request, res: Response): void {
+    const id = parseInt(req.params.id);
+    const query = 'SELECT * FROM news WHERE id=$1';
+    const values = [id];
+    client.query(query, values, (err, news) => {
+      if (!err) {
+        const newsSend = news.rows.map(row => ({
+          ...row,
+          date: parseDate(row.date)
+        }));
+        return res.status(200).send(newsSend);
+      } else {
+        return res.status(500).send('Грешка у бази!');
+      }
+    });
+  }
 
-      const id = parseInt(req.params.id);
-      const query = 'SELECT * FROM news WHERE id=$1';
-      const values = [id]
-      client.query(query, values, (err, news) => {
-          if (!err) {
-              const newsSend = news.rows.map(row => ({
-                ...row,
-                date: parseDate(row.date)
-              }));
-              return res.status(200).send(newsSend);
-          } else {
-              return res.status(500).send('Грешка у бази!');
-          }
-      });
-    }
+  public uploadNewsFile(req: Request, res: Response): void {
+    upload.fields([
+      { name: 'banner', maxCount: 1 },
+      { name: 'uploadedFiles', maxCount: 10 },
+    ])(req, res, (err) => {
+      // if (err) {
+      //   return res.status(400).send('File upload error');
+      // }
 
-    public uploadNewsFile(req: Request, res: Response): void {
+      // Log the request body and files
+      console.log(req.body);
+      console.log(req.files);
 
-      upload.fields([
-        { name: 'banner', maxCount: 1 },
-        { name: 'uploadedFiles', maxCount: 10 },
-      ])(req, res, (err) => {
-        // if (err) {
-        //   return res.status(400).send('File upload error');
-        // }
-    
-        // Log the request body and files
-        console.log(req.body);
-        console.log(req.files);
-    
-        // Parse other fields
-        const title = req.body.title;
-        const elements = JSON.parse(req.body.elements);
-        const headerValues = req.body.headerValues ? JSON.parse(req.body.headerValues) : {};
-        const textValues = req.body.textValues ? JSON.parse(req.body.textValues) : {};
-    
-        // console.log({ title, elements, headerValues, textValues });
-    
-        // Process the data as needed (e.g., store in the database)
-    
-        res.status(200).send('News uploaded successfully');
-      });
-    }
+      // Parse other fields
+      const title = req.body.title;
+      const elements = JSON.parse(req.body.elements);
+      const headerValues = req.body.headerValues ? JSON.parse(req.body.headerValues) : {};
+      const textValues = req.body.textValues ? JSON.parse(req.body.textValues) : {};
 
-    public deleteNews(req: Request, res: Response): void {
-        
-    }
+      // console.log({ title, elements, headerValues, textValues });
 
-    public updateNews(req: Request, res: Response): void {
-        
-    }
+      // Process the data as needed (e.g., store in the database)
+
+      res.status(200).send('News uploaded successfully');
+    });
+  }
+
+  public deleteNews(req: Request, res: Response): void {
+    // Implement delete logic
+  }
+
+  public updateNews(req: Request, res: Response): void {
+    // Implement update logic
+  }
 }

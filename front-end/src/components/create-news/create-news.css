@@ -5,7 +5,7 @@
     align-items: flex-start;
     flex-direction: column;
     gap: 15px;
-    width: 650px;
+    width: 100%;
 }
 
 .news-part{
@@ -147,10 +147,6 @@
 }
 
 @media screen and (max-width: 700px) {
-  
-.create-news{
-    width: 90%;
-}    
 
 .add-options{
     flex-wrap: wrap;

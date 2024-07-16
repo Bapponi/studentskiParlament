@@ -26,9 +26,8 @@ function AdminPanel() {
   return (
     <div>
       <Banner title='АДМИН' bannerImg='ztf.png'/>
-      <CreateNews/>
-      <div onClick={logout}>
-        <Button text='Izloguj se'/>
+      <div className='admin-panel'>
+        <CreateNews/>
       </div>
     </div>
   );

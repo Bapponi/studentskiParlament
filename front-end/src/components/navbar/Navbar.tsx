@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import './navbar.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 
 function Navbar() {
+  const navigate = useNavigate();
   const {isLoggedIn, setIsLoggedIn} = useAuth();
+  const [adminListToggle, setAdminListToggle] = useState<boolean>(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
   }, [setIsLoggedIn]);
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setAdminListToggle(false)
+    setIsLoggedIn(false)
+    navigate('/');
+  }
 
   let menuVisible: boolean = false;
   const toggleMenu = () => {
@@ -30,6 +39,10 @@ function Navbar() {
     }
 
     menuVisible = !menuVisible;
+  };
+
+  const handleAdminIconClick = () => {
+    setAdminListToggle(!adminListToggle);
   };
 
   return (
@@ -59,9 +72,19 @@ function Navbar() {
           ЛИНКОВИ
         </NavLink>
         {isLoggedIn && (
-          <NavLink to='/admin-panel'>
-            <img src='user.png' alt='admin' className='admin-icon' />
-          </NavLink>
+          <div className='nav-admin'>
+            <img src='user.png' alt='admin' className='admin-icon' onClick={handleAdminIconClick}/>
+            { adminListToggle && (
+              <div className='admin-list'>
+                <NavLink to='/admin-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')} onClick={handleAdminIconClick}>
+                  АДМИН ПАНЕЛ
+                </NavLink>
+                <div className='nav-page' onClick={logout}>
+                  ОДЈАВИ СЕ
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </nav>
       <div className='nav-mobile' onClick={toggleMenu}>
@@ -72,7 +95,7 @@ function Navbar() {
       <div className='mobile-menu__shadow'>
         <div className='mobile-menu__container'>
           <nav className='mobile-menu'>
-            <div className='mobile-menu-links'>
+            <div className='mobile-menu__links'>
               <NavLink to='/' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
                 ПОЧЕТНА
               </NavLink>
@@ -89,9 +112,14 @@ function Navbar() {
                 ЛИНКОВИ
               </NavLink>
               {isLoggedIn && (
-                <NavLink to='/admin-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
-                  АДМИН
-                </NavLink>
+                <div className='admin-list__mobile'>
+                  <NavLink to='/admin-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
+                    АДМИН ПАНЕЛ
+                  </NavLink>
+                  <div className='nav-page' onClick={logout} style={{alignSelf: 'flex-start'}}>
+                    ОДЈАВИ СЕ
+                  </div>
+                </div>
               )}
             </div>
           </nav>

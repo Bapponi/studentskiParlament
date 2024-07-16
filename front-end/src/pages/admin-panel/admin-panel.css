@@ -1,1 +1,10 @@
-    
+.admin-panel{
+    width: 650px;
+    margin: 20px auto;
+}
+
+@media screen and (max-width: 700px) {
+    .admin-panel{
+        width: 90%;
+    }
+}

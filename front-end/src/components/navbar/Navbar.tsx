@@ -96,25 +96,37 @@ function Navbar() {
         <div className='mobile-menu__container'>
           <nav className='mobile-menu'>
             <div className='mobile-menu__links'>
-              <NavLink to='/' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
-                ПОЧЕТНА
+              <NavLink to='/' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')} >
+                <div onClick={toggleMenu}>
+                  ПОЧЕТНА
+                </div>
               </NavLink>
               <NavLink to='/news' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
-                ВЕСТИ
+                <div onClick={toggleMenu}>
+                  ВЕСТИ
+                </div>
               </NavLink>
               <NavLink to='/members' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
-                ЧЛАНОВИ
+                <div onClick={toggleMenu}>
+                  ЧЛАНОВИ
+                </div>
               </NavLink>
               <NavLink to='/materials' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
-                МАТЕРИЈАЛИ
+                <div onClick={toggleMenu}>
+                  МАТЕРИЈАЛИ
+                </div>
               </NavLink>
               <NavLink to='/links' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
-                ЛИНКОВИ
+                <div onClick={toggleMenu}>
+                  ЛИНКОВИ
+                </div>
               </NavLink>
               {isLoggedIn && (
                 <div className='admin-list__mobile'>
                   <NavLink to='/admin-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
-                    АДМИН ПАНЕЛ
+                    <div onClick={toggleMenu}>
+                      АДМИН ПАНЕЛ
+                    </div>
                   </NavLink>
                   <div className='nav-page' onClick={logout} style={{alignSelf: 'flex-start'}}>
                     ОДЈАВИ СЕ

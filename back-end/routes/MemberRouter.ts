@@ -8,5 +8,6 @@ router.get('/:roleId', memberController.getAllMembers.bind(memberController));
 router.post('/upload', memberController.uploadMemberFile.bind(memberController));
 router.delete('/:id', memberController.deleteMember.bind(memberController));
 router.put('/:id', memberController.updateMember.bind(memberController));
+router.post('/login', memberController.loginMember.bind(memberController));
 
 export default router;

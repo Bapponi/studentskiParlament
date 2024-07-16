@@ -95,7 +95,7 @@ export class NewsController {
       const headerValues = req.body.headerValues ? JSON.parse(req.body.headerValues) : {};
       const textValues = req.body.textValues ? JSON.parse(req.body.textValues) : {};
 
-      // console.log({ title, elements, headerValues, textValues });
+      console.log({ title, elements, headerValues, textValues });
 
       // Process the data as needed (e.g., store in the database)
 

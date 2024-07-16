@@ -3,6 +3,10 @@ import client from '../database';
 import multer from 'multer';
 import fs, { link } from 'fs';
 import path from 'path';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+
+const SECRET_KEY = 'your_secret_key';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -189,4 +193,29 @@ export class MemberController {
             });
         });
     }
+
+    public loginMember(req: Request, res: Response) {
+
+        const { username, password } = req.body;
+
+        const query = 'SELECT * FROM members WHERE username = $1 AND password = $2';
+        const values = [username, password]
+
+        client.query(query, values, (err, member) => {
+            if (!err) {
+
+                if (member.rows.length === 0) {
+                    return res.status(400).send('Нетачни креденцијали!');
+                }
+            
+                const user = member.rows[0];
+                const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+            
+                return res.json({ token });
+            } else {
+                return res.status(500).send('Грешка у бази!');
+            }
+        });
+    };
+
 }

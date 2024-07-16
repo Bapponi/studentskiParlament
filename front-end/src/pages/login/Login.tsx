@@ -3,11 +3,14 @@ import './login.css'
 import Banner from '../../components/banner/Banner';
 import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
 
   const [userValue, setUserValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserValue(e.target.value);
@@ -17,10 +20,38 @@ function Login() {
     setPasswordValue(e.target.value);
   };
 
-  const sendLoginInfo = () => {
-    console.log(userValue)
-    console.log(passwordValue)
-  }
+  const sendLoginInfo = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/member/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: userValue,
+          password: passwordValue,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Неуспешно пријављивање');
+      }
+
+      const data = await response.json();
+      const token = data.token;
+
+      localStorage.setItem('token', token);
+
+      navigate('/');
+
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    }
+  };
 
   return (
     <div className='login-container'>
@@ -44,6 +75,7 @@ function Login() {
             placeholder='Унеси шифру овде'
           />
         </div>
+        {error && <p className='error-message'>{error}</p>}
         <div className='login-button' onClick={sendLoginInfo}>
           <Button text='Пошаљи'/>
         </div>

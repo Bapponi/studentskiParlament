@@ -6,6 +6,7 @@ import FileUpload from '../../components/form-elements/FileUpload';
 import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
 import TextArea from '../../components/form-elements/TextArea';
+import { useAuth } from '../../AuthContext';
 
 enum FileType {
   Photo = 1,
@@ -34,6 +35,7 @@ function Members() {
   const [position, setPosition] = useState<string>('');
   const [bio, setBio] = useState<string>('');
   const [roleId, setRoleId] = useState<string>('');
+  const {isLoggedIn} = useAuth();
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -179,42 +181,46 @@ function Members() {
           ))}
         </div>
       </div>
-      <div className='create-member'>
-        <h2>Креирај новог члана</h2>
-        <FileUpload 
-          file={file} 
-          onFileChange={handleFileChange} 
-          placeholder='Превуци слику члана овде, или кликни да би је изабрао'
-          fileType={FileType.Photo}
-        />
-        <TextInput 
-          value={name} 
-          onChange={handleNameChange} 
-          type={"text"}
-          placeholder='Унеси име и презиме члана'
-        />
-        <TextInput 
-          value={position} 
-          onChange={handlePositionChange} 
-          type={"text"} 
-          placeholder='Унеси позицију члана'
-        />
-        <TextArea 
-          value={bio} 
-          onChange={handleBioChange}
-          placeholder='Унеси биографију члана'
-        />
-        <TextInput 
-          value={roleId} 
-          onChange={handleRoleIdChange} 
-          type={"text"}
-          placeholder='Унеси ролу члана'
-        />
-        <div onClick={upload} style={{width: "100%"}}>
-          <Button text='Додај'/>
-        </div>
-        {error && <h4 style={{color: "var(--primary-color)"}}>{error}</h4>}
-      </div>
+      {
+        isLoggedIn && (
+          <div className='create-member'>
+            <h2>Креирај новог члана</h2>
+            <FileUpload 
+              file={file} 
+              onFileChange={handleFileChange} 
+              placeholder='Превуци слику члана овде, или кликни да би је изабрао'
+              fileType={FileType.Photo}
+            />
+            <TextInput 
+              value={name} 
+              onChange={handleNameChange} 
+              type={"text"}
+              placeholder='Унеси име и презиме члана'
+            />
+            <TextInput 
+              value={position} 
+              onChange={handlePositionChange} 
+              type={"text"} 
+              placeholder='Унеси позицију члана'
+            />
+            <TextArea 
+              value={bio} 
+              onChange={handleBioChange}
+              placeholder='Унеси биографију члана'
+            />
+            <TextInput 
+              value={roleId} 
+              onChange={handleRoleIdChange} 
+              type={"text"}
+              placeholder='Унеси ролу члана'
+            />
+            <div onClick={upload} style={{width: "100%"}}>
+              <Button text='Додај'/>
+            </div>
+            {error && <h4 style={{color: "var(--primary-color)"}}>{error}</h4>}
+          </div>
+        )
+      }
     </div>
   );
 }

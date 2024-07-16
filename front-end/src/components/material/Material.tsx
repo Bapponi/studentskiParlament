@@ -3,6 +3,7 @@ import './material.css'
 import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
 import FileUpload from '../form-elements/FileUpload';
+import { useAuth } from '../../AuthContext';
 
 enum FileType {
   Photo = 1,
@@ -25,6 +26,7 @@ interface MaterialProps {
     const [newDocumentLink, setNewDocumentLink] = useState(documentLink);
     const [currentTitle, setCurrentTitle] = useState(title);
     const [currentDocumentLink, setCurrentDocumentLink] = useState(documentLink);
+    const {isLoggedIn} = useAuth();
   
     const deleteMaterial = async () => {
       try {
@@ -91,10 +93,13 @@ interface MaterialProps {
         <img src="document.png" alt="document" className='document-image'/>
         <h2>{currentTitle}</h2>
       </a>
-      <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={deleteMaterial} />
-      <img src="refresh.png" alt="upload" className='material-admin material-update' onClick={updatePopUp} />
-
-      {isPopupVisible && (
+      { isLoggedIn && (
+        <div>
+          <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={deleteMaterial} />
+          <img src="refresh.png" alt="upload" className='material-admin material-update' onClick={updatePopUp} />
+        </div>
+      )}
+      {isPopupVisible && isLoggedIn && (
         <div className='popup'>
           <div className='popup-content'>
             <h2>Промени Materijal</h2>

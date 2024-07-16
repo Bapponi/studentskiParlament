@@ -4,6 +4,7 @@ import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
 import FileUpload from '../form-elements/FileUpload';
 import TextArea from '../form-elements/TextArea';
+import { useAuth } from '../../AuthContext';
 
 enum FileType {
   Photo = 1,
@@ -42,6 +43,7 @@ const Member: React.FC<MemberProps> = ({
   const [currentBio, setCurrentBio] = useState(bio);
   const [currentRoleId, setCurrentRoleId] = useState(roleId);
   const [currentMemberImg, setCurrentMemberImg] = useState(memberImg);
+  const {isLoggedIn} = useAuth();
 
   const deleteMember = async () => {
     try {
@@ -145,9 +147,13 @@ const Member: React.FC<MemberProps> = ({
           </h2>
         </div>
       )}
-      <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={deleteMember} />
-      <img src="refresh.png" alt="upload" className='link-admin link-update' onClick={updatePopUp} />
-      {isPopupVisible && (
+      {isLoggedIn && (
+        <div>
+          <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={deleteMember} />
+          <img src="refresh.png" alt="upload" className='link-admin link-update' onClick={updatePopUp} />
+        </div>
+      )}
+      {isPopupVisible && isLoggedIn && (
         <div className='popup'>
           <div className='popup-content'>
             <h2>Промени Члана</h2>

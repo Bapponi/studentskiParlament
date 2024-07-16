@@ -6,6 +6,7 @@ import FileUpload from '../../components/form-elements/FileUpload';
 import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
 import { useMaterials } from '../../hooks/useMaterials';
+import { useAuth } from '../../AuthContext';
 
 enum FileType {
   Photo = 1,
@@ -29,6 +30,7 @@ function Materials() {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState<string>('');
+  const {isLoggedIn} = useAuth();
 
   const handleFileChange = (file: File | null) => {
     setFile(file);
@@ -62,25 +64,29 @@ function Materials() {
           <Material key={entry.id} {...entry} onDelete={handleDelete} />
         ))}
       </div>
-      <div className='create-material'>
-        <h2>Креирај нови материјал</h2>
-        <FileUpload 
-          file={file} 
-          onFileChange={handleFileChange} 
-          placeholder='Превуци фајл овде, или кликни да би га изабрао'
-          fileType={FileType.Pdf}
-        />
-        <TextInput 
-          value={title} 
-          onChange={handleTitleChange} 
-          type={"text"}
-          placeholder='Унеси назив фајла'
-        />
-        <div onClick={handleUploadMaterial} style={{width: "100%"}}>
-          <Button text='Додај'/>
-        </div>
-        {error && <h4 style={{color: "var(--primary-color)"}}>{error}</h4>}
-      </div>
+      { isLoggedIn && (
+          <div className='create-material'>
+            <h2>Креирај нови материјал</h2>
+            <FileUpload 
+              file={file} 
+              onFileChange={handleFileChange} 
+              placeholder='Превуци фајл овде, или кликни да би га изабрао'
+              fileType={FileType.Pdf}
+            />
+            <TextInput 
+              value={title} 
+              onChange={handleTitleChange} 
+              type={"text"}
+              placeholder='Унеси назив фајла'
+            />
+            <div onClick={handleUploadMaterial} style={{width: "100%"}}>
+              <Button text='Додај'/>
+            </div>
+            {error && <h4 style={{color: "var(--primary-color)"}}>{error}</h4>}
+          </div>
+        )
+      }
+      
     </div>
   );
 }

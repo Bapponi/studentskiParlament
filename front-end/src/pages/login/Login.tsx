@@ -12,7 +12,7 @@ function Login() {
   const [passwordValue, setPasswordValue] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const {isLoggedIn, setIsLoggedIn} = useAuth()
+  const {setIsLoggedIn} = useAuth()
 
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserValue(e.target.value);

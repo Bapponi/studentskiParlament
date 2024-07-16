@@ -5,6 +5,7 @@ import Button from '../../components/button/Button'; // Assuming you have a Butt
 import './links.css';
 import TextInput from '../../components/form-elements/TextInput';
 import FileUpload from '../../components/form-elements/FileUpload';
+import { useAuth } from '../../AuthContext';
 
 enum FileType {
   Photo = 1,
@@ -27,6 +28,7 @@ const Links: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [website, setWebsite] = useState<string>('');
   const [name, setName] = useState<string>('');
+  const {isLoggedIn} = useAuth();
 
   useEffect(() => {
     const fetchLinks = async () => {
@@ -118,32 +120,34 @@ const Links: React.FC = () => {
           <Link key={entry.id} {...entry} onDelete={handleDelete} />
         ))}
       </div>
-      <div className='create-link'>
-        <h2>Креирај нови линк</h2>
-        <FileUpload 
-          file={file} 
-          onFileChange={handleFileChange} 
-          placeholder='Превуци лого овде, или кликни да би га изабрао'
-          fileType={FileType.Photo}
-        />
-        {/* <input type="file" onChange={handleFileChange} /> */}
-        <TextInput 
-          value={website} 
-          onChange={handleWebsiteChange} 
-          type={"text"} 
-          placeholder='Унеси линк овде типа https://...'
-        />
-        <TextInput 
-          value={name} 
-          onChange={handleNameChange} 
-          type={"text"}
-          placeholder='Унеси назив фајла'
-        />
-        <div onClick={upload} style={{width: "100%"}}>
-          <Button text='Додај'/>
+      { isLoggedIn && (
+        <div className='create-link'>
+          <h2>Креирај нови линк</h2>
+          <FileUpload 
+            file={file} 
+            onFileChange={handleFileChange} 
+            placeholder='Превуци лого овде, или кликни да би га изабрао'
+            fileType={FileType.Photo}
+          />
+          <TextInput 
+            value={website} 
+            onChange={handleWebsiteChange} 
+            type={"text"} 
+            placeholder='Унеси линк овде типа https://...'
+          />
+          <TextInput 
+            value={name} 
+            onChange={handleNameChange} 
+            type={"text"}
+            placeholder='Унеси назив фајла'
+          />
+          <div onClick={upload} style={{width: "100%"}}>
+            <Button text='Додај'/>
+          </div>
+          {error && <h4 style={{color: "var(--primary-color)"}}>{error}</h4>}
         </div>
-        {error && <h4 style={{color: "var(--primary-color)"}}>{error}</h4>}
-      </div>
+      )}
+      
     </div>
   );
 }

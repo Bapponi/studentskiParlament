@@ -11,27 +11,31 @@ import Links from './pages/links/Links';
 import AdminPanel from './pages/admin-panel/AdminPanel';
 import Login from './pages/login/Login';
 import OneNews from './pages/news/OneNews';
+import { AuthProvider } from './AuthContext';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar/>
-        <main>
-          <Routes>
-            <Route path="/" element={<Home/>} />
-            <Route path="/news" element={<News/>} />
-            <Route path="/news/:id" element={<OneNews/>} />
-            <Route path="/members" element={<Members/>} />
-            <Route path="/materials" element={<Materials/>} />
-            <Route path="/links" element={<Links/>} />
-            <Route path="/admin-panel" element={<AdminPanel/>} />
-            <Route path="/login" element={<Login/>} />
-          </Routes>
-        </main>
-        <Footer/>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Navbar/>
+          <main>
+            <Routes>
+              <Route path="/" element={<Home/>} />
+              <Route path="/news" element={<News/>} />
+              <Route path="/news/:id" element={<OneNews/>} />
+              <Route path="/members" element={<Members/>} />
+              <Route path="/materials" element={<Materials/>} />
+              <Route path="/links" element={<Links/>} />
+              <Route path="/admin-panel" element={<AdminPanel/>} />
+              <Route path="/login" element={<Login/>} />
+            </Routes>
+          </main>
+          <Footer/>
+        </div>
+      </Router>
+    </AuthProvider>
+    
   );
 }
 

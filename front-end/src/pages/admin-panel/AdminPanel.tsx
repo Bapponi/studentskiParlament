@@ -4,13 +4,16 @@ import Banner from '../../components/banner/Banner';
 import CreateNews from '../../components/create-news/CreateNews';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../AuthContext';
 
 function AdminPanel() {
 
   const navigate = useNavigate();
+  const {isLoggedIn, setIsLoggedIn} = useAuth();
 
   const logout = () => {
     localStorage.removeItem('token');
+    setIsLoggedIn(false)
     navigate('/');
   }
 

@@ -4,6 +4,7 @@ import Banner from '../../components/banner/Banner';
 import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../AuthContext';
 
 function Login() {
 
@@ -11,6 +12,7 @@ function Login() {
   const [passwordValue, setPasswordValue] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const {isLoggedIn, setIsLoggedIn} = useAuth()
 
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserValue(e.target.value);
@@ -41,7 +43,7 @@ function Login() {
       const token = data.token;
 
       localStorage.setItem('token', token);
-
+      setIsLoggedIn(true)
       navigate('/');
 
     } catch (error) {

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './navbar.css';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../AuthContext';
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const {isLoggedIn, setIsLoggedIn} = useAuth();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
-  }, []);
+  }, [setIsLoggedIn]);
 
   let menuVisible: boolean = false;
   const toggleMenu = () => {

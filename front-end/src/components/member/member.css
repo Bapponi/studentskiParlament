@@ -10,6 +10,7 @@
     border-radius: 10px;
     border: 2px solid var(--text-color);
     width: 600px;
+    height: auto;
 }
 
 .member-image{
@@ -31,12 +32,13 @@
 @media screen and (max-width: 640px){
     
 .admin-member{
-    width: 90%;
+    width: 85vw;
 }
 
 .member-image{
     width: 150px;
     height: 150px;
+    display: none;
 }
 
 .other-member{

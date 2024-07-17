@@ -106,11 +106,11 @@ function CreateNews() {
             <img src="header.png" alt="header" className='add-image'/>  
         </div>
         <TextInput 
-                  value={titleValue} 
-                  onChange={handleTitleChange} 
-                  type={"text"}
-                  placeholder='Унесите наслов овде'
-                />
+          value={titleValue} 
+          onChange={handleTitleChange} 
+          type={"text"}
+          placeholder='Унесите наслов вести овде'
+        />
       </div>
       <div className='news-part'>
         <div className='name-icon'>
@@ -138,6 +138,7 @@ function CreateNews() {
               onFileChange={handleFilesChange}
               uploadedVideo={uploadedVideo[id] || null}
               onVideoFileChange={handleVideoFileChange}
+              headerTitle='Заглавље'
             />
           ))}
         </div>

@@ -3,13 +3,6 @@ import './polls.css';
 import ElementOptions from '../create-news/ElementOptions';
 import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
-import FileUpload from '../form-elements/FileUpload';
-
-enum FileType {
-  Photo = 1,
-  Video,
-  Pdf
-}
 
 function CreatePoll() {
 

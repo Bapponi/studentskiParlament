@@ -157,6 +157,11 @@
 
 .admin-icon{
     height: 50px;
+    transition: 0.3s;
+}
+
+.admin-icon:hover{
+    transform: translateY(-3px);
 }
 
 .nav-admin{

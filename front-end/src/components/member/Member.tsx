@@ -5,6 +5,7 @@ import TextInput from '../form-elements/TextInput';
 import FileUpload from '../form-elements/FileUpload';
 import TextArea from '../form-elements/TextArea';
 import { useAuth } from '../../AuthContext';
+import SelectOption from '../form-elements/SelectOption';
 
 enum FileType {
   Photo = 1,
@@ -111,7 +112,7 @@ const Member: React.FC<MemberProps> = ({
     setNewName(e.target.value);
   };
 
-  const handleNewPositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNewPositionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNewPosition(e.target.value);
   };
 
@@ -120,9 +121,21 @@ const Member: React.FC<MemberProps> = ({
   };
 
   //potencijalno greska
-  const handleNewRoleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNewRoleIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNewRoleId(parseInt(e.target.value));
   };
+
+  const positionOptions = [
+    { value: 'председник', label: 'Председник' },
+    { value: 'под-председник', label: 'Под-Председник' },
+    { value: 'члан', label: 'Члан' },
+  ];
+  
+  const roleOptions = [
+    { value: '1', label: 'Админ' },
+    { value: '2', label: 'ПР' },
+    { value: '3', label: 'Корисник' },
+  ];
 
   return (
     <div className='member-container'>
@@ -169,23 +182,29 @@ const Member: React.FC<MemberProps> = ({
               type={"text"} 
               placeholder='Унеси ново име овде'
             />
-            <TextInput 
-              value={newPosition} 
-              onChange={handleNewPositionChange} 
-              type={"text"} 
-              placeholder='Унеси нови позицију'
+            <SelectOption
+              value={newPosition}
+              onChange={handleNewPositionChange}
+              options={positionOptions}
+              placeholder='Унеси позицију члана'
             />
             <TextArea
               value={newBio} 
               onChange={handleNewBioChange}
               placeholder='Унеси нову биографију овде'
             />
-            <TextInput 
+            <SelectOption
+              value={newRoleId.toString()}
+              onChange={handleNewRoleIdChange}
+              options={positionOptions}
+              placeholder='Унеси ролу члана'
+            />
+            {/* <TextInput 
               value={newRoleId.toString()} 
               onChange={handleNewRoleIdChange} 
               type={"text"} 
               placeholder='Унеси нову ролу овде'
-            />
+            /> */}
             <div onClick={updateMember} className='update-link__button'>
               <Button text='Промени'/>
             </div>

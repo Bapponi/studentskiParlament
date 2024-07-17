@@ -213,12 +213,6 @@ const Members: React.FC = () => {
               options={positionOptions}
               placeholder='Унеси позицију члана'
             />
-            {/* <TextInput
-              value={position}
-              onChange={handlePositionChange}
-              type={"text"}
-              placeholder='Унеси позицију члана'
-            /> */}
             <TextArea
               value={bio}
               onChange={handleBioChange}

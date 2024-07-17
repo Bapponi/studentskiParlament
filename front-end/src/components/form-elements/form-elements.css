@@ -11,6 +11,15 @@
     width: calc(100% - 2em);
 }
 
+.select-field{
+    border-radius: 10px;
+    border: solid 2px var(--text-color);
+    padding: 0.3em 1em;
+    font-family: Montserrat;
+    font-size: 1.5em;
+    width: calc(100% + 5px);
+}
+
 .text-input__area{
     border-radius: 10px;
     border: solid 2px var(--text-color);

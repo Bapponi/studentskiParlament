@@ -73,6 +73,8 @@ export class MemberController {
                 bio: bio,
                 roleId: roleId,
             };
+
+            console.log(fileData)
     
             if (roleId == 3 && (fileData.position === "" || fileData.name === "")) {
                 return res.status(400).send('Потребно је да се унесу и име и позиција члана!');

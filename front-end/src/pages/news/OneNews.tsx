@@ -22,7 +22,8 @@ function OneNews() {
   useEffect(() => {
     const fetchNewsDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/news/${id}`);
+        // const response = await fetch(`http://localhost:8000/news/${id}`);
+        const response = await fetch(`http://localhost:8000/news/${id}`, {method: 'GET'});
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

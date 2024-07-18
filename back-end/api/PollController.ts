@@ -4,7 +4,14 @@ import client from '../database';
 export class PollController {
 
   public getAllPolls(req: Request, res: Response): void {
-    
+    const query = 'SELECT * FROM polls;';
+    client.query(query, (err, polls) => {
+      if (!err) {
+          res.status(200).send(polls.rows);
+      } else {
+          return res.status(500).send('Грешка у бази!');
+      }
+  });
   }
 
   public getPollWithId(req: Request, res: Response): void {

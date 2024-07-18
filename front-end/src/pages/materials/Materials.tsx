@@ -60,7 +60,7 @@ function Materials() {
     <div>
       <Banner title='МАТЕРИЈАЛИ' bannerImg='ztf.png'/>
       <div className='materials'>
-        {hookMaterials && hookMaterials.map((entry, index) => (
+        {hookMaterials && hookMaterials.map((entry) => (
           <Material key={entry.id} {...entry} onDelete={handleDelete} />
         ))}
       </div>

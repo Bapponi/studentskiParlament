@@ -19,27 +19,31 @@ function CreatePoll() {
   };
 
   const publishNews = async () => {
-    console.log(titleValue)
-    console.log(elements, optionValues);
   
-    const formData = new FormData();
-  
-    formData.append('title', titleValue);
-    formData.append('elements', JSON.stringify(elements));
-    formData.append('optionValues', JSON.stringify(optionValues));
+    const payload = {
+      title: titleValue,
+      elements,
+      optionValues
+    };
   
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/upload`, {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
       });
   
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(`Failed to upload news: ${errorMessage}`);
       }
-  
-      console.log(await response.json());
+
+      setTitleValue('')
+      setElements([])
+      setOptionValues([])
+
     } catch (error) {
       console.error('Error uploading news:', error);
     }

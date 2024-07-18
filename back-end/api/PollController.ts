@@ -11,8 +11,31 @@ export class PollController {
     
   }
 
-  public uploadPoll(req: Request, res: Response): void {
-    //ovde sledece
+  public async uploadPoll(req: Request, res: Response) {
+    const { title, elements, optionValues } = req.body;
+
+    try {
+      const pollInsertQuery = 'INSERT INTO polls (title) VALUES ($1) RETURNING id';
+      const pollInsertResult = await client.query(pollInsertQuery, [title]);
+      const pollId = pollInsertResult.rows[0].id;
+
+      const pollOptionInsertQuery = 'INSERT INTO poll_options (option, poll_id) VALUES ($1, $2)';
+      
+      let i: number = 1
+      for (const element of elements) {
+        
+        const optionValue = optionValues[i];
+        if (optionValue) {
+          await client.query(pollOptionInsertQuery, [optionValue, pollId]);
+        }
+        i++
+      }
+      
+      return res.status(200).send('Poll and options uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading poll:', error);
+      return res.status(500).send('Internal server error');
+    }
   }
 
   public deletePoll(req: Request, res: Response): void {

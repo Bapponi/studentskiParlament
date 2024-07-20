@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import './polls.css';
+import Poll from './Poll';
 
-interface PollsProps{
+interface PollOption{
+  option_name: string
+  votes_num: number
+}
+
+interface PollProps{
   id: number
   title: string
+  pollOptions: PollOption[]
 }
 
 function Polls() {
 
-  const [polls, setPolls] = useState<PollsProps[]>([])
+  const [polls, setPolls] = useState<PollProps[]>([])
 
   useEffect(()=>{
     const fetchPolls = async () => {
@@ -17,7 +24,8 @@ function Polls() {
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
-        const data: PollsProps[] = await response.json();
+        const data: PollProps[] = await response.json();
+        console.log(data)
         setPolls(data);
       }catch(error){
         console.error(error);
@@ -29,12 +37,13 @@ function Polls() {
   return (
     <div className='polls-container'>
       <h1 style={{color: "var(--primary-color)"}}>Све активне анкете</h1>
-      <div>
+      <div className='polls-content'>
         {polls.map((entry) => (
-          <div key={entry.id}>{entry.id} - {entry.title}</div>
+          <Poll key={entry.id} {...entry}/>
         ))}
       </div>
     </div>
+    
   );
 }
 

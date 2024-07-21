@@ -4,6 +4,8 @@ import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
 import FileUpload from '../form-elements/FileUpload';
 import { useAuth } from '../../AuthContext';
+import { useMaterials } from '../../hooks/useMaterials';
+
 
 enum FileType {
   Photo = 1,
@@ -19,6 +21,8 @@ interface MaterialProps {
 }
     
   const Material: React.FC<MaterialProps> = ({id, title, documentLink, onDelete}) => {
+
+    const {updateMaterial, isLoadingUpdate, updateError} = useMaterials();
   
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [newFile, setNewFile] = useState<File | null>(null);
@@ -36,32 +40,38 @@ interface MaterialProps {
       setIsPopupVisible(false);
     };
   
-    const updateMaterial = async () => {
-      try {
-        const formData = new FormData();
-        if (newFile) {
-          formData.append('file', newFile);
-        }
-        formData.append('title', newTitle);
+    // const updateMaterial = async () => {
+    //   try {
+    //     const formData = new FormData();
+    //     if (newFile) {
+    //       formData.append('file', newFile);
+    //     }
+    //     formData.append('title', newTitle);
     
-        const response = await fetch(`http://localhost:8000/material/${id}`, {
-          method: 'PUT',
-          body: formData,
-        });
+    //     const response = await fetch(`http://localhost:8000/material/${id}`, {
+    //       method: 'PUT',
+    //       body: formData,
+    //     });
     
-        if (!response.ok) {
-          throw new Error('Неуспешно ажуриран линк!');
-        } else {
-          const updatedMaterial = await response.json();
-          setCurrentTitle(updatedMaterial.title);
-          setCurrentDocumentLink(updatedMaterial.documentLink);
-        }
+    //     if (!response.ok) {
+    //       throw new Error('Неуспешно ажуриран линк!');
+    //     } else {
+    //       const updatedMaterial = await response.json();
+    //       setCurrentTitle(updatedMaterial.title);
+    //       setCurrentDocumentLink(updatedMaterial.documentLink);
+    //     }
     
-        setIsPopupVisible(false);
-      } catch (error) {
-        console.error('Грешка приликом ажурирања линка:', error);
-      }
-    };
+    //     setIsPopupVisible(false);
+    //   } catch (error) {
+    //     console.error('Грешка приликом ажурирања материјала:', error);
+    //   }
+    // };
+
+    function handleUpdateMaterial(){
+      updateMaterial({file: newFile, title: newTitle, materialToUpdateId: id})
+      setNewFile(null)
+      setIsPopupVisible(false)
+    }
   
     const handleNewFileChange = (file: File | null) => {
       setNewFile(file);
@@ -99,7 +109,7 @@ interface MaterialProps {
               type={"text"} 
               placeholder='Унеси нови наслов овде'
             />
-            <div onClick={updateMaterial} className='update-material__button'>
+            <div onClick={handleUpdateMaterial} className='update-material__button'>
               <Button text='Промени'/>
             </div>
             <img src="cross.png" alt="cross" className='material-cross' onClick={closePopup}/>

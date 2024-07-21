@@ -1,20 +1,19 @@
 import { useCallback, useState} from "react"
-import { createMaterialAPI } from "../api/materials";
+import { updateMaterialAPI } from "../api/materials";
 
-
-export function useCreateNewMaterial () {
+export function useUpdateMaterial () {
 
     const [error, setError] = useState<undefined | string>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const createMaterialQuery = useCallback(
-        async ({file,title,}:{file: undefined | File | null, title: string,}) => {
+    const updateMaterialQuery = useCallback(
+        async ({file,title, id}:{file: undefined | File | null, title: string, id: number}) => {
         setIsLoading(true);
     
         try {
         //   setTimeout(async () => {
             try {
-                await createMaterialAPI({file, title});
+                await updateMaterialAPI({file, title, id});
             } catch (error) {
               setError(`Грешка приликом креирања материјала: ${error}`);
             } finally {
@@ -29,7 +28,7 @@ export function useCreateNewMaterial () {
     );
 
     return {
-        createMaterialQuery,
+        updateMaterialQuery,
         error, 
         isLoading,
     }

@@ -19,7 +19,7 @@ export const fetchAllMaterialsAPI = async () => {
   } 
 };
 
-export const uploadMaterial = async ({
+export const createMaterialAPI = async ({
     file,
     title,
 }:{
@@ -58,8 +58,6 @@ export const deleteMaterialAPI = async ({
   id: number,
 }) => {
   try {
-
-    console.log('API API');
     const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/material/${id}`, {
       method: 'DELETE',
     });
@@ -74,21 +72,21 @@ export const deleteMaterialAPI = async ({
 };
 
 export const updateMaterialAPI = async ({
-  newFile,
-  newTitle,
+  file,
+  title,
   id
 }:{
-  newFile: undefined | File | null,
-  newTitle: string,
+  file: undefined | File | null,
+  title: string,
   id: number
 }) => {
   try {
 
     const formData = new FormData();
-    if (newFile) {
-      formData.append('file', newFile);
+    if (file) {
+      formData.append('file', file);
     }
-    formData.append('title', newTitle);
+    formData.append('title', title);
 
     const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/material/${id}`, {
       method: 'PUT',
@@ -96,10 +94,10 @@ export const updateMaterialAPI = async ({
     });
 
     if (!response.ok) {
-      throw new Error('Неуспешно ажуриран линк!');
+      throw new Error('Неуспешно ажуриран материјал!');
     } 
   } catch (error) {
-    console.error('Грешка приликом ажурирања линка:', error);
+    console.error('Грешка приликом ажурирања материјал:', error);
   }
 };
 

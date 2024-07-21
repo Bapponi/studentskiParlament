@@ -11,7 +11,7 @@ export function useFetchMaterials() {
     setIsLoading(true);
 
     try {
-      setTimeout(async () => {
+      // setTimeout(async () => {
         try {
           const newMaterials = await fetchAllMaterialsAPI();
           setMaterials(newMaterials);
@@ -20,7 +20,7 @@ export function useFetchMaterials() {
         } finally {
           setIsLoading(false);
         }
-      }, 1000);
+      // }, 1000);
     } catch (error) {
       setError(`Грешка приликом учитавања материјала: ${error}`);
       setIsLoading(false);

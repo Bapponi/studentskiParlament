@@ -77,13 +77,10 @@ export class MaterialController {
     }
 
     public deleteMaterial(req: Request, res: Response): void {
-        console.log('stigao request');
         const id = parseInt(req.params.id);
 
         const selectQuery = 'SELECT document_link FROM materials WHERE id = $1';
         client.query(selectQuery, [id], (err, result) => {
-            console.log('pocinjemo')
-            console.log(result)
             if (err) {
                 console.error(err.message);
                 return res.status(500).send('Грешка у бази!');
@@ -122,12 +119,13 @@ export class MaterialController {
                 return res.status(400).send('Није успело качење фајла!');
             }
 
-            if (!req.file) {
-                return res.status(400).send('Није окачен фајл!');
-            }
+            // if (!req.file) {
+            //     return res.status(400).send('Није окачен фајл!');
+            // }
+            const document_link = req.file ? 'http://localhost:8000/uploads/materials/' + req.file.filename : null;
 
             const fileData = {
-                document_link: 'http://localhost:8000/uploads/materials/' + req.file.filename,
+                document_link: document_link,
                 title: req.body.title,
             };
             const id = parseInt(req.params.id);
@@ -136,8 +134,16 @@ export class MaterialController {
                 return res.status(400).send('Потребно је да се унесе име!');
             }
 
-            const query = 'UPDATE materials SET title = $1, document_link = $2 WHERE id = $3 RETURNING *';
-            const values = [fileData.title, fileData.document_link, id];
+            let query
+            let values
+            if(document_link != null){
+                query = 'UPDATE materials SET title = $1, document_link = $2 WHERE id = $3 RETURNING *';
+                values = [fileData.title, fileData.document_link, id];
+            }else{
+                query = 'UPDATE materials SET title = $1 WHERE id = $2 RETURNING *';
+                values = [fileData.title, id];
+            }
+            
             console.log(fileData.document_link)
 
             client.query(query, values, (err, result) => {

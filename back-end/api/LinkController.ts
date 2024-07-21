@@ -109,12 +109,14 @@ export class LinkController {
                 return res.status(400).send('Није успело каченје фајла!');
             }
 
-            if (!req.file) {
-                return res.status(400).send('Није окачен фајл!');
-            }
+            // if (!req.file) {
+            //     return res.status(400).send('Није окачен фајл!');
+            // }
+
+            const logo = req.file ? 'http://localhost:8000/uploads/links/' + req.file.filename : null;
 
             const fileData = {
-                logo: 'http://localhost:8000/uploads/links/' + req.file.filename,
+                logo: logo,
                 website: req.body.website,
                 name: req.body.name,
             };
@@ -130,8 +132,13 @@ export class LinkController {
                 return res.status(400).send('Сајт мора почети са http:// или са https://');
             }
 
-            const query = 'UPDATE links SET website = $1, name = $2, logo = $3 WHERE id = $4 RETURNING *';
-            const values = [fileData.website, fileData.name, fileData.logo, id];
+            let query = 'UPDATE links SET website = $1, name = $2, logo = $3 WHERE id = $4 RETURNING *';
+            let values = [fileData.website, fileData.name, fileData.logo, id];
+            
+            if(logo == null){
+                query = 'UPDATE links SET website = $1, name = $2 WHERE id = $3 RETURNING *';
+                values = [fileData.website, fileData.name, id];
+            }
 
             client.query(query, values, (err, result) => {
                 if (err) {

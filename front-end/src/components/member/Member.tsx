@@ -100,7 +100,7 @@ const Member: React.FC<MemberProps> = ({
   
       setIsPopupVisible(false);
     } catch (error) {
-      console.error('Грешка приликом ажурирања линка:', error);
+      console.error('Грешка приликом ажурирања члана:', error);
     }
   };
 

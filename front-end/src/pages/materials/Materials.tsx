@@ -25,7 +25,9 @@ function Materials() {
 
   const {materials, isLoadingFetch, fetchError,
          createMaterial, isLoadingCreate, createError, 
-         deleteMaterial, isLoadingDelete, deleteError} = useMaterials();
+         deleteMaterial, isLoadingDelete, deleteError,
+         updateMaterial, isLoadingUpdate, updateError
+        } = useMaterials();
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>('');
   const {isLoggedIn} = useAuth();
@@ -39,15 +41,21 @@ function Materials() {
   };
 
   function handleUploadMaterial(){
-      createMaterial({file:file, title:title});
-      setTitle('');
-      setFile(null)
+    createMaterial({file:file, title:title});
+    setTitle('');
+    setFile(null)
   }
 
   const handleDelete = (id: number) => {
-    console.log('del iz componente')
     deleteMaterial({materialToDeleteId: id});
   };
+
+  // function handleUpdateMaterial(id: number){
+  //   updateMaterial({file:file, title:title, materialToUpdateId: id});
+  //   setTitle('');
+  //   setFile(null)
+  //   //kako ovo povezati sa Material.tsx
+  // }
 
   // if (isLoading) {
   //   return <div>Loading...</div>;

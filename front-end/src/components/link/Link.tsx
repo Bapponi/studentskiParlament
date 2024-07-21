@@ -59,7 +59,7 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
       if (newFile) {
         formData.append('file', newFile);
       }
-      formData.append('website', newWebsite); // Ensure newWebsite is correctly set
+      formData.append('website', newWebsite);
       formData.append('name', newName);
   
       const response = await fetch(`http://localhost:8000/link/${id}`, {

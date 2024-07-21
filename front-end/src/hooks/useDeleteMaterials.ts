@@ -9,16 +9,24 @@ export function useDeleteMaterials () {
 
     const deleteMaterialQuery = useCallback(
         async ({id}:{id:number}) => {
-            try{
-                setIsLoading(true);
-                //timeout kasnuje dodaj ovde kao hook setTimeout...
-                await deleteMaterialAPI({id});
-                setIsLoading(false);
-            }catch(error){
-                setError(`Грешка приликом брисања материјала: ${error}`);
+            setIsLoading(true);
+        
+            try {
+            //   setTimeout(async () => {
+                try {
+                    await deleteMaterialAPI({id});
+                } catch (error) {
+                  setError(`Грешка приликом креирања материјала: ${error}`);
+                } finally {
+                  setIsLoading(false);
+                }
+            //   }, 1000);
+            } catch (error) {
+              setError(`Грешка приликом учитавања материјала: ${error}`);
+              setIsLoading(false);
             }
-        },[]
-    )
+        }, [setIsLoading, setError]
+    );
 
     return {
         deleteMaterialQuery,

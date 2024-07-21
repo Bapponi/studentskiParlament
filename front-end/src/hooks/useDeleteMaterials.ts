@@ -1,4 +1,4 @@
-import { useCallback, useState} from "react"
+import { useCallback, useEffect, useState} from "react"
 import { deleteMaterialAPI } from "../api/materials";
 
 
@@ -9,24 +9,26 @@ export function useDeleteMaterials () {
 
     const deleteMaterialQuery = useCallback(
         async ({id}:{id:number}) => {
-            setIsLoading(true);
-        
-            try {
-            //   setTimeout(async () => {
-                try {
-                    await deleteMaterialAPI({id});
-                } catch (error) {
-                  setError(`Грешка приликом креирања материјала: ${error}`);
-                } finally {
-                  setIsLoading(false);
-                }
-            //   }, 1000);
-            } catch (error) {
-              setError(`Грешка приликом учитавања материјала: ${error}`);
-              setIsLoading(false);
-            }
+          setIsLoading(true);
+            
+          try {
+            await deleteMaterialAPI({id});
+          } catch (error) {
+            setError(`Грешка приликом брисања материјала: ${error}`);
+          } finally {
+            setIsLoading(false);
+          }
+                
         }, [setIsLoading, setError]
     );
+
+    useEffect(() => {
+      if(error){
+        setTimeout(() => {
+          setError(undefined)
+        }, 5000)
+      }
+    }, [error])
 
     return {
         deleteMaterialQuery,

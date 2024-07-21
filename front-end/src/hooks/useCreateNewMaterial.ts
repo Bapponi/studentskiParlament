@@ -1,4 +1,4 @@
-import { useCallback, useState} from "react"
+import { useCallback, useEffect, useState} from "react"
 import { createMaterialAPI } from "../api/materials";
 
 
@@ -10,23 +10,25 @@ export function useCreateNewMaterial () {
     const createMaterialQuery = useCallback(
         async ({file,title,}:{file: undefined | File | null, title: string,}) => {
         setIsLoading(true);
-    
+
         try {
-        //   setTimeout(async () => {
-            try {
-                await createMaterialAPI({file, title});
-            } catch (error) {
-              setError(`Грешка приликом креирања материјала: ${error}`);
-            } finally {
-              setIsLoading(false);
-            }
-        //   }, 1000);
+          await createMaterialAPI({file, title});
         } catch (error) {
-          setError(`Грешка приликом учитавања материјала: ${error}`);
+          setError(`Грешка приликом креирања материјала: ${error}`);
+        } finally {
           setIsLoading(false);
         }
+
       }, [setIsLoading, setError]
     );
+
+    useEffect(() => {
+      if(error){
+        setTimeout(() => {
+          setError(undefined)
+        }, 5000)
+      }
+    }, [error])
 
     return {
         createMaterialQuery,

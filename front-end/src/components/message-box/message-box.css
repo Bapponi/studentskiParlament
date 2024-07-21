@@ -1,0 +1,20 @@
+.message-box__container{
+    min-width: 300px;
+    /* height: 100px; */
+    padding: 10px;
+    background-color: var(--secondary-color);
+    border: 2px solid var(--text-color);
+    border-top-left-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    gap: 10px;
+}
+
+.message-box__cross{
+    height: 50px;
+    cursor: pointer;
+}

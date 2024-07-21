@@ -7,24 +7,8 @@ import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
 import { useMaterials } from '../../hooks/useMaterials';
 import { useAuth } from '../../AuthContext';
-
-enum FileType {
-  Photo = 1,
-  Video,
-  Pdf
-}
-
-interface MaterialProps {
-  id: number;
-  documentLink: string;
-  title: string;
-  onDelete: (id: number) => void;
-  onUpdate: ({ file, title, materialToUpdateId }: {
-    file: File | null | undefined;
-    title: string;
-    materialToUpdateId: number;
-}) => void;
-}
+import MessageBox from '../../components/message-box/MessageBox';
+import { FileType, MessageBoxTypes } from './helpers';
 
 function Materials() {
 
@@ -45,10 +29,6 @@ function Materials() {
     setTitle(e.target.value);
   };
 
-  useEffect(()=>{
-    console.log('matttt', materials)
-  },[materials])
-
   function handleUploadMaterial(){
     createMaterial({file:file, title:title});
     setTitle('');
@@ -58,21 +38,6 @@ function Materials() {
   const handleDelete = (id: number) => {
     deleteMaterial({materialToDeleteId: id});
   };
-
-  // function handleUpdateMaterial(id: number){
-  //   updateMaterial({file:file, title:title, materialToUpdateId: id});
-  //   setTitle('');
-  //   setFile(null)
-  //   //kako ovo povezati sa Material.tsx
-  // }
-
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (error && isLoading) {
-  //   return <div>Error: {error}</div>;
-  // }
 
   return (
     <div>
@@ -100,13 +65,14 @@ function Materials() {
             <div onClick={handleUploadMaterial} style={{width: "100%"}}>
               <Button text='Додај'/>
             </div>
-            {deleteError && <h4 style={{color: "var(--primary-color)"}}>{deleteError}</h4>}
-            {fetchError && <h4 style={{color: "var(--primary-color)"}}>{fetchError}</h4>}
-            {createError && <h4 style={{color: "var(--primary-color)"}}>{createError}</h4>}
-            {isLoadingFetch && <h4 style={{color: "var(--primary-color)"}}>a</h4>}
-            {isLoadingCreate && <h4 style={{color: "var(--primary-color)"}}>b</h4>}
-            {isLoadingDelete && <h4 style={{color: "var(--primary-color)"}}>c</h4>}
-            
+            {deleteError && <MessageBox text={deleteError} infoType={MessageBoxTypes.Error}/>}
+            {fetchError && <MessageBox text={fetchError} infoType={MessageBoxTypes.Error}/>}
+            {createError && <MessageBox text={createError} infoType={MessageBoxTypes.Error}/>}
+            {updateError && <MessageBox text={updateError} infoType={MessageBoxTypes.Error}/>}
+            {isLoadingFetch && <MessageBox text='Учитавају се сви материјали...' infoType={MessageBoxTypes.Loading}/>}
+            {isLoadingCreate && <MessageBox text='Креирање новог материјала...' infoType={MessageBoxTypes.Loading}/>}
+            {isLoadingDelete && <MessageBox text='Брисање материјала...' infoType={MessageBoxTypes.Loading}/>}
+            {isLoadingUpdate && <MessageBox text='Ажурирање материјала...' infoType={MessageBoxTypes.Loading}/>}
           </div>
         )
       }

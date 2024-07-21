@@ -9,3 +9,15 @@ export interface MaterialProps {
       materialToUpdateId: number;
     }) => void;
 }
+
+export enum FileType {
+  Photo = 1,
+  Video,
+  Pdf
+}
+
+export enum MessageBoxTypes{
+  Info = 1,
+  Error,
+  Loading
+}

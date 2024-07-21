@@ -109,10 +109,6 @@ export class LinkController {
                 return res.status(400).send('Није успело каченје фајла!');
             }
 
-            // if (!req.file) {
-            //     return res.status(400).send('Није окачен фајл!');
-            // }
-
             const logo = req.file ? 'http://localhost:8000/uploads/links/' + req.file.filename : null;
 
             const fileData = {

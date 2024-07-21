@@ -29,6 +29,7 @@ export const useMaterials = () => {
     ){
         await updateMaterialQuery({file, title, id: materialToUpdateId});
         refetch();
+        
     }
 
     return {

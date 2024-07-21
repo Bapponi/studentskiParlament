@@ -169,7 +169,7 @@ export class MemberController {
             if (fileData.roleId == 3 && (fileData.position == "" || fileData.name == "")) {
                 return res.status(400).send('Потребно постоје и име и позиција члана!');
             }
-            //promeniti ovo
+            
             if (fileData.roleId == 1 && (fileData.position == "" || fileData.name == "" || fileData.bio == "")) {
                 return res.status(400).send('Потребно је да постоје и име, позиција и биографија члана!');
             }

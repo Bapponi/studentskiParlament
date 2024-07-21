@@ -9,12 +9,13 @@ export function useFetchMaterials() {
 
   const fetchAllMaterials = useCallback(async () => {
     setIsLoading(true);
-
+console.log('fetch')
     try {
       // setTimeout(async () => {
         try {
           const newMaterials = await fetchAllMaterialsAPI();
           setMaterials(newMaterials);
+          console.log(newMaterials)
         } catch (error) {
           setError(`Грешка приликом учитавања материјала: ${error}`);
         } finally {
@@ -25,7 +26,7 @@ export function useFetchMaterials() {
       setError(`Грешка приликом учитавања материјала: ${error}`);
       setIsLoading(false);
     }
-  }, [setIsLoading, setMaterials, setError]);
+  }, [setIsLoading, setMaterials, materials, setError]);
 
   useEffect(() => {
     fetchAllMaterials();

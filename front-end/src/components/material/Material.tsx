@@ -4,7 +4,6 @@ import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
 import FileUpload from '../form-elements/FileUpload';
 import { useAuth } from '../../AuthContext';
-import { useMaterials } from '../../hooks/useMaterials';
 
 
 enum FileType {
@@ -18,18 +17,18 @@ interface MaterialProps {
   documentLink: string;
   title: string;
   onDelete: (id: number) => void;
+  onUpdate: ({ file, title, materialToUpdateId }: {
+    file: File | null | undefined;
+    title: string;
+    materialToUpdateId: number;
+}) => void;
 }
     
-  const Material: React.FC<MaterialProps> = ({id, title, documentLink, onDelete}) => {
-
-    const {updateMaterial, isLoadingUpdate, updateError} = useMaterials();
+  const Material: React.FC<MaterialProps> = ({id, title, documentLink, onDelete, onUpdate}) => {
   
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [newFile, setNewFile] = useState<File | null>(null);
     const [newTitle, setNewTitle] = useState(title);
-    const [newDocumentLink, setNewDocumentLink] = useState(documentLink);
-    const [currentTitle, setCurrentTitle] = useState(title);
-    const [currentDocumentLink, setCurrentDocumentLink] = useState(documentLink);
     const {isLoggedIn} = useAuth();
   
     const updatePopUp = () => {
@@ -39,36 +38,9 @@ interface MaterialProps {
     const closePopup = () => {
       setIsPopupVisible(false);
     };
-  
-    // const updateMaterial = async () => {
-    //   try {
-    //     const formData = new FormData();
-    //     if (newFile) {
-    //       formData.append('file', newFile);
-    //     }
-    //     formData.append('title', newTitle);
-    
-    //     const response = await fetch(`http://localhost:8000/material/${id}`, {
-    //       method: 'PUT',
-    //       body: formData,
-    //     });
-    
-    //     if (!response.ok) {
-    //       throw new Error('Неуспешно ажуриран линк!');
-    //     } else {
-    //       const updatedMaterial = await response.json();
-    //       setCurrentTitle(updatedMaterial.title);
-    //       setCurrentDocumentLink(updatedMaterial.documentLink);
-    //     }
-    
-    //     setIsPopupVisible(false);
-    //   } catch (error) {
-    //     console.error('Грешка приликом ажурирања материјала:', error);
-    //   }
-    // };
 
     function handleUpdateMaterial(){
-      updateMaterial({file: newFile, title: newTitle, materialToUpdateId: id})
+      onUpdate({file: newFile, title: newTitle, materialToUpdateId: id})
       setNewFile(null)
       setIsPopupVisible(false)
     }
@@ -83,9 +55,9 @@ interface MaterialProps {
   
     return (
     <div className='material-container'>
-      <a href={currentDocumentLink} target='blank' className='material'>
+      <a href={documentLink} target='blank' className='material'>
         <img src="document.png" alt="document" className='document-image'/>
-        <h2>{currentTitle}</h2>
+        <h2>{title}</h2>
       </a>
       { isLoggedIn && (
         <div>

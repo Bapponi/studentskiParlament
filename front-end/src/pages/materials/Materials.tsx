@@ -19,6 +19,11 @@ interface MaterialProps {
   documentLink: string;
   title: string;
   onDelete: (id: number) => void;
+  onUpdate: ({ file, title, materialToUpdateId }: {
+    file: File | null | undefined;
+    title: string;
+    materialToUpdateId: number;
+}) => void;
 }
 
 function Materials() {
@@ -39,6 +44,10 @@ function Materials() {
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
+
+  useEffect(()=>{
+    console.log('matttt', materials)
+  },[materials])
 
   function handleUploadMaterial(){
     createMaterial({file:file, title:title});
@@ -70,7 +79,7 @@ function Materials() {
       <Banner title='МАТЕРИЈАЛИ' bannerImg='ztf.png'/>
       <div className='materials'>
         {materials && materials.map((entry) => (
-          <Material key={entry.id} {...entry} onDelete={handleDelete} />
+          <Material key={entry.id} {...entry} onDelete={handleDelete} onUpdate={updateMaterial}/>
         ))}
       </div>
       { isLoggedIn && (

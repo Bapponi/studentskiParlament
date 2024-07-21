@@ -32,7 +32,7 @@ const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Record<s
 export class MaterialController {
 
     public getAllMaterials(req: Request, res: Response): void {
-        client.query('SELECT * FROM materials', (err, links) => {
+        client.query('SELECT * FROM materials ORDER BY id ASC', (err, links) => {
             if (!err) {
                 const camelCaseLinks = links.rows.map(convertKeysToCamelCase);
                 res.status(200).send(camelCaseLinks);
@@ -119,9 +119,6 @@ export class MaterialController {
                 return res.status(400).send('Није успело качење фајла!');
             }
 
-            // if (!req.file) {
-            //     return res.status(400).send('Није окачен фајл!');
-            // }
             const document_link = req.file ? 'http://localhost:8000/uploads/materials/' + req.file.filename : null;
 
             const fileData = {
@@ -143,7 +140,7 @@ export class MaterialController {
                 query = 'UPDATE materials SET title = $1 WHERE id = $2 RETURNING *';
                 values = [fileData.title, id];
             }
-            
+
             console.log(fileData.document_link)
 
             client.query(query, values, (err, result) => {

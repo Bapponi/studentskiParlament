@@ -23,12 +23,10 @@ interface MaterialProps {
 
 function Materials() {
 
-  const {materials: hookMaterials, 
-    // loading:isLoading, error: hookError,
-     uploadMaterial, deleteMaterial} = useMaterials();
-  const [materials, setMaterials] = useState<MaterialProps[]>([]);
+  const {materials, isLoadingFetch, fetchError,
+         createMaterial, isLoadingCreate, createError, 
+         deleteMaterial, isLoadingDelete, deleteError} = useMaterials();
   const [file, setFile] = useState<File | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState<string>('');
   const {isLoggedIn} = useAuth();
 
@@ -41,11 +39,14 @@ function Materials() {
   };
 
   function handleUploadMaterial(){
-    uploadMaterial({file:file, title:title});
+      createMaterial({file:file, title:title});
+      setTitle('');
+      setFile(null)
   }
 
   const handleDelete = (id: number) => {
-    deleteMaterial({id});
+    console.log('del iz componente')
+    deleteMaterial({materialToDeleteId: id});
   };
 
   // if (isLoading) {
@@ -60,7 +61,7 @@ function Materials() {
     <div>
       <Banner title='МАТЕРИЈАЛИ' bannerImg='ztf.png'/>
       <div className='materials'>
-        {hookMaterials && hookMaterials.map((entry) => (
+        {materials && materials.map((entry) => (
           <Material key={entry.id} {...entry} onDelete={handleDelete} />
         ))}
       </div>
@@ -82,7 +83,13 @@ function Materials() {
             <div onClick={handleUploadMaterial} style={{width: "100%"}}>
               <Button text='Додај'/>
             </div>
-            {error && <h4 style={{color: "var(--primary-color)"}}>{error}</h4>}
+            {deleteError && <h4 style={{color: "var(--primary-color)"}}>{deleteError}</h4>}
+            {fetchError && <h4 style={{color: "var(--primary-color)"}}>{fetchError}</h4>}
+            {createError && <h4 style={{color: "var(--primary-color)"}}>{createError}</h4>}
+            {isLoadingFetch && <h4 style={{color: "var(--primary-color)"}}>a</h4>}
+            {isLoadingCreate && <h4 style={{color: "var(--primary-color)"}}>b</h4>}
+            {isLoadingDelete && <h4 style={{color: "var(--primary-color)"}}>c</h4>}
+            
           </div>
         )
       }

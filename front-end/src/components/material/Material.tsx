@@ -28,22 +28,6 @@ interface MaterialProps {
     const [currentDocumentLink, setCurrentDocumentLink] = useState(documentLink);
     const {isLoggedIn} = useAuth();
   
-    const deleteMaterial = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/material/${id}`, {
-          method: 'DELETE',
-        });
-  
-        if (!response.ok) {
-          throw new Error('Неуспешно избрисан линк!');
-        }
-  
-        onDelete(id);
-      } catch (error) {
-        console.error('Грешка приликом брисанја линка:', error);
-      }
-    };
-  
     const updatePopUp = () => {
       setIsPopupVisible(true);
     };
@@ -95,7 +79,7 @@ interface MaterialProps {
       </a>
       { isLoggedIn && (
         <div>
-          <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={deleteMaterial} />
+          <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={()=>{onDelete(id)}} />
           <img src="refresh.png" alt="upload" className='material-admin material-update' onClick={updatePopUp} />
         </div>
       )}

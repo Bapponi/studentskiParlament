@@ -1,27 +1,29 @@
-import { useCallback} from "react"
+import { useCallback, useState} from "react"
 import { deleteMaterialAPI } from "../api/materials";
-import { useMutation } from "./base";
 
 
 export function useDeleteMaterials () {
 
-    const deleteMaterial = useCallback(
+    const [error, setError] = useState<undefined | string>(undefined);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const deleteMaterialQuery = useCallback(
         async ({id}:{id:number}) => {
             try{
-              return await deleteMaterialAPI({id})
+                setIsLoading(true);
+                //timeout kasnuje dodaj ovde kao hook setTimeout...
+                await deleteMaterialAPI({id});
+                setIsLoading(false);
             }catch(error){
-                throw new Error('Error deleting materials');
+                setError(`Грешка приликом брисања материјала: ${error}`);
             }
         },[]
     )
 
-    const {status, error, isLoading} = useMutation(deleteMaterial)
-
     return {
-        deleteMaterial,
-        status, 
-        error, 
+        deleteMaterialQuery,
         isLoading,
+        error, 
     }
 
 }

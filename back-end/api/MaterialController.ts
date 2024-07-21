@@ -77,10 +77,12 @@ export class MaterialController {
     }
 
     public deleteMaterial(req: Request, res: Response): void {
+        console.log('stigao request');
         const id = parseInt(req.params.id);
 
         const selectQuery = 'SELECT document_link FROM materials WHERE id = $1';
         client.query(selectQuery, [id], (err, result) => {
+            console.log('pocinjemo')
             console.log(result)
             if (err) {
                 console.error(err.message);

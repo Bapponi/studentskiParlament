@@ -58,6 +58,8 @@ export const deleteMaterialAPI = async ({
   id: number,
 }) => {
   try {
+
+    console.log('API API');
     const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/material/${id}`, {
       method: 'DELETE',
     });
@@ -65,8 +67,6 @@ export const deleteMaterialAPI = async ({
     if (!response.ok) {
       throw new Error('Неуспешно избрисан материјал!');
     }
-
-    return id;
   } catch (error) {
     console.log("greska", error)
     throw new Error(`Грешка приликом брисанја материјала: ${error}`);
@@ -97,13 +97,7 @@ export const updateMaterialAPI = async ({
 
     if (!response.ok) {
       throw new Error('Неуспешно ажуриран линк!');
-    } else {
-      const updatedMaterial = await response.json();
-      // setCurrentTitle(updatedMaterial.title);
-      // setCurrentDocumentLink(updatedMaterial.documentLink);
-    }
-
-    // setIsPopupVisible(false);
+    } 
   } catch (error) {
     console.error('Грешка приликом ажурирања линка:', error);
   }

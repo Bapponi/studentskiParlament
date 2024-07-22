@@ -45,7 +45,9 @@ function OneNews() {
         <div>
           <Banner title={newsDetails.title} bannerImg={newsDetails.banner} />
           <h3>{newsDetails.date}</h3>
-          <p>{newsDetails.clip}</p>
+          <div className='one-news'>
+            <p>{newsDetails.clip}</p>
+          </div>
         </div>
       )}
     </div>

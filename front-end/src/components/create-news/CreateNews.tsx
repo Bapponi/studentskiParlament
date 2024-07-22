@@ -52,11 +52,20 @@ function CreateNews() {
     console.log("UF: ")
     console.log(uploadedFiles)
 
+    let i = 0
     for (const [key, file] of Object.entries(uploadedFiles)) {
       if (file) {
-        formData.append(`uploadedFiles[${key}]`, file);
+        console.log("Key ", key)
+        console.log("File ", file)
+        formData.append(`uploadedFiles[${i}]`, file);
       }
+      i++
     }
+
+    console.log("FormData contents:");
+  for (const pair of formData.entries()) {
+    console.log(`${pair[0]}: ${pair[1]}`);
+  }
   
     // for (const [key, file] of Object.entries(uploadedVideo)) {
     //   if (file) {

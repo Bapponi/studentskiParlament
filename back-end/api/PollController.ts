@@ -9,6 +9,7 @@ interface PollOption{
 interface Poll{
   id: number,
   title: string,
+  active: boolean
   poll_options: PollOption[],
 }
 
@@ -45,6 +46,7 @@ export class PollController {
             poll = {
               id: row.poll_id,
               title: row.title,
+              active: row.active,
               poll_options: []
             };
             currentId = row.poll_id;
@@ -94,15 +96,31 @@ export class PollController {
         i++
       }
       
-      return res.status(200).send('Poll and options uploaded successfully');
+      return res.status(200).send('Успешно качење гласања!');
     } catch (error) {
       console.error('Error uploading poll:', error);
-      return res.status(500).send('Internal server error');
+      return res.status(500).send('Грешка у бази!');
     }
   }
 
-  public deletePoll(req: Request, res: Response): void {
+  public deletePoll = async (req: Request, res: Response): Promise<void> => {
+    
+    const id = parseInt(req.params.id);
+    const deletePollOptionsQuery = 'DELETE FROM poll_options WHERE poll_id = $1';
+    const deletePollQuery = 'DELETE FROM polls WHERE id = $1 RETURNING *';
 
+    try {
+      await client.query(deletePollOptionsQuery, [id]);
+      const result = await client.query(deletePollQuery, [id]);
+
+      if (result.rows.length === 0) {
+        res.status(404).send('Није пронађено гласање');
+      } else {
+        res.status(200).json('Успешно избрисано гласање');
+      }
+    } catch (err) {
+      res.status(500).send('Грешка у бази!');
+    } 
   }
 
   public updatePoll(req: Request, res: Response): void {

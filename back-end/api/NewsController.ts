@@ -69,7 +69,7 @@ export class NewsController {
           ...row,
           date: parseDate(row.date)
         }));
-        return res.status(200).send(newsSend);
+        return res.status(200).send(newsSend[0]);
       } else {
         return res.status(500).send('Грешка у бази!');
       }
@@ -86,7 +86,7 @@ export class NewsController {
       // }
 
       // Log the request body and files
-      console.log(req.body);
+      // console.log(req.body);
       console.log(req.files);
 
       // Parse other fields
@@ -94,8 +94,11 @@ export class NewsController {
       const elements = JSON.parse(req.body.elements);
       const headerValues = req.body.headerValues ? JSON.parse(req.body.headerValues) : {};
       const textValues = req.body.textValues ? JSON.parse(req.body.textValues) : {};
+      const uploadedFiles = req.body.uploadedFiles ? JSON.parse(req.body.uploadedFiles) : {};
 
-      console.log({ title, elements, headerValues, textValues });
+      // console.log({ title, elements, headerValues, textValues });
+      console.log("aaaaaaaaaaa")
+      console.log(uploadedFiles)
 
       // Process the data as needed (e.g., store in the database)
 

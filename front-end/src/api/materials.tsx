@@ -1,17 +1,27 @@
 import { MaterialProps } from "../pages/materials/helpers";
 
+const errorToString = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return String(error);
+};
+
 export const fetchAllMaterialsAPI = async () => {
   try {
     const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/material`);
     if (!response.ok) {
-      throw new Error('');
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
     }
 
     const data: MaterialProps[] = await response.json();
     return data;
 
   } catch (error) {
-    throw new Error(`${error}`);
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
   } 
 };
 
@@ -39,12 +49,14 @@ export const createMaterialAPI = async ({
 
     if (!response.ok) {
       const errorMessage = await response.text();
-      throw new Error(``);
+      throw new Error(errorMessage);
     }    
       const newMaterial: MaterialProps = await response.json();
       return newMaterial;
     }catch (error) {
-      throw new Error(`${error}`);
+      const errorMessage = errorToString(error);
+      console.error(errorMessage);
+      throw errorMessage;
   }
 };
 
@@ -59,11 +71,14 @@ export const deleteMaterialAPI = async ({
     });
 
     if (!response.ok) {
-      throw new Error('Неуспешно избрисан материјал!');
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
     }
 
   } catch (error) {
-    throw new Error(`${error}`);
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
   }
 };
 
@@ -90,10 +105,13 @@ export const updateMaterialAPI = async ({
     });
 
     if (!response.ok) {
-      throw new Error('Неуспешно ажуриран материјал!');
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
     } 
   } catch (error) {
-    throw new Error(`${error}`);
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
   }
 };
 

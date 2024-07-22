@@ -13,7 +13,6 @@ export function useFetchMaterials() {
     try {
       const newMaterials = await fetchAllMaterialsAPI();
       setMaterials(newMaterials);
-      console.log(newMaterials)
     } catch (error) {
       setError(`Грешка приликом учитавања материјала: ${error}`);
     } finally {

@@ -10,6 +10,7 @@ interface PollOption{
 interface PollProps{
   id: number
   title: string
+  active: boolean
   pollOptions: PollOption[]
 }
 
@@ -34,12 +35,16 @@ function Polls() {
     fetchPolls();
   },[])
 
+  const handleDelete = (id: number) => {
+    setPolls((prevPolls) => prevPolls.filter(poll => poll.id !== id));
+  };
+
   return (
     <div className='polls-container'>
       <h1 style={{color: "var(--primary-color)"}}>Све активне анкете</h1>
       <div className='polls-content'>
         {polls.map((entry) => (
-          <Poll key={entry.id} {...entry}/>
+          <Poll key={entry.id} {...entry} onDelete={handleDelete}/>
         ))}
       </div>
     </div>

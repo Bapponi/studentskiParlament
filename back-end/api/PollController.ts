@@ -30,7 +30,7 @@ const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Record<s
 export class PollController {
 
   public getAllPolls(req: Request, res: Response): void {
-    const query = 'SELECT * FROM polls INNER JOIN poll_options ON polls.id = poll_options.poll_id;';
+    const query = 'SELECT * FROM polls INNER JOIN poll_options ON polls.id = poll_options.poll_id ORDER BY polls.id, poll_options.id;';
     client.query(query, (err, result) => {
       if (!err) {
         let polls: Poll[] = [];
@@ -70,10 +70,6 @@ export class PollController {
         return res.status(500).send('Грешка у бази!');
       }
     });
-  }
-
-  public getPollWithId(req: Request, res: Response): void {
-    
   }
 
   public async uploadPoll(req: Request, res: Response) {
@@ -123,7 +119,21 @@ export class PollController {
     } 
   }
 
-  public updatePoll(req: Request, res: Response): void {
+  public updatePollActivityStatus(req: Request, res: Response): void {
+    const id = parseInt(req.params.id);
 
+    const active = !req.body.active;
+    console.log(id, active)
+    const query = 'UPDATE polls SET active = $1 WHERE id = $2';
+    const values = [active, id]
+
+    client.query(query, values, (err, members) => {
+        if (!err) {
+            const camelCaseLinks = members.rows.map(convertKeysToCamelCase);
+            res.status(200).send(camelCaseLinks);
+        } else {
+            return res.status(500).send('Грешка у бази!');
+        }
+    });
   }
 }

@@ -21,6 +21,8 @@ interface PollProps {
 
 const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete }) => {
 
+  const [currentActive, setCurrentActive] = useState<boolean>(active)
+
   const data = {
     labels: pollOptions.map(option => option.option_name),
     datasets: [
@@ -62,6 +64,31 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
     }
   };
 
+  const updateActivity = async () => {
+    try {
+
+      const payload = {
+        active: active
+      };
+
+      const response = await fetch(`http://localhost:8000/poll/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Неуспешно ажурирано гласање!');
+      }
+      setCurrentActive(!currentActive)
+
+    } catch (error) {
+      console.error('Грешка приликом брисанја гласања:', error);
+    }
+  }
+
   return (
     <div className='poll-container'>
       <h3>{id} - {title} - </h3>
@@ -75,7 +102,9 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
       </div>
       <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={deletePoll}/>
       <button className='poll-admin poll-toggle__active'>
-        {active ? (<h3>Деактивирај</h3>) : (<h3>Активирај</h3>)}
+      <div onClick={updateActivity}>
+        {currentActive ? (<h3>Деактивирај</h3>) : (<h3>Активирај</h3>)}
+      </div>
       </button>
     </div>
   );

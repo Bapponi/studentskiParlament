@@ -121,9 +121,8 @@ export class PollController {
 
   public updatePollActivityStatus(req: Request, res: Response): void {
     const id = parseInt(req.params.id);
-
     const active = !req.body.active;
-    console.log(id, active)
+    
     const query = 'UPDATE polls SET active = $1 WHERE id = $2';
     const values = [active, id]
 

@@ -20,6 +20,7 @@ interface PollProps {
 
 const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete }) => {
   const [currentActive, setCurrentActive] = useState<boolean>(active);
+  const [votesSum, setVotesSum] = useState<number>(0)
 
   const data = {
     labels: pollOptions.map(option => option.option_name),
@@ -46,11 +47,26 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
     ]
   };
 
+  useEffect(()=>{
+    const num: number = pollOptions.reduce((sum, option) => sum + option.votes_num, 0);
+    setVotesSum(num)
+  }, [])
+
   const options = {
     plugins: {
       legend: {
-        position: 'right' as const, // explicitly specify the type
+        position: 'right' as const,
+        labels: {
+          font: {
+            size: 18,
+          },
+        },
       },
+    },
+    elements: {
+      arc: {
+        hoverOffset: 10, // increase the size of the segment when hovered
+      }
     },
   };
 
@@ -95,7 +111,7 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
 
   return (
     <div className='poll-container'>
-      <h3>{title}</h3>
+      <h3>{title} - Укупно гласова: <span style={{color: "var(--primary-color)"}}>{votesSum}</span></h3>
       <div className='pie-chart'>
         <Pie data={data} options={options}/>
       </div>

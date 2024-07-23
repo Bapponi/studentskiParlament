@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './polls.css';
 import { Bar } from 'react-chartjs-2';
 import { Chart, BarElement, Tooltip, Legend, CategoryScale, LinearScale } from 'chart.js';
+import PollVote from './PollVote'; // Import the new PollVote component
 
 Chart.register(BarElement, Tooltip, Legend, CategoryScale, LinearScale);
 
@@ -20,7 +21,12 @@ interface PollProps {
 
 const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete }) => {
   const [currentActive, setCurrentActive] = useState<boolean>(active);
-  const [votesSum, setVotesSum] = useState<number>(0)
+  const [votesSum, setVotesSum] = useState<number>(0);
+
+  const voteOptions = pollOptions.map(option => ({
+    value: option.option_name,
+    label: option.option_name
+  }));
 
   const data = {
     labels: pollOptions.map(option => option.option_name),
@@ -137,6 +143,11 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
         <div className='bar-chart'>
           <Bar data={data} options={options} />
         </div>
+      )}
+      {currentActive && (
+        <PollVote
+          voteOptions={voteOptions}
+        />
       )}
       <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={deletePoll} />
       <button className='poll-admin poll-toggle__active'>

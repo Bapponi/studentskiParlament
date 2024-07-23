@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './polls.css';
-import { Pie} from 'react-chartjs-2';
-import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import { Chart, BarElement, Tooltip, Legend, CategoryScale, LinearScale } from 'chart.js';
 
-Chart.register(ArcElement, Tooltip, Legend);
+Chart.register(BarElement, Tooltip, Legend, CategoryScale, LinearScale);
 
 interface PollOption {
   option_name: string;
@@ -26,6 +26,7 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
     labels: pollOptions.map(option => option.option_name),
     datasets: [
       {
+        label: ``,
         data: pollOptions.map(option => option.votes_num),
         backgroundColor: [
           '#FF6384',
@@ -47,14 +48,15 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
     ]
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const num: number = pollOptions.reduce((sum, option) => sum + option.votes_num, 0);
-    setVotesSum(num)
-  }, [])
+    setVotesSum(num);
+  }, [pollOptions]);
 
   const options = {
     plugins: {
       legend: {
+        display: false,
         position: 'right' as const,
         labels: {
           font: {
@@ -63,9 +65,27 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
         },
       },
     },
+    scales: {
+      x: {
+        beginAtZero: true,
+        ticks: {
+          font: {
+            size: 16, // Increase font size for the x-axis labels
+          },
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          font: {
+            size: 16, // Increase font size for the y-axis labels
+          },
+        },
+      },
+    },
     elements: {
-      arc: {
-        hoverOffset: 10, // increase the size of the segment when hovered
+      bar: {
+        hoverBorderWidth: 2,
       }
     },
   };
@@ -111,18 +131,19 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
 
   return (
     <div className='poll-container'>
-      <h3>{title} - Укупно гласова: <span style={{color: "var(--primary-color)"}}>{votesSum}</span></h3>
+      <h3>{title}</h3>
+      <h3>Укупно гласова: <span style={{color: "var(--primary-color)"}}>{votesSum}</span></h3>
       {!currentActive && (
-        <div className='pie-chart'>
-          <Pie data={data} options={options}/>
+        <div className='bar-chart'>
+          <Bar data={data} options={options} />
         </div>
       )}
       <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={deletePoll} />
       <button className='poll-admin poll-toggle__active'>
         <div>
           {currentActive ? (
-            <h3 onClick={() => {updateActivity(false)}}>Деактивирај</h3>) : (
-            <h3 onClick={() => {updateActivity(true)}}>Активирај</h3>)
+            <h3 onClick={() => { updateActivity(false) }}>Деактивирај</h3>) : (
+            <h3 onClick={() => { updateActivity(true) }}>Активирај</h3>)
           }
         </div>
       </button>

@@ -1,5 +1,6 @@
 import React from 'react';
 import './top-news.css'
+import { Link } from 'react-router-dom';
 
 interface NewsClipProps {
   id: number;
@@ -17,7 +18,9 @@ const NewsClip: React.FC<NewsClipProps> = ({ id, date, title, description}) => {
             <h4 className='news-title'>{title}</h4>
             <p>{description}</p>
         </div>
-        <p className='news-details'>Детаљније...</p>
+        <Link to={`/news/${id}`} className='news_panel__more'>
+          <h3>Detaljnije...</h3>
+        </Link>
     </div>
   );
 }

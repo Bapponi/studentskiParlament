@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './polls.css';
-import { Pie } from 'react-chartjs-2';
+import { Pie} from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 
 Chart.register(ArcElement, Tooltip, Legend);
@@ -86,10 +86,10 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
     }
   };
 
-  const updateActivity = async () => {
+  const updateActivity = async (updateActive: boolean) => {
     try {
       const payload = {
-        active: active
+        active: updateActive
       };
 
       const response = await fetch(`http://localhost:8000/poll/${id}`, {
@@ -112,13 +112,18 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
   return (
     <div className='poll-container'>
       <h3>{title} - Укупно гласова: <span style={{color: "var(--primary-color)"}}>{votesSum}</span></h3>
-      <div className='pie-chart'>
-        <Pie data={data} options={options}/>
-      </div>
+      {!currentActive && (
+        <div className='pie-chart'>
+          <Pie data={data} options={options}/>
+        </div>
+      )}
       <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={deletePoll} />
       <button className='poll-admin poll-toggle__active'>
-        <div onClick={updateActivity}>
-          {currentActive ? (<h3>Деактивирај</h3>) : (<h3>Активирај</h3>)}
+        <div>
+          {currentActive ? (
+            <h3 onClick={() => {updateActivity(false)}}>Деактивирај</h3>) : (
+            <h3 onClick={() => {updateActivity(true)}}>Активирај</h3>)
+          }
         </div>
       </button>
     </div>

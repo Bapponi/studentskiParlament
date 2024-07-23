@@ -30,7 +30,7 @@ const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Record<s
 export class PollController {
 
   public getAllPolls(req: Request, res: Response): void {
-    const query = 'SELECT * FROM polls INNER JOIN poll_options ON polls.id = poll_options.poll_id ORDER BY polls.id, poll_options.id;';
+    const query = 'SELECT * FROM polls INNER JOIN poll_options ON polls.id = poll_options.poll_id ORDER BY polls.active, polls.id, poll_options.id;';
     client.query(query, (err, result) => {
       if (!err) {
         let polls: Poll[] = [];
@@ -121,8 +121,8 @@ export class PollController {
 
   public updatePollActivityStatus(req: Request, res: Response): void {
     const id = parseInt(req.params.id);
-    const active = !req.body.active;
-    
+    const active = req.body.active;
+
     const query = 'UPDATE polls SET active = $1 WHERE id = $2';
     const values = [active, id]
 

@@ -27,7 +27,7 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
   const [currentWebsite, setCurrentWebsite] = useState(website);
   const [currentName, setCurrentName] = useState(name);
   const [currentLogo, setCurrentLogo] = useState(logo);
-  const {isLoggedIn} = useAuth();
+  const {isAdmin} = useAuth();
 
   const deleteLink = async () => {
     try {
@@ -100,14 +100,14 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
         <img src={currentLogo} alt="link-logo" className='link-logo' />
         <h2>{currentName}</h2>
       </a>
-      { isLoggedIn && (
+      { isAdmin && (
           <div>
             <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={deleteLink} />
             <img src="refresh.png" alt="upload" className='link-admin link-update' onClick={updatePopUp} />
           </div>
         )
       }
-      {isPopupVisible && isLoggedIn && (
+      {isPopupVisible && isAdmin && (
         <div className='popup'>
           <div className='popup-content'>
             <h2>Промени Линк</h2>

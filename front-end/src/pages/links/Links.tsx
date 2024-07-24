@@ -28,7 +28,7 @@ const Links: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [website, setWebsite] = useState<string>('');
   const [name, setName] = useState<string>('');
-  const {isLoggedIn} = useAuth();
+  const {isAdmin} = useAuth();
 
   useEffect(() => {
     const fetchLinks = async () => {
@@ -120,7 +120,7 @@ const Links: React.FC = () => {
           <Link key={entry.id} {...entry} onDelete={handleDelete} />
         ))}
       </div>
-      { isLoggedIn && (
+      { isAdmin && (
         <div className='create-link'>
           <h2>Креирај нови линк</h2>
           <FileUpload 

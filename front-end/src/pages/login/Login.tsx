@@ -45,8 +45,10 @@ function Login() {
       localStorage.setItem('userId', data.userId);
       localStorage.setItem('userRole', data.userRole);
 
+      if(data.userRole == 1 ){
+        setIsAdmin(true)
+      }
       setIsLoggedIn(true)
-      setIsAdmin(true)
       navigate('/');
 
     } catch (error) {

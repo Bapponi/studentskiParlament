@@ -11,7 +11,7 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
-  const userId = parseInt(localStorage.getItem('roleId') || '-1');
+  const userId = parseInt(localStorage.getItem('userId') || '-1');
 
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [isAdmin, setIsAdmin] = useState(userId==1)

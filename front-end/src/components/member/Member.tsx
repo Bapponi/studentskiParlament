@@ -44,7 +44,7 @@ const Member: React.FC<MemberProps> = ({
   const [currentBio, setCurrentBio] = useState(bio);
   const [currentRoleId, setCurrentRoleId] = useState(roleId);
   const [currentMemberImg, setCurrentMemberImg] = useState(memberImg);
-  const {isLoggedIn} = useAuth();
+  const {isAdmin} = useAuth();
 
   const deleteMember = async () => {
     try {
@@ -160,13 +160,13 @@ const Member: React.FC<MemberProps> = ({
           </h2>
         </div>
       )}
-      {isLoggedIn && (
+      {isAdmin && (
         <div>
           <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={deleteMember} />
           <img src="refresh.png" alt="upload" className='link-admin link-update' onClick={updatePopUp} />
         </div>
       )}
-      {isPopupVisible && isLoggedIn && (
+      {isPopupVisible && isAdmin && (
         <div className='popup'>
           <div className='popup-content'>
             <h2>Промени Члана</h2>

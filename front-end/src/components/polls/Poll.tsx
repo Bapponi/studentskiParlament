@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './polls.css';
 import PollVote from './PollVote'; // Import the new PollVote component
 import PollBar from './PollBar';
+import { useAuth } from '../../AuthContext';
 
 interface PollOption {
   option_name: string;
@@ -19,6 +20,7 @@ interface PollProps {
 const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete }) => {
   const [currentActive, setCurrentActive] = useState<boolean>(active);
   const [votesSum, setVotesSum] = useState<number>(0);
+  const {isAdmin} = useAuth();
 
   const voteOptions = pollOptions.map(option => ({
     value: option.option_name,
@@ -75,15 +77,19 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
       <h3>Укупно гласова: <span style={{color: "var(--primary-color)"}}>{votesSum}</span></h3>
       {!currentActive && <PollBar pollOptions={pollOptions} />}
       {currentActive && <PollVote pollId={id} voteOptions={voteOptions}/>}
-      <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={deletePoll} />
-      <button className='poll-admin poll-toggle__active'>
+      {isAdmin && (
         <div>
-          {currentActive ? (
-            <h3 onClick={() => { updateActivity(false) }}>Деактивирај</h3>) : (
-            <h3 onClick={() => { updateActivity(true) }}>Активирај</h3>)
-          }
+          <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={deletePoll} />
+          <button className='poll-admin poll-toggle__active'>
+            <div>
+              {currentActive ? (
+                <h3 onClick={() => { updateActivity(false) }}>Деактивирај</h3>) : (
+                <h3 onClick={() => { updateActivity(true) }}>Активирај</h3>)
+              }
+            </div>
+          </button>
         </div>
-      </button>
+      )}
     </div>
   );
 }

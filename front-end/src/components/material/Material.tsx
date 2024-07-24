@@ -29,7 +29,7 @@ interface MaterialProps {
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [newFile, setNewFile] = useState<File | null>(null);
     const [newTitle, setNewTitle] = useState(title);
-    const {isLoggedIn} = useAuth();
+    const {isAdmin} = useAuth();
   
     const updatePopUp = () => {
       setIsPopupVisible(true);
@@ -59,13 +59,13 @@ interface MaterialProps {
         <img src="document.png" alt="document" className='document-image'/>
         <h2>{title}</h2>
       </a>
-      { isLoggedIn && (
+      { isAdmin && (
         <div>
           <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={()=>{onDelete(id)}} />
           <img src="refresh.png" alt="upload" className='material-admin material-update' onClick={updatePopUp} />
         </div>
       )}
-      {isPopupVisible && isLoggedIn && (
+      {isPopupVisible && isAdmin && (
         <div className='popup'>
           <div className='popup-content'>
             <h2>Промени Materijal</h2>

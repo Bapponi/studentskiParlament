@@ -35,7 +35,7 @@ const Members: React.FC = () => {
   const [position, setPosition] = useState<string>('');
   const [bio, setBio] = useState<string>('');
   const [roleId, setRoleId] = useState<string>('');
-  const { isLoggedIn } = useAuth();
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -192,7 +192,7 @@ const Members: React.FC = () => {
         </div>
       </div>
       {
-        isLoggedIn && (
+        isAdmin && (
           <div className='create-member'>
             <h2>Креирај новог члана</h2>
             <FileUpload

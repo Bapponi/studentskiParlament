@@ -11,7 +11,7 @@ import Polls from '../../components/polls/Polls';
 function AdminPanel() {
 
   const navigate = useNavigate();
-  const {isLoggedIn} = useAuth();
+  const {isLoggedIn, isAdmin} = useAuth();
   const [pollsVisible, setPollsVisible] = useState<boolean>(true)
   const [createPollsVisible, setCreatePollsVisible] = useState<boolean>(false)
   const [createNewsVisible, setCreateNewsVisible] = useState<boolean>(false)
@@ -47,20 +47,23 @@ function AdminPanel() {
     <div>
       <Banner title='АДМИН' bannerImg='ztf.png'/>
       <div className='admin-panel'>
-        <div className='user-buttons'>
-          <div onClick={()=>{selectUserActivity(1)}}>
-            <Button text='Преглед гласања' active={pollsVisible}/>
+        {isAdmin && (
+          <div className='user-buttons'>
+            <div onClick={()=>{selectUserActivity(1)}}>
+              <Button text='Преглед гласања' active={pollsVisible}/>
+            </div>
+            <div onClick={()=>{selectUserActivity(2)}}>
+              <Button text='Прављење новог гласања' active={createPollsVisible}/>
+            </div>
+            <div onClick={()=>{selectUserActivity(3)}}>
+              <Button text='Прављење нових вести' active={createNewsVisible}/>
+            </div>
           </div>
-          <div onClick={()=>{selectUserActivity(2)}}>
-            <Button text='Прављење новог гласања' active={createPollsVisible}/>
-          </div>
-          <div onClick={()=>{selectUserActivity(3)}}>
-            <Button text='Прављење нових вести' active={createNewsVisible}/>
-          </div>
-        </div>
+        )}
+        
         {pollsVisible && <Polls/>}
-        {createPollsVisible && <CreatePoll/>}
-        {createNewsVisible && <CreateNews/>}
+        {createPollsVisible && isAdmin && <CreatePoll/>}
+        {createNewsVisible && isAdmin && <CreateNews/>}
       </div>
     </div>
   );

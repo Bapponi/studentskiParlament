@@ -19,7 +19,7 @@ function Materials() {
         } = useMaterials();
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>('');
-  const {isLoggedIn} = useAuth();
+  const {isAdmin} = useAuth();
 
   const handleFileChange = (file: File | null) => {
     setFile(file);
@@ -47,7 +47,7 @@ function Materials() {
           <Material key={entry.id} {...entry} onDelete={handleDelete} onUpdate={updateMaterial}/>
         ))}
       </div>
-      { isLoggedIn && (
+      { isAdmin && (
           <div className='create-material'>
             <h2>Креирај нови материјал</h2>
             <FileUpload 

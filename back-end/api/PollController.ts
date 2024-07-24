@@ -143,7 +143,7 @@ export class PollController {
       return res.status(400).send('Молим вас да унесете за шта гласате');
     }
 
-    const queryVote = 'INSERT INTO votes (id_poll, id_member) VALUES($1, $2)';
+    const queryVote = 'INSERT INTO votes (poll_id, member_id) VALUES($1, $2)';
     const valuesVote = [req.body.pollId, req.body.userId]
     try{
       client.query(queryVote, valuesVote);
@@ -159,4 +159,25 @@ export class PollController {
     }
     
   }
+
+  public votedOnPoll(req: Request, res: Response){
+    const { userId, pollId } = req.params;
+    const query = 'SELECT COUNT(*) FROM votes WHERE member_id = $1 AND poll_id = $2';
+    const values = [userId, pollId]
+
+    client.query(query, values, (err, result) => {
+      if(!err){
+        if(result.rows[0].count > 0){
+          return res.status(200).json({voted: true});
+        }else{
+          return res.status(200).json({voted: false});
+        }
+        
+      }else{
+        return res.status(500).json('Грешка у бази!');
+      }
+    });
+    
+}
+
 }

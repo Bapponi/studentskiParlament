@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SelectOption from '../form-elements/SelectOption';
 import Button from '../button/Button';
 
@@ -18,14 +18,14 @@ const PollVote: React.FC<PollVoteProps> = ({
 }) => {
 
   const [voteOption, setVoteOption] = useState<string>('')
+  const userId = parseInt(localStorage.getItem('userId') || '-1');
+  const [voted, setVoted] = useState<boolean>(false)
 
   const handleVoteOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setVoteOption(e.target.value);
   };
 
   const sendVote = async () =>{
-
-    const userId = parseInt(localStorage.getItem('userId') || '-1');
 
     const payload = {
       pollId: pollId,
@@ -47,21 +47,52 @@ const PollVote: React.FC<PollVoteProps> = ({
       }
 
     }catch(error){
-
+        console.error(error)
     }
   }
 
+  const checkIsVoted = async () =>{
+
+    try{
+      const response = await fetch(`http://localhost:8000/poll/${userId}/${pollId}`, {
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error('Неуспешно хватање стања гласањеа!');
+      }
+
+      const data = await response.json();
+      setVoted(data.voted)
+
+    }catch(error){
+        console.error(error)
+    }
+  }
+
+  useEffect(()=>{
+    checkIsVoted()
+  },[])
+
   return (
     <div className='poll-vote'>
-      <SelectOption
-        value={voteOption}
-        onChange={handleVoteOptionChange}
-        options={voteOptions} 
-        placeholder='Гласај за једну од опција'
-      />
-      <div style={{width: "100%"}} onClick={sendVote}>
-        <Button text='Пошаљи глас'/>
-      </div>
+      {!voted ? (
+        <div style={{width: "100%"}}>
+          <SelectOption
+            value={voteOption}
+            onChange={handleVoteOptionChange}
+            options={voteOptions} 
+            placeholder='Гласај за једну од опција'
+          />
+          <div style={{width: "100%"}} onClick={sendVote}>
+            <Button text='Пошаљи глас'/>
+          </div>
+        </div>
+      ):(
+        <h3 style={{color: "var(--primary-color)"}}>
+          Ваше гласање на овој анкети је забележено!
+        </h3>
+      )}  
     </div>
   );
 }

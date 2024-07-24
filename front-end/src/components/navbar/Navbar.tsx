@@ -5,7 +5,7 @@ import { useAuth } from '../../AuthContext';
 
 function Navbar() {
   const navigate = useNavigate();
-  const {isLoggedIn, setIsLoggedIn} = useAuth();
+  const {isLoggedIn, setIsLoggedIn, setIsAdmin} = useAuth();
   const [adminListToggle, setAdminListToggle] = useState<boolean>(false);
 
   useEffect(() => {
@@ -15,8 +15,11 @@ function Navbar() {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('roleId');
     setAdminListToggle(false)
     setIsLoggedIn(false)
+    setIsAdmin(false)
     navigate('/');
   }
 

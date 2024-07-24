@@ -75,9 +75,9 @@ const PollVote: React.FC<PollVoteProps> = ({
   },[])
 
   return (
-    <div className='poll-vote'>
+    <div >
       {!voted ? (
-        <div style={{width: "100%"}}>
+        <div className='poll-vote'>
           <SelectOption
             value={voteOption}
             onChange={handleVoteOptionChange}

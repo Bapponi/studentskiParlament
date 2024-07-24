@@ -12,7 +12,7 @@ function Login() {
   const [passwordValue, setPasswordValue] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const {setIsLoggedIn} = useAuth()
+  const {setIsLoggedIn, isAdmin, setIsAdmin} = useAuth()
 
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserValue(e.target.value);
@@ -46,6 +46,7 @@ function Login() {
       localStorage.setItem('userRole', data.userRole);
 
       setIsLoggedIn(true)
+      setIsAdmin(true)
       navigate('/');
 
     } catch (error) {

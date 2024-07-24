@@ -23,7 +23,6 @@ function AdminPanel() {
   }, []);
 
   const selectUserActivity = (option: number) => {
-    console.log("aaaaaa: " + option)
     switch(option){
       case 1:{
         setPollsVisible(true)
@@ -50,13 +49,13 @@ function AdminPanel() {
       <div className='admin-panel'>
         <div className='user-buttons'>
           <div onClick={()=>{selectUserActivity(1)}}>
-            <Button text='Преглед гласања' />
+            <Button text='Преглед гласања' active={pollsVisible}/>
           </div>
           <div onClick={()=>{selectUserActivity(2)}}>
-            <Button text='Прављење новог гласања' />
+            <Button text='Прављење новог гласања' active={createPollsVisible}/>
           </div>
           <div onClick={()=>{selectUserActivity(3)}}>
-            <Button text='Прављење нових вести' />
+            <Button text='Прављење нових вести' active={createNewsVisible}/>
           </div>
         </div>
         {pollsVisible && <Polls/>}

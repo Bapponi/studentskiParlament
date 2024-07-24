@@ -4,7 +4,7 @@ import './footer.css';
 function Footer() {
   return (
     <div className='footer'>
-      <img src="etf-logo.png" alt="etf-logo" style={{height: "70px"}}/>
+      <img src="../etf-logo.png" alt="etf-logo" style={{height: "70px"}}/>
       <div className='contact'>
         <h4>Булевар Краља Александра 73</h4>
         <h4>11000 Београд - Србија</h4>

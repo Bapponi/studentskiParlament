@@ -43,7 +43,7 @@ function OneNews() {
     <div>
       {newsDetails && (
         <div>
-          <Banner title={newsDetails.title} bannerImg="ztf.png" />
+          <Banner title={newsDetails.title} bannerImg="../ztf.png" />
           <h3>{newsDetails.date}</h3>
           <div className='one-news'>
             <p>{newsDetails.clip}</p>

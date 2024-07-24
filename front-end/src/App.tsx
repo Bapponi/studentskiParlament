@@ -24,6 +24,7 @@ function App() {
               <Route path="/" element={<Home/>} />
               <Route path="/news" element={<News/>} />
               <Route path="/news/:id" element={<OneNews/>} />
+              <Route path="/one-news" element={<OneNews/>} />
               <Route path="/members" element={<Members/>} />
               <Route path="/materials" element={<Materials/>} />
               <Route path="/links" element={<Links/>} />

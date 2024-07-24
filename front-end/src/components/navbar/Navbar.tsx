@@ -48,10 +48,12 @@ function Navbar() {
     setAdminListToggle(!adminListToggle);
   };
 
+  // iz nekog razloga ../ radi za slike i nakon rutiranja
+
   return (
     <header className='nav-bar'>
       <a href='/' className='logo-part'>
-        <img src='etf-logo.png' alt='etf-logo' className='etf-logo' />
+        <img src='../etf-logo.png' alt='etf-logo' className='etf-logo' />
         <div>
           <h4>СТУДЕНТСКИ ПАРЛАМЕНТ</h4>
           <h4 style={{ color: 'var(--primary-color)' }}>ЕЛЕКТРОТЕХНИЧКОГ ФАКУЛТЕТА</h4>
@@ -76,7 +78,7 @@ function Navbar() {
         </NavLink>
         {isLoggedIn && (
           <div className='nav-admin'>
-            <img src='user.png' alt='admin' className='admin-icon' onClick={handleAdminIconClick}/>
+            <img src='../user.png' alt='admin' className='admin-icon' onClick={handleAdminIconClick}/>
             { adminListToggle && (
               <div className='admin-list'>
                 <NavLink to='/admin-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')} onClick={handleAdminIconClick}>

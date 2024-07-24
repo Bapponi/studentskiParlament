@@ -74,7 +74,7 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
       <h3>{title}</h3>
       <h3>Укупно гласова: <span style={{color: "var(--primary-color)"}}>{votesSum}</span></h3>
       {!currentActive && <PollBar pollOptions={pollOptions} />}
-      {currentActive && <PollVote voteOptions={voteOptions}/>}
+      {currentActive && <PollVote pollId={id} voteOptions={voteOptions}/>}
       <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={deletePoll} />
       <button className='poll-admin poll-toggle__active'>
         <div>

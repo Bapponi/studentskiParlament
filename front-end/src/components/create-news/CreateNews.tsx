@@ -62,10 +62,10 @@ function CreateNews() {
       i++
     }
 
-    console.log("FormData contents:");
-  for (const pair of formData.entries()) {
-    console.log(`${pair[0]}: ${pair[1]}`);
-  }
+  //   console.log("FormData contents:");
+  // for (const pair of formData.entries()) {
+  //   console.log(`${pair[0]}: ${pair[1]}`);
+  // }
   
     // for (const [key, file] of Object.entries(uploadedVideo)) {
     //   if (file) {

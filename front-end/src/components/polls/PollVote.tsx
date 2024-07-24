@@ -8,10 +8,12 @@ interface PollOption {
 }
 
 interface PollVoteProps {
+  pollId: number
   voteOptions: PollOption[];
 }
 
 const PollVote: React.FC<PollVoteProps> = ({
+  pollId,
   voteOptions,
 }) => {
 
@@ -23,6 +25,30 @@ const PollVote: React.FC<PollVoteProps> = ({
 
   const sendVote = async () =>{
 
+    const userId = parseInt(localStorage.getItem('userId') || '-1');
+
+    const payload = {
+      pollId: pollId,
+      userId: userId,
+      voteOption: voteOption,
+    }
+
+    try{
+      const response = await fetch('http://localhost:8000/poll/vote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Неуспешно гласање!');
+      }
+
+    }catch(error){
+
+    }
   }
 
   return (

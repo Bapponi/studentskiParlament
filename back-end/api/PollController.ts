@@ -30,7 +30,7 @@ const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Record<s
 export class PollController {
 
   public getAllPolls(req: Request, res: Response): void {
-    const query = 'SELECT * FROM polls INNER JOIN poll_options ON polls.id = poll_options.poll_id ORDER BY polls.active, polls.id, poll_options.id;';
+    const query = 'SELECT * FROM polls INNER JOIN poll_options ON polls.id = poll_options.poll_id ORDER BY polls.id, poll_options.id;';
     client.query(query, (err, result) => {
       if (!err) {
         let polls: Poll[] = [];
@@ -127,12 +127,36 @@ export class PollController {
     const values = [active, id]
 
     client.query(query, values, (err, members) => {
-        if (!err) {
-            const camelCaseLinks = members.rows.map(convertKeysToCamelCase);
-            res.status(200).send(camelCaseLinks);
-        } else {
-            return res.status(500).send('Грешка у бази!');
-        }
+      if (!err) {
+        const camelCaseLinks = members.rows.map(convertKeysToCamelCase);
+        res.status(200).send(camelCaseLinks);
+      } else {
+        return res.status(500).send('Грешка у бази!');
+      }
     });
+  }
+
+  public pollVote(req: Request, res: Response){
+    console.log(req.body)
+
+    if(req.body.voteOption == ''){
+      return res.status(400).send('Молим вас да унесете за шта гласате');
+    }
+
+    const queryVote = 'INSERT INTO votes (id_poll, id_member) VALUES($1, $2)';
+    const valuesVote = [req.body.pollId, req.body.userId]
+    try{
+      client.query(queryVote, valuesVote);
+
+      const queryPollOption = 'UPDATE poll_options SET votes_num = votes_num + 1 WHERE option_name = $1';
+      const valuesPollOptions = [req.body.voteOption]
+
+      client.query(queryPollOption, valuesPollOptions);
+      res.status(200).json('Успешно обављено гласање');
+
+    }catch(error){
+      return res.status(500).send('Грешка у бази!');
+    }
+    
   }
 }

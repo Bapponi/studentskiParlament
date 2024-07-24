@@ -213,7 +213,7 @@ export class MemberController {
                 const user = member.rows[0];
                 const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
             
-                return res.json({ token });
+                return res.json({token: token, userId: user.id, userRole: user.role_id});
             } else {
                 return res.status(500).send('Грешка у бази!');
             }

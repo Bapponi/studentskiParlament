@@ -40,9 +40,11 @@ function Login() {
       }
 
       const data = await response.json();
-      const token = data.token;
 
-      localStorage.setItem('token', token);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userId', data.userId);
+      localStorage.setItem('userRole', data.userRole);
+
       setIsLoggedIn(true)
       navigate('/');
 

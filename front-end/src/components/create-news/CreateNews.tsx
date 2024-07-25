@@ -34,8 +34,8 @@ function CreateNews() {
   };
 
   const publishNews = async () => {
-    console.log(uploadedBanner)
-    console.log(titleValue)
+    console.log(uploadedBanner);
+    console.log(titleValue);
     console.log(elements, headerValues, textValues, uploadedFiles, uploadedVideo);
   
     const formData = new FormData();
@@ -49,28 +49,15 @@ function CreateNews() {
     formData.append('headerValues', JSON.stringify(headerValues));
     formData.append('textValues', JSON.stringify(textValues));
   
-    console.log("UF: ")
-    console.log(uploadedFiles)
-
-    let i = 0
-    for (const [key, file] of Object.entries(uploadedFiles)) {
+    Object.entries(uploadedFiles).forEach(([key, file]) => {
       if (file) {
-        console.log("Key ", key)
-        console.log("File ", file)
-        formData.append(`uploadedFiles[${i}]`, file);
+        formData.append('uploadedFiles', file);
       }
-      i++
-    }
-
-  //   console.log("FormData contents:");
-  // for (const pair of formData.entries()) {
-  //   console.log(`${pair[0]}: ${pair[1]}`);
-  // }
+    });
   
-    // for (const [key, file] of Object.entries(uploadedVideo)) {
-    //   if (file) {
-    //     formData.append(`uploadedVideo[${key}]`, file);
-    //   }
+    // console.log("FormData contents:");
+    // for (const pair of formData.entries()) {
+    //   console.log(`${pair[0]}: ${pair[1]}`);
     // }
   
     try {
@@ -89,6 +76,7 @@ function CreateNews() {
       console.error('Error uploading news:', error);
     }
   };
+  
 
   const handleHeaderChange = (id: number, value: string) => {
     setHeaderValues({ ...headerValues, [id]: value });

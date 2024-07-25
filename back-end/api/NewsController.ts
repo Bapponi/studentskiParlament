@@ -26,6 +26,14 @@ function parseDate(dateString: string): string {
   return `${day}. ${month}. ${year}.`;
 }
 
+interface UploadedFiles {
+  [fieldname: string]: Express.Multer.File[];
+}
+
+interface MulterRequest extends Request {
+  files: UploadedFiles;
+}
+
 export class NewsController {
 
   public getAllNews(req: Request, res: Response): void {
@@ -76,35 +84,85 @@ export class NewsController {
     });
   }
 
-  public uploadNewsFile(req: Request, res: Response): void {
-    upload.fields([
+  public uploadNewsFile = async (req: Request, res: Response) => {
+    const multerUpload = upload.fields([
       { name: 'banner', maxCount: 1 },
       { name: 'uploadedFiles', maxCount: 10 },
-    ])(req, res, (err) => {
-      // if (err) {
-      //   return res.status(400).send('File upload error');
-      // }
-
-      // Log the request body and files
-      // console.log(req.body);
-      console.log(req.files);
-
-      // Parse other fields
+    ]);
+  
+    // Wrap the multer upload in a promise
+    const handleFileUpload = (): Promise<UploadedFiles> => {
+      return new Promise((resolve, reject) => {
+        multerUpload(req, res, (err) => {
+          if (err) {
+            return reject(new Error('File upload error'));
+          }
+          resolve(req.files as UploadedFiles);
+        });
+      });
+    };
+  
+    try {
+      const files = await handleFileUpload();
+  
+      const uploadedFiles = files['uploadedFiles'] || [];
+      const banner = files['banner'] ? files['banner'][0] : undefined;
+      const bannerName = banner ? 'http://localhost:8000/uploads/news/' + banner.filename : null;
+  
       const title = req.body.title;
       const elements = JSON.parse(req.body.elements);
-      const headerValues = req.body.headerValues ? JSON.parse(req.body.headerValues) : {};
-      const textValues = req.body.textValues ? JSON.parse(req.body.textValues) : {};
-      const uploadedFiles = req.body.uploadedFiles ? JSON.parse(req.body.uploadedFiles) : {};
+      const headerValues = JSON.parse(req.body.headerValues);
+      const textValues = JSON.parse(req.body.textValues);
+  
+      console.log({ title, banner, elements, headerValues, textValues, uploadedFiles });
+      const clip = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit inventore odio nam aliquid tenetur reprehenderit facere voluptate nesciunt laudantium consequuntur maxime, autem magnam omnis hic officiis quisquam at esse labore.'
+  
+      let mainQuery: string;
+      let values: any[];
+  
+      if (banner == undefined) {
+        mainQuery = 'INSERT INTO news (title, clip) VALUES($1, $2) RETURNING id';
+        values = [title, clip];
+      } else {
+        mainQuery = 'INSERT INTO news (title, clip, banner) VALUES($1, $2, $3) RETURNING id';
+        values = [title, clip, bannerName];
+      }
+  
+      const newsInsertResult = await client.query(mainQuery, values);
+      const newsId = newsInsertResult.rows[0].id;
 
-      // console.log({ title, elements, headerValues, textValues });
-      console.log("aaaaaaaaaaa")
-      console.log(uploadedFiles)
+      const selectQuery = 'INSERT INTO news_sections (type, content, ordering, news_id) VALUES($1, $2, $3, $4)';
+      if(headerValues){
+        
+        Object.entries(headerValues).forEach(([key, value]) => {
+          console.log(`Key: ${key}, Value: ${value}`);
+          const values = ['header', value, key, newsId]
+          client.query(selectQuery, values);
+        });
+      }
 
-      // Process the data as needed (e.g., store in the database)
+      if(textValues){
+        Object.entries(textValues).forEach(([key, value]) => {
+          console.log(`Key: ${key}, Value: ${value}`);
+          const values = ['text', value, key, newsId]
+          client.query(selectQuery, values);
+        });
+      }
 
-      res.status(200).send('News uploaded successfully');
-    });
-  }
+      if (uploadedFiles.length > 0) {
+        uploadedFiles.forEach((file, index) => {
+          const pictureName = 'http://localhost:8000/uploads/news/' + file.filename;
+          const sectionValues = ['picture', pictureName, index + 1, newsId];
+          client.query(selectQuery, sectionValues);
+        });
+      }
+  
+      res.status(200).json('Успешно окачена вест');
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Грешка у бази!');
+    }
+  };
 
   public deleteNews(req: Request, res: Response): void {
     // Implement delete logic

@@ -51,14 +51,10 @@ function CreateNews() {
   
     Object.entries(uploadedFiles).forEach(([key, file]) => {
       if (file) {
+        formData.append('uploadedFileKeys', key);
         formData.append('uploadedFiles', file);
       }
     });
-  
-    // console.log("FormData contents:");
-    // for (const pair of formData.entries()) {
-    //   console.log(`${pair[0]}: ${pair[1]}`);
-    // }
   
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/upload`, {

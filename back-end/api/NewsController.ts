@@ -113,8 +113,9 @@ export class NewsController {
       const elements = JSON.parse(req.body.elements);
       const headerValues = JSON.parse(req.body.headerValues);
       const textValues = JSON.parse(req.body.textValues);
+      const fileKeys = req.body.uploadedFileKeys
   
-      console.log({ title, banner, elements, headerValues, textValues, uploadedFiles });
+      console.log({ title, banner, elements, headerValues, textValues, uploadedFiles, fileKeys });
       const clip = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit inventore odio nam aliquid tenetur reprehenderit facere voluptate nesciunt laudantium consequuntur maxime, autem magnam omnis hic officiis quisquam at esse labore.'
   
       let mainQuery: string;
@@ -135,7 +136,6 @@ export class NewsController {
       if(headerValues){
         
         Object.entries(headerValues).forEach(([key, value]) => {
-          console.log(`Key: ${key}, Value: ${value}`);
           const values = ['header', value, key, newsId]
           client.query(selectQuery, values);
         });
@@ -143,7 +143,6 @@ export class NewsController {
 
       if(textValues){
         Object.entries(textValues).forEach(([key, value]) => {
-          console.log(`Key: ${key}, Value: ${value}`);
           const values = ['text', value, key, newsId]
           client.query(selectQuery, values);
         });
@@ -152,7 +151,7 @@ export class NewsController {
       if (uploadedFiles.length > 0) {
         uploadedFiles.forEach((file, index) => {
           const pictureName = 'http://localhost:8000/uploads/news/' + file.filename;
-          const sectionValues = ['picture', pictureName, index + 1, newsId];
+          const sectionValues = ['picture', pictureName, fileKeys[index], newsId];
           client.query(selectQuery, sectionValues);
         });
       }

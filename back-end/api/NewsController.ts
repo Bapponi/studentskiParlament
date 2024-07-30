@@ -142,13 +142,17 @@ export class NewsController {
       const bannerName = banner ? 'http://localhost:8000/uploads/news/' + banner.filename : null;
   
       const title = req.body.title;
+      const clip = req.body.clip;
       const elements = JSON.parse(req.body.elements);
       const headerValues = JSON.parse(req.body.headerValues);
       const textValues = JSON.parse(req.body.textValues);
-      const fileKeys = req.body.uploadedFileKeys
+      const fileKeys = req.body.uploadedFileKeys;
+
+      if(clip.length > 200){
+        return res.status(300).send('Унет предугачки исечак текста!');
+      }
   
-      console.log({ title, banner, elements, headerValues, textValues, uploadedFiles, fileKeys });
-      const clip = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit inventore odio nam aliquid tenetur reprehenderit facere voluptate nesciunt laudantium consequuntur maxime, autem magnam omnis hic officiis quisquam at esse labore.'
+      console.log({ title, clip, banner, elements, headerValues, textValues, uploadedFiles, fileKeys });
   
       let mainQuery: string;
       let values: any[];

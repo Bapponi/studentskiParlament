@@ -4,6 +4,7 @@ import ElementOptions from './ElementOptions';
 import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
 import FileUpload from '../form-elements/FileUpload';
+import TextArea from '../form-elements/TextArea';
 
 enum FileType {
   Photo = 1,
@@ -14,6 +15,7 @@ enum FileType {
 function CreateNews() {
 
   const [titleValue, setTitleValue] = useState('');
+  const [clipValue, setClipValue] = useState('');
   const [uploadedBanner, setUploadedBanner] = useState<File | null>(null);
   const [elements, setElements] = useState<number[]>([]);
   const [headerValues, setHeaderValues] = useState<{ [key: number]: string }>({});
@@ -23,6 +25,10 @@ function CreateNews() {
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitleValue(e.target.value);
+  };
+
+  const handleClipChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setClipValue(e.target.value);
   };
 
   const handleBannerChange = (file: File | null) => {
@@ -36,6 +42,7 @@ function CreateNews() {
   const publishNews = async () => {
     console.log(uploadedBanner);
     console.log(titleValue);
+    console.log(clipValue);
     console.log(elements, headerValues, textValues, uploadedFiles, uploadedVideo);
   
     const formData = new FormData();
@@ -45,6 +52,7 @@ function CreateNews() {
     }
   
     formData.append('title', titleValue);
+    formData.append('clip', clipValue);
     formData.append('elements', JSON.stringify(elements));
     formData.append('headerValues', JSON.stringify(headerValues));
     formData.append('textValues', JSON.stringify(textValues));
@@ -103,6 +111,17 @@ function CreateNews() {
           onChange={handleTitleChange} 
           type={"text"}
           placeholder='Унесите наслов вести овде'
+        />
+      </div>
+      <div className='news-part'>
+        <div className='name-icon'>
+            <h2>Исечак текста</h2>
+            <img src="header.png" alt="header" className='add-image'/>  
+        </div>
+        <TextArea
+          value={clipValue} 
+          onChange={handleClipChange}
+          placeholder='Унети максимално 200 карактера'
         />
       </div>
       <div className='news-part'>

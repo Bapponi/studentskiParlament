@@ -70,7 +70,6 @@
     flex-direction: column;
     justify-content: space-between;
     height: 70%;
-    align-items: flex-end;
 }
 
 .news-panel__title{
@@ -83,6 +82,7 @@
     cursor: pointer;
     text-decoration: none;
     color: var(--text-color);
+    align-self: flex-end;
 }
 
 .news_panel__more:hover{

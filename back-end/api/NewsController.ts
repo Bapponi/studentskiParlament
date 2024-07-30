@@ -4,6 +4,20 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 
+interface NewsSection{
+  type: string,
+  content: string,
+}
+
+interface News{
+  id: number,
+  title: string,
+  banner: string,
+  clip: string,
+  date: string,
+  newsSection: NewsSection[],
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/news/');
@@ -69,15 +83,33 @@ export class NewsController {
 
   public getNewsWithId(req: Request, res: Response): void {
     const id = parseInt(req.params.id);
-    const query = 'SELECT * FROM news WHERE id=$1';
+    const query = 'SELECT * FROM news INNER JOIN news_sections ON news.id = news_sections.news_id WHERE news.id = $1 ORDER BY news_sections.ordering;';
     const values = [id];
-    client.query(query, values, (err, news) => {
+    client.query(query, values, (err, result) => { //sredi ovo kasnije i najbolje da ide iz 2 query-ja
       if (!err) {
-        const newsSend = news.rows.map(row => ({
-          ...row,
-          date: parseDate(row.date)
-        }));
-        return res.status(200).send(newsSend[0]);
+
+        let news: News | null = null;
+
+        news = {
+          id: result.rows[0].news_id,
+          title: result.rows[0].title,
+          banner: result.rows[0].banner,
+          clip: result.rows[0].clip,
+          date: parseDate(result.rows[0].date),
+          newsSection: []
+        };
+
+        result.rows.forEach((row)=>{
+
+          if (news) {
+            news.newsSection.push({
+              type: row.type,
+              content: row.content,
+            });
+          }
+        })
+        
+        return res.status(200).send(news);
       } else {
         return res.status(500).send('Грешка у бази!');
       }

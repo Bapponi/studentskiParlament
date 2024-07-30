@@ -4,13 +4,20 @@ import './news.css'
 import Button from '../../components/button/Button';
 import { useParams } from 'react-router-dom';
 
-interface NewsPanelProps {
-  id: number;
-  date: string;
-  title: string;
-  clip: string;
-  banner: string;
+interface NewsSection{
+  type: string,
+  content: string,
 }
+
+interface NewsPanelProps{
+  id: number,
+  title: string,
+  banner: string,
+  clip: string,
+  date: string,
+  newsSection: NewsSection[],
+}
+
 
 // const OneNews: React.FC<NewsPanelProps> = () => {
 function OneNews() {
@@ -43,10 +50,17 @@ function OneNews() {
     <div>
       {newsDetails && (
         <div>
-          <Banner title={newsDetails.title} bannerImg="../ztf.png" />
-          <h3>{newsDetails.date}</h3>
+          <Banner title={newsDetails.title} bannerImg={newsDetails.banner} />
           <div className='one-news'>
+            <h3>Објављено: <span style={{color: "var(--primary-color)"}}>{newsDetails.date}</span></h3>
             <p>{newsDetails.clip}</p>
+            {newsDetails.newsSection.map((entry, idx) => (
+              <div key={idx} className='one-news__sections'>
+                {entry.type === 'header' && <h2>{entry.content}</h2>}
+                {entry.type === 'text' && <p>{entry.content}</p>}
+                {entry.type === 'picture' && <img src={entry.content} alt={`News section ${idx}`} className='news-section__picture'/>}
+              </div>
+            ))}
           </div>
         </div>
       )}

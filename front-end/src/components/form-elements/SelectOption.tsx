@@ -11,7 +11,7 @@ interface SelectOptionProps {
 const SelectOption: React.FC<SelectOptionProps> = ({ options, onChange, value, placeholder }) => {
   return (
     <div className='form-element__container'>
-      <select value={value} onChange={onChange} className='select-field' defaultValue="">
+      <select value={value} onChange={onChange} className='select-field'>
         <option value="" disabled>{placeholder}</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 import CreatePoll from '../../components/polls/CreatePoll';
 import Polls from '../../components/polls/Polls';
+import ConformationDialog from '../../components/conformation-dialog/ConformationDialog';
 
 function AdminPanel() {
 
@@ -45,6 +46,7 @@ function AdminPanel() {
 
   return (
     <div>
+      {/* <ConformationDialog/> */}
       <Banner title='АДМИН' bannerImg='ztf.png'/>
       <div className='admin-panel'>
         {isAdmin && (

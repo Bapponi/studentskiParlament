@@ -35,9 +35,7 @@ function OneNews() {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log(data)
         setNewsDetails(data);
-        console.log(newsDetails)
       } catch (error) {
         console.error('Error fetching news details:', error);
       }

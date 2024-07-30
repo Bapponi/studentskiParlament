@@ -4,6 +4,7 @@ import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
 import FileUpload from '../form-elements/FileUpload';
 import { useAuth } from '../../AuthContext';
+import ConformationDialog from '../conformation-dialog/ConformationDialog';
 
 
 enum FileType {
@@ -26,6 +27,7 @@ interface MaterialProps {
     
   const Material: React.FC<MaterialProps> = ({id, title, documentLink, onDelete, onUpdate}) => {
   
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [newFile, setNewFile] = useState<File | null>(null);
     const [newTitle, setNewTitle] = useState(title);
@@ -55,13 +57,16 @@ interface MaterialProps {
   
     return (
     <div className='material-container'>
+      {isDialogOpen && (
+        <ConformationDialog onConfirm={()=>{onDelete(id)}} onClose={()=>{setIsDialogOpen(false)}} />
+      )}
       <a href={documentLink} target='blank' className='material'>
         <img src="document.png" alt="document" className='document-image'/>
         <h2>{title}</h2>
       </a>
       { isAdmin && (
         <div>
-          <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={()=>{onDelete(id)}} />
+          <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={()=>{setIsDialogOpen(true)}} />
           <img src="refresh.png" alt="upload" className='material-admin material-update' onClick={updatePopUp} />
         </div>
       )}

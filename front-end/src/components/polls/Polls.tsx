@@ -26,7 +26,6 @@ function Polls() {
           throw new Error('Failed to fetch data');
         }
         const data: PollProps[] = await response.json();
-        console.log(data)
         setPolls(data);
       }catch(error){
         console.error(error);

@@ -70,3 +70,10 @@
     flex-direction: column;
     gap: 10px;
 }
+
+@media screen and (max-width: 700px) {
+    
+    .polls-container{
+        width:90vw;
+    }
+}

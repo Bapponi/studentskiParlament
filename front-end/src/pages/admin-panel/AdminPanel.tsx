@@ -16,7 +16,7 @@ function AdminPanel() {
   const [createPollsVisible, setCreatePollsVisible] = useState<boolean>(false);
   const [createNewsVisible, setCreateNewsVisible] = useState<boolean>(false);
   const userId = localStorage.getItem('userId');
-  const [name, setName] = useState<string>('');
+  const [memberName, setMemberName] = useState<string>('');
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -33,7 +33,7 @@ function AdminPanel() {
         throw new Error('Failed to fetch data');
       }
       const data = await response.json();
-      setName(data);
+      setMemberName(data);
     } catch (error) {
       console.error(error);
     }
@@ -64,15 +64,15 @@ function AdminPanel() {
   return (
     <div>
       {isAdmin ? (
-        <Banner title={name + " АДМИН"} bannerImg="ztf.png" />
+        <Banner title={memberName + " АДМИН"} bannerImg="ztf.png" />
       ) : (
-        <Banner title={name + " ЧЛАН"} bannerImg="ztf.png" />
+        <Banner title={memberName + " ЧЛАН"} bannerImg="ztf.png" />
       )}
       <div className="admin-panel">
         {isAdmin && (
           <div className="user-buttons">
             <div onClick={() => selectUserActivity(1)}>
-              <Button text="Преглед гласања" active={pollsVisible} />
+              <Button text="Преглед свих гласања" active={pollsVisible} />
             </div>
             <div onClick={() => selectUserActivity(2)}>
               <Button text="Прављење новог гласања" active={createPollsVisible} />

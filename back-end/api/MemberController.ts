@@ -51,10 +51,10 @@ export class MemberController {
         });
     }
 
-    public getMember(req: Request, res: Response): void {
+    public getMemberName(req: Request, res: Response): void {
         
         const id = parseInt(req.params.userId);
-        console.log('aaaa', req.params)
+
         const query = 'SELECT name FROM members WHERE id = $1';
         const values = [id]
 

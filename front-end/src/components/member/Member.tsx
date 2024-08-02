@@ -6,6 +6,7 @@ import FileUpload from '../form-elements/FileUpload';
 import TextArea from '../form-elements/TextArea';
 import { useAuth } from '../../AuthContext';
 import SelectOption from '../form-elements/SelectOption';
+import ConformationDialog from '../conformation-dialog/ConformationDialog';
 
 enum FileType {
   Photo = 1,
@@ -45,6 +46,7 @@ const Member: React.FC<MemberProps> = ({
   const [currentRoleId, setCurrentRoleId] = useState(roleId);
   const [currentMemberImg, setCurrentMemberImg] = useState(memberImg);
   const {isAdmin} = useAuth();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const deleteMember = async () => {
     try {
@@ -139,6 +141,9 @@ const Member: React.FC<MemberProps> = ({
 
   return (
     <div className='member-container'>
+      {isDialogOpen && (
+        <ConformationDialog onConfirm={deleteMember} onClose={()=>{setIsDialogOpen(false)}} />
+      )}
       {currentRoleId == 1 && (
         <div className='admin-member'>
           <img src={currentMemberImg} alt="member" className='member-image'/>
@@ -162,7 +167,7 @@ const Member: React.FC<MemberProps> = ({
       )}
       {isAdmin && (
         <div>
-          <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={deleteMember} />
+          <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={()=>{setIsDialogOpen(true)}}/>
           <img src="refresh.png" alt="upload" className='link-admin link-update' onClick={updatePopUp} />
         </div>
       )}

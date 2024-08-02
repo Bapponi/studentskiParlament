@@ -4,6 +4,7 @@ import TextInput from '../form-elements/TextInput';
 import FileUpload from '../form-elements/FileUpload';
 import Button from '../button/Button';
 import { useAuth } from '../../AuthContext';
+import ConformationDialog from '../conformation-dialog/ConformationDialog';
 
 enum FileType {
   Photo = 1,
@@ -28,6 +29,7 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
   const [currentName, setCurrentName] = useState(name);
   const [currentLogo, setCurrentLogo] = useState(logo);
   const {isAdmin} = useAuth();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const deleteLink = async () => {
     try {
@@ -96,13 +98,16 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
 
   return (
     <div className='link-container'>
+      {isDialogOpen && (
+        <ConformationDialog onConfirm={deleteLink} onClose={()=>{setIsDialogOpen(false)}} />
+      )}
       <a href={currentWebsite} target='_blank' className='link'>
         <img src={currentLogo} alt="link-logo" className='link-logo' />
         <h2>{currentName}</h2>
       </a>
       { isAdmin && (
           <div>
-            <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={deleteLink} />
+            <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={()=>{setIsDialogOpen(true)}} />
             <img src="refresh.png" alt="upload" className='link-admin link-update' onClick={updatePopUp} />
           </div>
         )

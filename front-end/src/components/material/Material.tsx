@@ -27,12 +27,12 @@ interface MaterialProps {
     
   const Material: React.FC<MaterialProps> = ({id, title, documentLink, onDelete, onUpdate}) => {
   
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [newFile, setNewFile] = useState<File | null>(null);
     const [newTitle, setNewTitle] = useState(title);
     const {isAdmin} = useAuth();
-  
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
     const updatePopUp = () => {
       setIsPopupVisible(true);
     };

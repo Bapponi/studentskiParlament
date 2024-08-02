@@ -11,7 +11,7 @@ const ConformationDialog: React.FC<ConformationDialogProps> = ({ onConfirm, onCl
   return (
     <div className='conformation-dialog__container'>
       <div className='conformation-dialog'>
-        <h2>Jeste li sigurni</h2>
+        <h2>Jeste li sigurni?</h2>
         <div className='conformation-dialog__buttons'>
             <div className='conformation-dialog__button' onClick={onConfirm}>
                 <Button text='DA'/>
@@ -20,7 +20,7 @@ const ConformationDialog: React.FC<ConformationDialogProps> = ({ onConfirm, onCl
                 <Button text='NE'/>
             </div>
         </div>
-        <img src="cross.png" alt="cross" className='material-cross' onClick={onConfirm}/>
+        <img src="cross.png" alt="cross" className='material-cross' onClick={onClose}/>
       </div>
     </div>
   );

@@ -212,28 +212,29 @@ export class MemberController {
         });
     }
 
-    public loginMember(req: Request, res: Response) {
-
-        const { username, password } = req.body;
-
-        const query = 'SELECT * FROM members WHERE username = $1 AND password = $2';
-        const values = [username, password]
-
-        client.query(query, values, (err, member) => {
-            if (!err) {
-
-                if (member.rows.length === 0) {
-                    return res.status(400).send('Нетачни креденцијали!');
-                }
-            
-                const user = member.rows[0];
-                const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-            
-                return res.json({token: token, userId: user.id, userRole: user.role_id});
-            } else {
-                return res.status(500).send('Грешка у бази!');
-            }
-        });
-    };
+    public async loginMember(req: Request, res: Response) {
+      const { username, password } = req.body;
+      const query = 'SELECT * FROM members WHERE username = $1';
+      const values = [username];
+    
+      try {
+        const result = await client.query(query, values);
+        if (result.rows.length === 0) {
+          return res.status(400).send('Нетачни креденцијали!');
+        }
+    
+        const user = result.rows[0];
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+          return res.status(400).send('Нетачни креденцијали!');
+        }
+    
+        const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+        return res.json({ token: token, userId: user.id, userRole: user.role_id });
+      } catch (err) {
+        console.error(err);
+        return res.status(500).send('Грешка у бази!');
+      }
+    }
 
 }

@@ -51,6 +51,22 @@ export class MemberController {
         });
     }
 
+    public getMember(req: Request, res: Response): void {
+        
+        const id = parseInt(req.params.userId);
+        console.log('aaaa', req.params)
+        const query = 'SELECT name FROM members WHERE id = $1';
+        const values = [id]
+
+        client.query(query, values, (err, member) => {
+            if (!err) {
+                res.status(200).json(member.rows[0].name);
+            } else {
+                return res.status(500).send('Грешка у бази!');
+            }
+        });
+    }
+
     public uploadMemberFile(req: Request, res: Response): void {
         upload.single('file')(req, res, (err) => {
             if (err) {

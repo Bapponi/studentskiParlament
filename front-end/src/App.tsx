@@ -28,7 +28,7 @@ function App() {
               <Route path="/members" element={<Members/>} />
               <Route path="/materials" element={<Materials/>} />
               <Route path="/links" element={<Links/>} />
-              <Route path="/admin-panel" element={<AdminPanel/>} />
+              <Route path="/user-panel" element={<AdminPanel/>} />
               <Route path="/login" element={<Login/>} />
             </Routes>
           </main>

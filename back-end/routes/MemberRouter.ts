@@ -5,6 +5,7 @@ const router = Router();
 const memberController = new MemberController();
 
 router.get('/:roleId', memberController.getAllMembers.bind(memberController));
+router.get('/name/:userId', memberController.getMember.bind(memberController));
 router.post('/upload', memberController.uploadMemberFile.bind(memberController));
 router.delete('/:id', memberController.deleteMember.bind(memberController));
 router.put('/:id', memberController.updateMember.bind(memberController));

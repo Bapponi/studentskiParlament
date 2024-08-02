@@ -81,8 +81,8 @@ function Navbar() {
             <img src='../user.png' alt='admin' className='admin-icon' onClick={handleAdminIconClick}/>
             { adminListToggle && (
               <div className='admin-list'>
-                <NavLink to='/admin-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')} onClick={handleAdminIconClick}>
-                  АДМИН ПАНЕЛ
+                <NavLink to='/user-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')} onClick={handleAdminIconClick}>
+                  КОРИСНИЧКИ ПАНЕЛ
                 </NavLink>
                 <div className='nav-page' onClick={logout}>
                   ОДЈАВИ СЕ
@@ -130,7 +130,7 @@ function Navbar() {
                 <div className='admin-list__mobile'>
                   <NavLink to='/admin-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
                     <div onClick={toggleMenu}>
-                      АДМИН ПАНЕЛ
+                      КОРИСНИЧКИ ПАНЕЛ
                     </div>
                   </NavLink>
                   <div className='nav-page' onClick={logout} style={{alignSelf: 'flex-start'}}>

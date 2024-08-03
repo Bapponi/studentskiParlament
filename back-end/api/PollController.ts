@@ -80,7 +80,7 @@ export class PollController {
       const pollInsertResult = await client.query(pollInsertQuery, [title]);
       const pollId = pollInsertResult.rows[0].id;
 
-      const pollOptionInsertQuery = 'INSERT INTO poll_options (option, poll_id) VALUES ($1, $2)';
+      const pollOptionInsertQuery = 'INSERT INTO poll_options (option_name, poll_id) VALUES ($1, $2)';
       
       let i: number = 1
       for (const element of elements) {

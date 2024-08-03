@@ -44,43 +44,42 @@ function CreateNews() {
     console.log(titleValue);
     console.log(clipValue);
     console.log(elements, headerValues, textValues, uploadedFiles, uploadedVideo);
-  
+
     const formData = new FormData();
-  
+
     if (uploadedBanner) {
       formData.append('banner', uploadedBanner);
     }
-  
+
     formData.append('title', titleValue);
     formData.append('clip', clipValue);
     formData.append('elements', JSON.stringify(elements));
     formData.append('headerValues', JSON.stringify(headerValues));
     formData.append('textValues', JSON.stringify(textValues));
-  
+
     Object.entries(uploadedFiles).forEach(([key, file]) => {
       if (file) {
         formData.append('uploadedFileKeys', key);
         formData.append('uploadedFiles', file);
       }
     });
-  
+
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/upload`, {
         method: 'POST',
         body: formData,
       });
-  
+
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(`Failed to upload news: ${errorMessage}`);
       }
-  
+
       console.log(await response.json());
     } catch (error) {
       console.error('Error uploading news:', error);
     }
   };
-  
 
   const handleHeaderChange = (id: number, value: string) => {
     setHeaderValues({ ...headerValues, [id]: value });
@@ -98,13 +97,25 @@ function CreateNews() {
     setUploadedVideo({ ...uploadedVideo, [id]: files });
   };
 
+  const handleDeleteElement = (id: number) => {
+    setElements(elements.filter(elementId => elementId !== id));
+    const { [id]: _, ...newHeaderValues } = headerValues;
+    setHeaderValues(newHeaderValues);
+    const { [id]: __, ...newTextValues } = textValues;
+    setTextValues(newTextValues);
+    const { [id]: ___, ...newUploadedFiles } = uploadedFiles;
+    setUploadedFiles(newUploadedFiles);
+    const { [id]: ____, ...newUploadedVideo } = uploadedVideo;
+    setUploadedVideo(newUploadedVideo);
+  };
+
   return (
     <div className='create-news'>
       <h1>Креирај нову вест</h1>
       <div className='news-part'>
         <div className='name-icon'>
             <h2>Наслов</h2>
-            <img src="header.png" alt="header" className='add-image'/>  
+            <img src="header.png" alt="header" className='add-image' />  
         </div>
         <TextInput 
           value={titleValue} 
@@ -116,7 +127,7 @@ function CreateNews() {
       <div className='news-part'>
         <div className='name-icon'>
             <h2>Исечак текста</h2>
-            <img src="header.png" alt="header" className='add-image'/>  
+            <img src="header.png" alt="header" className='add-image' />  
         </div>
         <TextArea
           value={clipValue} 
@@ -127,7 +138,7 @@ function CreateNews() {
       <div className='news-part'>
         <div className='name-icon'>
             <h2>Слика Банера</h2>
-            <img src="photo.png" alt="header" className='add-image'/>  
+            <img src="photo.png" alt="header" className='add-image' />  
         </div>
         <FileUpload 
           file={uploadedBanner} 
@@ -150,6 +161,7 @@ function CreateNews() {
               onFileChange={handleFilesChange}
               uploadedVideo={uploadedVideo[id] || null}
               onVideoFileChange={handleVideoFileChange}
+              onDelete={handleDeleteElement}
               headerTitle='Заглавље'
             />
           ))}
@@ -157,11 +169,11 @@ function CreateNews() {
         <div className='new-element__button' onClick={addElement}>
           <div className='add-element'>
             <h2>Додај нови елемент</h2>
-            <img src="add.png" alt="add" className='add-image'/>
+            <img src="add.png" alt="add" className='add-image' />
           </div>
         </div>
         <div onClick={publishNews}>
-          <Button text='Објави вест'/>
+          <Button text='Објави вест' />
         </div>
       </div>
     </div>

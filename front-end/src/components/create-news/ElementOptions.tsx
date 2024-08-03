@@ -20,6 +20,7 @@ interface ElementOptionsProps {
   onFileChange?: (id: number, files: File | null) => void;
   uploadedVideo?: File | null;
   onVideoFileChange?: (id: number, files: File | null) => void;
+  onDelete: (id: number) => void;
   headerTitle: string;
 }
 
@@ -33,6 +34,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
   onFileChange,
   uploadedVideo = null,
   onVideoFileChange,
+  onDelete,
   headerTitle
 }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -54,17 +56,26 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
     }
   };
 
-  const handleFileChange = (files: File | null) => {
+  const handleFileChange = (file: File | null) => {
     if (onFileChange) {
-      onFileChange(id, files);
+      onFileChange(id, file);
     }
   };
 
-  const handleVideoFileChange = (files: File | null) => {
+  const handleVideoFileChange = (file: File | null) => {
     if (onVideoFileChange) {
-      onVideoFileChange(id, files);
+      onVideoFileChange(id, file);
     }
   };
+
+  const handleDelete = () => {
+    onDelete(id);
+    setIsVisible(false);
+  };
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <div>
@@ -98,7 +109,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   </div>
                 )}
               </div>
-              <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => { setIsVisible(false); setAreOptionsVisible(false); }} />
+              <img src="cross.png" alt="cross" className='add-image cross-image' onClick={handleDelete} />
             </div>
           )}
           {isHeaderVisible && (
@@ -108,7 +119,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   <h2>{headerTitle}</h2>
                   <img src="header.png" alt="header" className='add-image' />
                 </div>
-                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)} />
+                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={handleDelete} />
               </div>
               <div className='input-area'>
                 <TextInput
@@ -127,7 +138,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   <h2>Текст</h2>
                   <img src="text.png" alt="text" className='add-image' />
                 </div>
-                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)} />
+                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={handleDelete} />
               </div>
               <div className='input-area'>
                 <TextArea
@@ -144,7 +155,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   <h2>Слика</h2>
                   <img src="photo.png" alt="galery" className='add-image' />
                 </div>
-                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)} />
+                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={handleDelete} />
               </div>
               <div className='input-area'>
                 <FileUpload
@@ -163,7 +174,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   <h2>Видео</h2>
                   <img src="video.png" alt="video" className='add-image' />
                 </div>
-                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={() => setIsVisible(false)} />
+                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={handleDelete} />
               </div>
               <div className='input-area'>
                 <FileUpload

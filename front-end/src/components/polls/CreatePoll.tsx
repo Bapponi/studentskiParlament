@@ -18,14 +18,13 @@ function CreatePoll() {
     setElements([...elements, elements.length + 1]);
   };
 
-  const publishNews = async () => {
-  
+  const publishPoll = async () => {
     const payload = {
       title: titleValue,
       elements,
       optionValues
     };
-  
+
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/upload`, {
         method: 'POST',
@@ -34,18 +33,18 @@ function CreatePoll() {
         },
         body: JSON.stringify(payload),
       });
-  
+
       if (!response.ok) {
         const errorMessage = await response.text();
-        throw new Error(`Failed to upload news: ${errorMessage}`);
+        throw new Error(`Failed to upload poll: ${errorMessage}`);
       }
 
-      setTitleValue('')
-      setElements([])
-      setOptionValues([])
+      setTitleValue('');
+      setElements([]);
+      setOptionValues({});
 
     } catch (error) {
-      console.error('Error uploading news:', error);
+      console.error('Error uploading poll:', error);
     }
   };
 
@@ -53,18 +52,24 @@ function CreatePoll() {
     setOptionValues({ ...optionValues, [id]: value });
   };
 
+  const handleDeleteElement = (id: number) => {
+    setElements(elements.filter(elementId => elementId !== id));
+    const { [id]: _, ...newOptionValues } = optionValues;
+    setOptionValues(newOptionValues);
+  };
+
   return (
     <div className='create-news'>
       <h1>Креирај ново гласање</h1>
       <div className='news-part'>
         <div className='name-icon'>
-            <h2>Наслов</h2>
-            <img src="header.png" alt="header" className='add-image'/>  
+          <h2>Наслов</h2>
+          <img src="header.png" alt="header" className='add-image' />  
         </div>
         <TextInput 
           value={titleValue} 
           onChange={handleTitleChange} 
-          type={"text"}
+          type="text"
           placeholder='Унесите наслов гласања овде'
         />
       </div>
@@ -76,18 +81,19 @@ function CreatePoll() {
               id={id}
               headerValue={optionValues[id] || ''}
               onHeaderChange={handleOptionChange}
-              headerTitle={'Опција'}
+              onDelete={handleDeleteElement}
+              headerTitle='Опција'
             />
           ))}
         </div>
         <div className='new-element__button' onClick={addElement}>
           <div className='add-element'>
             <h2>Додај нови елемент</h2>
-            <img src="add.png" alt="add" className='add-image'/>
+            <img src="add.png" alt="add" className='add-image' />
           </div>
         </div>
-        <div onClick={publishNews}>
-          <Button text='Објави ново гласање'/>
+        <div onClick={publishPoll}>
+          <Button text='Објави ново гласање' />
         </div>
       </div>
     </div>

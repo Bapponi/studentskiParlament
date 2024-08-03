@@ -3,6 +3,7 @@ import './create-news.css';
 import TextInput from '../form-elements/TextInput';
 import TextArea from '../form-elements/TextArea';
 import FileUpload from '../form-elements/FileUpload';
+import ConformationDialog from '../conformation-dialog/ConformationDialog';
 
 enum FileType {
   Photo = 1,
@@ -43,6 +44,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
   const [isTextVisible, setIsTextVisible] = useState(!!textValue);
   const [isPictureVisible, setIsPictureVisible] = useState(!!uploadedFiles);
   const [isVideoVisible, setIsVideoVisible] = useState(!!uploadedVideo);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleHeaderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onHeaderChange) {
@@ -79,6 +81,9 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
 
   return (
     <div>
+      {isDialogOpen && (
+        <ConformationDialog onConfirm={handleDelete} onClose={()=>{setIsDialogOpen(false)}} />
+      )}
       {isVisible && (
         <div className='element-options'>
           {areOptionsVisible && (
@@ -119,7 +124,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   <h2>{headerTitle}</h2>
                   <img src="header.png" alt="header" className='add-image' />
                 </div>
-                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={handleDelete} />
+                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={()=>{setIsDialogOpen(true)}} />
               </div>
               <div className='input-area'>
                 <TextInput
@@ -138,7 +143,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   <h2>Текст</h2>
                   <img src="text.png" alt="text" className='add-image' />
                 </div>
-                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={handleDelete} />
+                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={()=>{setIsDialogOpen(true)}} />
               </div>
               <div className='input-area'>
                 <TextArea
@@ -155,7 +160,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   <h2>Слика</h2>
                   <img src="photo.png" alt="galery" className='add-image' />
                 </div>
-                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={handleDelete} />
+                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={()=>{setIsDialogOpen(true)}} />
               </div>
               <div className='input-area'>
                 <FileUpload
@@ -174,7 +179,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
                   <h2>Видео</h2>
                   <img src="video.png" alt="video" className='add-image' />
                 </div>
-                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={handleDelete} />
+                <img src="cross.png" alt="cross" className='add-image cross-image' onClick={()=>{setIsDialogOpen(true)}} />
               </div>
               <div className='input-area'>
                 <FileUpload

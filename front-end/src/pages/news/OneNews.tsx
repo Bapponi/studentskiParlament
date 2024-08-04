@@ -29,7 +29,6 @@ function OneNews() {
   useEffect(() => {
     const fetchNewsDetails = async () => {
       try {
-        // const response = await fetch(`http://localhost:8000/news/${id}`);
         const response = await fetch(`http://localhost:8000/news/${id}`, {method: 'GET'});
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -54,8 +53,16 @@ function OneNews() {
             <p>{newsDetails.clip}</p>
             {newsDetails.newsSection.map((entry, idx) => (
               <div key={idx} className='one-news__sections'>
-                {entry.type === 'header' && <h2>{entry.content}</h2>}
-                {entry.type === 'text' && <p>{entry.content}</p>}
+                {entry.type === 'header' && <h2 className='news-section__header'>
+                  {entry.content}
+                </h2>}
+                {entry.type === 'text' && (
+                  <div>
+                    {entry.content.split('\n').map((line, lineIdx) => (
+                      <p key={lineIdx}>{line}</p>
+                    ))}
+                  </div>
+                )}
                 {entry.type === 'picture' && <img src={entry.content} alt={`News section ${idx}`} className='news-section__picture'/>}
               </div>
             ))}

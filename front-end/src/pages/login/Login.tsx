@@ -14,7 +14,7 @@ function Login() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const {setIsLoggedIn, isAdmin, setIsAdmin} = useAuth()
-  const [isPopUpVisible, setIsPopUpVisible] = useState<boolean>(true)
+  const [isPopUpVisible, setIsPopUpVisible] = useState<boolean>(false)
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmailValue(e.target.value);
@@ -67,11 +67,52 @@ function Login() {
     }
   };
 
+  const sendMail = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/member/sendMail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: emailValue,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Неуспешна обнова шифре');
+      }
+
+      const data = await response.json();
+
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    }
+  }
+
   return (
     <div>
       { isPopUpVisible &&
         <PopUp onClose={()=>{setIsPopUpVisible(false)}}>
-          <p></p>
+          <div className='new-password__panel'>
+            <h2>Постављање нове шифре</h2>
+            <p>
+              Унесите ваш мејл и биће Вам послати линк за унос нове лозинке
+            </p>
+            <TextInput 
+              value={emailValue} 
+              onChange={handleEmailChange} 
+              type={"text"}
+              placeholder='Унеси мејл овде'
+            />
+            <div onClick={sendMail}>
+              <Button text='Пошаљите захтев'></Button>
+            </div>
+          </div>
         </PopUp>
       }
       <Banner title='УЛОГУЈ СЕ' bannerImg='ztf.png'/>
@@ -98,7 +139,7 @@ function Login() {
         <div className='login-button' onClick={sendLoginInfo}>
           <Button text='Пошаљи'/>
         </div>
-        <h3>Želite li da postavite novu šifru?</h3>
+        <h3 className='new-password__label' onClick={()=>{setIsPopUpVisible(true)}}>Želite li da postavite novu šifru?</h3>
       </div>
     </div>
   );

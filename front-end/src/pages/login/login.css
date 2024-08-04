@@ -31,6 +31,25 @@
     width: 100%;
 }
 
+.new-password__label{
+    align-self: flex-end;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.new-password__label:hover{
+    text-decoration: underline;
+}
+
+.new-password__panel{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
 @media screen and (max-width: 760px) {
 
 .login{

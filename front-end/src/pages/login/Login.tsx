@@ -61,16 +61,16 @@ function Login() {
   };
 
   return (
-    <div className='login-container'>
+    <div>
       <Banner title='УЛОГУЈ СЕ' bannerImg='ztf.png'/>
       <div className='login'>
         <div className='login-part'>
-          <h2>Корисничко име</h2>
+          <h2>Мејл</h2>
           <TextInput 
             value={userValue} 
             onChange={handleUserChange} 
             type={"text"}
-            placeholder='Унеси корисничко име овде'
+            placeholder='Унеси мејл овде'
           />
         </div>
         <div className='login-part'>
@@ -86,6 +86,7 @@ function Login() {
         <div className='login-button' onClick={sendLoginInfo}>
           <Button text='Пошаљи'/>
         </div>
+        <h3>Želite li da postavite novu šifru?</h3>
       </div>
     </div>
   );

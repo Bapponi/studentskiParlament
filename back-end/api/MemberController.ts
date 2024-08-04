@@ -214,7 +214,7 @@ export class MemberController {
 
     public async loginMember(req: Request, res: Response) {
       const { username, password } = req.body;
-      const query = 'SELECT * FROM members WHERE username = $1';
+      const query = 'SELECT * FROM members WHERE email = $1';
       const values = [username];
     
       try {

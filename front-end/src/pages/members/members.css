@@ -6,6 +6,7 @@
     margin: 20px auto;
     gap: 30px;
     max-width: 1300px;
+    min-height: calc(100vh - 500px);
 }
 
 .main-members{

@@ -14,6 +14,7 @@
     text-decoration: none;
     color: var(--text-color);
     transition: 0.3s;
+    max-height: 100px;
 }
 
 .material:hover{

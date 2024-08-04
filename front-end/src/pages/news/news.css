@@ -6,6 +6,7 @@
     margin: 20px auto;
     gap: 30px;
     max-width: 1260px;
+    min-height: calc(100vh - 500px);
 }
 
 .all-news__button{

@@ -7,6 +7,7 @@
     gap: 30px;
     max-width: 1340px;
     z-index: -1;
+    min-height: calc(100vh - 500px);
 }
 
 .create-link{

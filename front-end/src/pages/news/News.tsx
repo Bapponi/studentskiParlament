@@ -49,12 +49,16 @@ function News() {
     fetchNews();
   }, []);
 
+  const handleDelete = (id: number) => {
+    setNews((prevNews) => prevNews.filter(news => news.id !== id));
+  };
+
   return (
     <div>
       <Banner title='ВЕСТИ' bannerImg='ztf.png' />
       <div className='all-news'>
         {news.map((entry) => (
-          <NewsPanel key={entry.id} {...entry} />
+          <NewsPanel key={entry.id} {...entry} onDelete={handleDelete}/>
         ))}
         {news.length < totalCount && ( // Check if more news are available
           <div className='all-news__button' onClick={fetchNews}>

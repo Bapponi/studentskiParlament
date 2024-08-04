@@ -199,8 +199,23 @@ export class NewsController {
     }
   };
 
-  public deleteNews(req: Request, res: Response): void {
-    // Implement delete logic
+  public deleteNews = async (req: Request, res: Response): Promise<void> => {
+    const id = parseInt(req.params.id);
+    const deleteNewsSectionsQuery = 'DELETE FROM news_sections WHERE news_id = $1';
+    const deleteNewsQuery = 'DELETE FROM news WHERE id = $1 RETURNING *';
+
+    try {
+      await client.query(deleteNewsSectionsQuery, [id]);
+      const result = await client.query(deleteNewsQuery, [id]);
+
+      if (result.rows.length === 0) {
+        res.status(404).send('Није пронађенa вест');
+      } else {
+        res.status(200).json('Успешно избрисана вест');
+      }
+    } catch (err) {
+      res.status(500).send('Грешка у бази!');
+    } 
   }
 
   public updateNews(req: Request, res: Response): void {

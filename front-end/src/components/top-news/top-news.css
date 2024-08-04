@@ -49,6 +49,7 @@
 }
 
 .news-panel{
+    position: relative;
     width: 380px;
     height: 380px;
     padding: 10px;
@@ -87,6 +88,24 @@
 
 .news_panel__more:hover{
     color: var(--primary-color);
+}
+
+.news-delete{
+    right: 5px;
+    top: 5px;
+    position: absolute;
+    width: 25px;
+    padding: 5px;
+    border: 2px solid var(--text-color);
+    border-radius: 5px;
+    transition: 0.3s;
+    background-color: var(--secondary-color);
+    z-index: 2;
+    cursor: pointer;
+}
+
+.news-delete:hover{
+    background-color: var(--primary-color);
 }
 
 @media screen and (max-width: 850px) {

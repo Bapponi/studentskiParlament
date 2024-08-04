@@ -8,14 +8,14 @@ import { useAuth } from '../../AuthContext';
 
 function Login() {
 
-  const [userValue, setUserValue] = useState('');
+  const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const {setIsLoggedIn, isAdmin, setIsAdmin} = useAuth()
 
-  const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserValue(e.target.value);
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailValue(e.target.value);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +30,7 @@ function Login() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: userValue,
+          email: emailValue,
           password: passwordValue,
         }),
       });
@@ -67,8 +67,8 @@ function Login() {
         <div className='login-part'>
           <h2>Мејл</h2>
           <TextInput 
-            value={userValue} 
-            onChange={handleUserChange} 
+            value={emailValue} 
+            onChange={handleEmailChange} 
             type={"text"}
             placeholder='Унеси мејл овде'
           />

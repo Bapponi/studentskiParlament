@@ -18,6 +18,7 @@ enum FileType {
 interface MemberProps {
   id: number;
   name: string;
+  email: string;
   position: string;
   bio: string;
   memberImg: string;
@@ -32,6 +33,7 @@ const Members: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [position, setPosition] = useState<string>('');
   const [bio, setBio] = useState<string>('');
   const [roleId, setRoleId] = useState<string>('');
@@ -88,6 +90,10 @@ const Members: React.FC = () => {
     setName(e.target.value);
   };
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
   const handlePositionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPosition(e.target.value);
   };
@@ -112,6 +118,7 @@ const Members: React.FC = () => {
       formData.append('file', file);
     }
     formData.append('name', name);
+    formData.append('email', email);
     formData.append('position', position);
     formData.append('bio', bio);
     formData.append('roleId', roleId);
@@ -138,6 +145,7 @@ const Members: React.FC = () => {
         setError(null)
         setFile(null)
         setName("")
+        setEmail("")
         setPosition("")
         setBio("")
         setRoleId("")
@@ -206,6 +214,12 @@ const Members: React.FC = () => {
               onChange={handleNameChange}
               type={"text"}
               placeholder='Унеси име и презиме члана'
+            />
+            <TextInput
+              value={email}
+              onChange={handleEmailChange}
+              type={"text"}
+              placeholder='Унеси мејл члана'
             />
             <SelectOption
               value={position}

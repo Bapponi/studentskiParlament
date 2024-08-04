@@ -67,7 +67,13 @@ export class MemberController {
         });
     }
 
+    private validateEmail(email: string): boolean {
+        const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+      }
+
     public uploadMemberFile(req: Request, res: Response): void {
+
         upload.single('file')(req, res, (err) => {
             if (err) {
                 return res.status(400).send('Није успело са сланјем логоа!');
@@ -85,12 +91,15 @@ export class MemberController {
             const fileData = {
                 memberImg: memberImg,
                 name: req.body.name,
+                email: req.body.email,
                 position: req.body.position,
                 bio: bio,
                 roleId: roleId,
             };
 
-            console.log(fileData)
+            if(!this.validateEmail(fileData.email)){
+                return res.status(400).send('Лоше форматиран мејл!');
+            }
     
             if (roleId == 3 && (fileData.position === "" || fileData.name === "")) {
                 return res.status(400).send('Потребно је да се унесу и име и позиција члана!');
@@ -100,8 +109,8 @@ export class MemberController {
                 return res.status(400).send('Потребно је да се унесу и име, позиција и биографија члана!');
             }
     
-            const query = 'INSERT INTO members (name, position, bio, member_img, role_id) VALUES ($1, $2, $3, $4, $5) RETURNING *';
-            const values = [fileData.name, fileData.position, fileData.bio, fileData.memberImg, fileData.roleId];
+            const query = 'INSERT INTO members (name, email, position, bio, member_img, role_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+            const values = [fileData.name, fileData.email, fileData.position, fileData.bio, fileData.memberImg, fileData.roleId];
     
             client.query(query, values, (err, result) => {
                 if (err) {
@@ -173,14 +182,17 @@ export class MemberController {
             const fileData = {
                 memberImg: memberImg,
                 name: req.body.name,
+                email: req.body.email,
                 position: req.body.position,
                 bio: req.body.bio,
                 roleId: roleId,
             };
 
-            console.log(fileData)
-
             const id = parseInt(req.params.id);
+
+            if(!this.validateEmail(fileData.email)){
+                return res.status(400).send('Лоше форматиран мејл!');
+            }
 
             if (fileData.roleId == 3 && (fileData.position == "" || fileData.name == "")) {
                 return res.status(400).send('Потребно постоје и име и позиција члана!');
@@ -193,11 +205,11 @@ export class MemberController {
             let query, values
             
             if(fileData.memberImg == undefined){
-                query = 'UPDATE members SET name = $1, position = $2, bio = $3, role_id = $4 WHERE id = $5 RETURNING *';
-                values = [fileData.name, fileData.position, fileData.bio, fileData.roleId, id];
+                query = 'UPDATE members SET name = $1, email = $2, position = $3, bio = $4, role_id = $5 WHERE id = $6 RETURNING *';
+                values = [fileData.name, fileData.email, fileData.position, fileData.bio, fileData.roleId, id];
             }else{
-                query = 'UPDATE members SET name = $1, position = $2, bio = $3, member_img = $4, role_id = $5 WHERE id = $6 RETURNING *';
-                values = [fileData.name, fileData.position, fileData.bio, fileData.memberImg, fileData.roleId, id];
+                query = 'UPDATE members SET name = $1, email = $2, position = $3, bio = $4, member_img = $5, role_id = $6 WHERE id = $7 RETURNING *';
+                values = [fileData.name, fileData.email, fileData.position, fileData.bio, fileData.memberImg, fileData.roleId, id];
             }
 
             client.query(query, values, (err, result) => {
@@ -213,9 +225,9 @@ export class MemberController {
     }
 
     public async loginMember(req: Request, res: Response) {
-      const { username, password } = req.body;
+      const { email, password } = req.body;
       const query = 'SELECT * FROM members WHERE email = $1';
-      const values = [username];
+      const values = [email];
     
       try {
         const result = await client.query(query, values);

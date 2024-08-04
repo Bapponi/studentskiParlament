@@ -18,6 +18,7 @@ interface MemberProps {
   id: number;
   position: string;
   name: string;
+  email: string;
   bio: string;
   memberImg: string;
   roleId: number;
@@ -28,6 +29,7 @@ const Member: React.FC<MemberProps> = ({
     id,
     position,
     name,
+    email,
     bio,
     memberImg,
     roleId,
@@ -37,10 +39,12 @@ const Member: React.FC<MemberProps> = ({
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [newFile, setNewFile] = useState<File | null>(null);
   const [newName, setNewName] = useState(name);
+  const [newEmail, setNewEmail] = useState(email);
   const [newPosition, setNewPosition] = useState(position);
   const [newBio, setNewBio] = useState(bio);
   const [newRoleId, setNewRoleId] = useState(roleId);
   const [currentName, setCurrentName] = useState(name);
+  const [currentEmail, setCurrentEmail] = useState(email);
   const [currentPosition, setCurrentPosition] = useState(position);
   const [currentBio, setCurrentBio] = useState(bio);
   const [currentRoleId, setCurrentRoleId] = useState(roleId);
@@ -79,6 +83,7 @@ const Member: React.FC<MemberProps> = ({
         formData.append('file', newFile);
       }
       formData.append('name', newName);
+      formData.append('email', newEmail);
       formData.append('position', newPosition);
       formData.append('bio', newBio);
       formData.append('roleId', newRoleId.toString());
@@ -94,6 +99,7 @@ const Member: React.FC<MemberProps> = ({
         const updatedMember = await response.json();
         setCurrentPosition(updatedMember.position);
         setCurrentName(updatedMember.name);
+        setCurrentName(updatedMember.email);
         setCurrentBio(updatedMember.bio);
         setCurrentRoleId(updatedMember.roleId);
         setCurrentBio(updatedMember.bio);
@@ -112,6 +118,10 @@ const Member: React.FC<MemberProps> = ({
 
   const handleNewNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewName(e.target.value);
+  };
+
+  const handleNewEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewEmail(e.target.value);
   };
 
   const handleNewPositionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -187,6 +197,12 @@ const Member: React.FC<MemberProps> = ({
               type={"text"} 
               placeholder='Унеси ново име овде'
             />
+            <TextInput 
+              value={newEmail} 
+              onChange={handleNewEmailChange} 
+              type={"text"} 
+              placeholder='Унеси нов мејл овде'
+            />
             <SelectOption
               value={newPosition}
               onChange={handleNewPositionChange}
@@ -201,7 +217,7 @@ const Member: React.FC<MemberProps> = ({
             <SelectOption
               value={newRoleId.toString()}
               onChange={handleNewRoleIdChange}
-              options={positionOptions}
+              options={roleOptions}
               placeholder='Унеси ролу члана'
             />
             {/* <TextInput 

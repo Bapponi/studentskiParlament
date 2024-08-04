@@ -163,6 +163,7 @@ function CreateNews() {
               onVideoFileChange={handleVideoFileChange}
               onDelete={handleDeleteElement}
               headerTitle='Заглавље'
+              single={false}
             />
           ))}
         </div>

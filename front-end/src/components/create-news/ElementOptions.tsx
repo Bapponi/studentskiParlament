@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './create-news.css';
 import TextInput from '../form-elements/TextInput';
 import TextArea from '../form-elements/TextArea';
@@ -23,6 +23,7 @@ interface ElementOptionsProps {
   onVideoFileChange?: (id: number, files: File | null) => void;
   onDelete: (id: number) => void;
   headerTitle: string;
+  single: boolean
 }
 
 const ElementOptions: React.FC<ElementOptionsProps> = ({
@@ -36,7 +37,8 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
   uploadedVideo = null,
   onVideoFileChange,
   onDelete,
-  headerTitle
+  headerTitle,
+  single
 }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [areOptionsVisible, setAreOptionsVisible] = useState(true);
@@ -45,6 +47,20 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
   const [isPictureVisible, setIsPictureVisible] = useState(!!uploadedFiles);
   const [isVideoVisible, setIsVideoVisible] = useState(!!uploadedVideo);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(()=>{
+    if(single){
+      if(headerValue != undefined){
+        setIsHeaderVisible(true)
+      }else if(textValue != undefined){
+        setIsTextVisible(true)
+      }else if(uploadedFiles != undefined){
+        setIsPictureVisible(true)
+      }else if(uploadedVideo != undefined){
+        setIsVideoVisible(true)
+      }
+    }
+  }, [])
 
   const handleHeaderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onHeaderChange) {
@@ -86,7 +102,7 @@ const ElementOptions: React.FC<ElementOptionsProps> = ({
       )}
       {isVisible && (
         <div className='element-options'>
-          {areOptionsVisible && (
+          {areOptionsVisible && !single && (
             <div className='add-options__container'>
               <div className='add-options'>
                 {onHeaderChange && (

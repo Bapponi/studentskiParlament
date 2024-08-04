@@ -83,12 +83,13 @@ function CreatePoll() {
               onHeaderChange={handleOptionChange}
               onDelete={handleDeleteElement}
               headerTitle='Опција'
+              single={true}
             />
           ))}
         </div>
         <div className='new-element__button' onClick={addElement}>
           <div className='add-element'>
-            <h2>Додај нови елемент</h2>
+            <h2>Додај нову опцију</h2>
             <img src="add.png" alt="add" className='add-image' />
           </div>
         </div>

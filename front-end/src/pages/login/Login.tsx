@@ -5,6 +5,7 @@ import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
+import PopUp from '../../components/pop-up/PopUp';
 
 function Login() {
 
@@ -13,6 +14,7 @@ function Login() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const {setIsLoggedIn, isAdmin, setIsAdmin} = useAuth()
+  const [isPopUpVisible, setIsPopUpVisible] = useState<boolean>(true)
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmailValue(e.target.value);
@@ -41,6 +43,11 @@ function Login() {
 
       const data = await response.json();
 
+      //ukoliko se loguje drugi clan bez odjavljivanja
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('roleId');
+
       localStorage.setItem('token', data.token);
       localStorage.setItem('userId', data.userId);
       localStorage.setItem('userRole', data.userRole);
@@ -62,6 +69,11 @@ function Login() {
 
   return (
     <div>
+      { isPopUpVisible &&
+        <PopUp onClose={()=>{setIsPopUpVisible(false)}}>
+          <p></p>
+        </PopUp>
+      }
       <Banner title='УЛОГУЈ СЕ' bannerImg='ztf.png'/>
       <div className='login'>
         <div className='login-part'>

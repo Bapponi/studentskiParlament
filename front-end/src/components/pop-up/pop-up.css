@@ -1,4 +1,4 @@
-.conformation-dialog__container {
+.pop-up__container {
     position: fixed;
     top: 0;
     left: 0;
@@ -12,7 +12,7 @@
     z-index: 10001;
 }
   
-.conformation-dialog {
+.pop-up {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
@@ -27,7 +27,7 @@
     gap: 20px;
 }
 
-.conformation-dialog__cross{
+.pop-up__cross{
     position: absolute;
     top: 5px;
     right: 18px;
@@ -36,24 +36,13 @@
     cursor: pointer;
 }
 
-.conformation-dialog__cross:hover{
+.pop-up__cross:hover{
     background-color: var(--primary-color);
     border-radius: 50%;
 }
 
-.conformation-dialog__buttons{
-    width: 100%;
-    display: flex;
-    gap: 10px;
-    justify-content: space-around;
-}
-
-.conformation-dialog__button{
-    width: 100px
-}
-
 @media screen and (max-width: 500px) {
-    .conformation-dialog {
+    .pop-up {
         width: 85%;
     }
 }

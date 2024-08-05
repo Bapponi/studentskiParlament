@@ -67,9 +67,9 @@ function Login() {
     }
   };
 
-  const sendMail = async () => {
+  const resetPassword = async () => {
     try {
-      const response = await fetch('http://localhost:8000/member/sendMail', {
+      const response = await fetch('http://localhost:8000/member/resetPassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ function Login() {
               type={"text"}
               placeholder='Унеси мејл овде'
             />
-            <div onClick={sendMail}>
+            <div onClick={resetPassword}>
               <Button text='Пошаљите захтев'></Button>
             </div>
           </div>

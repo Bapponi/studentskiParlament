@@ -268,7 +268,7 @@ export class MemberController {
 
         await client.query('INSERT INTO password_reset_tokens (user_id, token, expiration) VALUES ($1, $2, $3)', [user.id, token, expiration]);
 
-        const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+        const resetLink = `http://localhost:3000/new-password?token=${token}`;
         await sendEmail(email, 'Прављење нове шифре', `Кликни на овај линк како би поставио нову шифру: ${resetLink}`);
 
         res.status(200).json({ message: 'Грешка приликом слања мејла потврде' });
@@ -280,24 +280,40 @@ export class MemberController {
 
 
     public async setNewPassword(req: Request, res: Response) {
-      const { email, password1, password2 } = req.body;
+      const { email, password1, password2, token } = req.body;
 
       if (password1 !== password2) {
         return res.status(400).json("Нису исте шифре!");
       }
-
-      const hashedPassword = await bcrypt.hash(password1, 10);
-
-      const query = 'UPDATE members SET password = $1 WHERE email = $2';
-      const values = [hashedPassword, email];
-
+    
       try {
-        const result = await client.query(query, values);
-
-        if (result.rowCount === 0) {
+        const tokenQuery = 'SELECT * FROM password_reset_tokens WHERE token = $1';
+        const tokenValues = [token];
+        const tokenResult = await client.query(tokenQuery, tokenValues);
+    
+        if (tokenResult.rows.length === 0 || new Date(tokenResult.rows[0].expiration) < new Date()) {
+          return res.status(400).json("Invalid or expired token");
+        }
+    
+        const userId = tokenResult.rows[0].user_id;
+    
+        const userQuery = 'SELECT * FROM members WHERE id = $1 AND email = $2';
+        const userValues = [userId, email];
+        const userResult = await client.query(userQuery, userValues);
+    
+        if (userResult.rows.length === 0) {
           return res.status(404).json("Није нађен корисник са датим мејлом");
         }
-
+    
+        const hashedPassword = await bcrypt.hash(password1, 10);
+    
+        const updateQuery = 'UPDATE members SET password = $1 WHERE id = $2';
+        const updateValues = [hashedPassword, userId];
+        await client.query(updateQuery, updateValues);
+    
+        const deleteTokenQuery = 'DELETE FROM password_reset_tokens WHERE token = $1';
+        await client.query(deleteTokenQuery, tokenValues);
+    
         return res.status(200).json("Успешно постављена нова шифра");
       } catch (err) {
         console.error(err);

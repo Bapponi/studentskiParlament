@@ -3,7 +3,7 @@ import './login.css'
 import Banner from '../../components/banner/Banner';
 import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function NewPassword() {
 
@@ -12,6 +12,8 @@ function NewPassword() {
   const [password2Value, setPassword2Value] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token') || '';
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmailValue(e.target.value);
@@ -37,6 +39,7 @@ function NewPassword() {
           email: emailValue,
           password1: password1Value,
           password2: password2Value,
+          token: token,
         }),
       });
 

@@ -3,7 +3,7 @@ import './login.css'
 import Banner from '../../components/banner/Banner';
 import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 import PopUp from '../../components/pop-up/PopUp';
 
@@ -83,7 +83,7 @@ function Login() {
         throw new Error('Неуспешна обнова шифре');
       }
 
-      const data = await response.json();
+      setIsPopUpVisible(false)
 
     } catch (error) {
       if (error instanceof Error) {
@@ -139,10 +139,7 @@ function Login() {
         <div className='login-button' onClick={sendLoginInfo}>
           <Button text='Пошаљи'/>
         </div>
-        <Link to={`/new-password`} className='news_panel__more'>
-          <h3>Желите ли да поставите нову шифру?</h3>
-        </Link>
-        {/* <h3 className='new-password__label' onClick={()=>{setIsPopUpVisible(true)}}>Желите ли да поставите нову шифру?</h3> */}
+        <h3 className='new-password__label' onClick={()=>{setIsPopUpVisible(true)}}>Желите ли да поставите нову шифру?</h3>
       </div>
     </div>
   );

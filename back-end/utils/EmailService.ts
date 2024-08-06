@@ -6,8 +6,8 @@ export const sendEmail = async (to: string, subject: string, text: string) => {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: 'studentski.parlament.etf@gmail.com', // your email
-      pass: 'sifra123', // your email password
+      user: 'aleksandarbubalo99@gmail.com', // your email
+      pass: 'sbuq obks iiul xvio', // app password
     },
   });
 

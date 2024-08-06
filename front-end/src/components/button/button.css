@@ -3,13 +3,13 @@
     border-radius: 15px;
     border: 2px solid var(--text-color);
     background-color: var(--complementary-color);
-    width: 100%;
+    width: calc(100% - 20px);
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     transition: 0.3s;
-    padding: 10px 0;
+    padding: 10px;
     border-radius: 15px;
 }
 

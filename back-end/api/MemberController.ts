@@ -269,7 +269,7 @@ export class MemberController {
         await client.query('INSERT INTO password_reset_tokens (user_id, token, expiration) VALUES ($1, $2, $3)', [user.id, token, expiration]);
 
         const resetLink = `http://localhost:3000/new-password?token=${token}`;
-        await sendEmail(email, 'Прављење нове шифре', `Кликни на овај линк како би поставио нову шифру: ${resetLink}`);
+        await sendEmail(email, 'Прављење нове шифре', `Кликни на овај линк како би поставио нову шифру у року од наредних сат времена: ${resetLink}`);
 
         res.status(200).json({ message: 'Грешка приликом слања мејла потврде' });
       } catch (err) {
@@ -292,7 +292,7 @@ export class MemberController {
         const tokenResult = await client.query(tokenQuery, tokenValues);
     
         if (tokenResult.rows.length === 0 || new Date(tokenResult.rows[0].expiration) < new Date()) {
-          return res.status(400).json("Invalid or expired token");
+          return res.status(400).json("Прошло је време за постављање нове шифре");
         }
     
         const userId = tokenResult.rows[0].user_id;

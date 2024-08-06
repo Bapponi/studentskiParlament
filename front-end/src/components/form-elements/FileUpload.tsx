@@ -70,9 +70,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ file, onFileChange, placeholder
   return (
     <div {...getRootProps()} className='photo-upload'>
       <input {...getInputProps()} />
-      {fileType === FileType.Photo && <img src="photo-upload.png" alt="upload" className='upload-image' />}
-      {fileType === FileType.Video && <img src="video-upload.png" alt="upload" className='upload-image' />}
-      {fileType === FileType.Pdf && <img src="file-upload.png" alt="upload" className='upload-image' />}
+      {fileType === FileType.Photo && <img src="../photo-upload.png" alt="upload" className='upload-image' />}
+      {fileType === FileType.Video && <img src="../video-upload.png" alt="upload" className='upload-image' />}
+      {fileType === FileType.Pdf && <img src="../file-upload.png" alt="upload" className='upload-image' />}
       <div>
         {isDragActive ? (
           <p>Убаци фајл овде</p>

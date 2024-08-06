@@ -10,4 +10,10 @@ router.post('/upload', newsController.uploadNewsFile.bind(newsController));
 router.delete('/:id', newsController.deleteNews.bind(newsController));
 router.put('/:id', newsController.updateNews.bind(newsController));
 
+// New routes for updating title, clip, banner, and sections
+router.put('/:id/title', newsController.updateTitle.bind(newsController));
+router.put('/:id/clip', newsController.updateClip.bind(newsController));
+router.put('/:id/banner', newsController.upload.single('banner'), newsController.updateBanner.bind(newsController));
+router.put('/:id/section', newsController.updateNewsSection.bind(newsController));
+
 export default router;

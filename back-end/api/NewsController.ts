@@ -4,12 +4,13 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 
-interface NewsSection{
+interface NewsSection {
+  id: number,
   type: string,
   content: string,
 }
 
-interface News{
+interface News {
   id: number,
   title: string,
   banner: string,
@@ -49,6 +50,7 @@ interface MulterRequest extends Request {
 }
 
 export class NewsController {
+  public upload = upload;
 
   public getAllNews(req: Request, res: Response): void {
     const countQuery = 'SELECT COUNT(*) FROM news';
@@ -87,7 +89,6 @@ export class NewsController {
     const values = [id];
     client.query(query, values, (err, result) => { //sredi ovo kasnije i najbolje da ide iz 2 query-ja
       if (!err) {
-
         let news: News | null = null;
 
         news = {
@@ -99,16 +100,16 @@ export class NewsController {
           newsSection: []
         };
 
-        result.rows.forEach((row)=>{
-
+        result.rows.forEach((row) => {
           if (news) {
             news.newsSection.push({
+              id: row.id,
               type: row.type,
               content: row.content,
             });
           }
         })
-        
+
         return res.status(200).send(news);
       } else {
         return res.status(500).send('Грешка у бази!');
@@ -121,7 +122,7 @@ export class NewsController {
       { name: 'banner', maxCount: 1 },
       { name: 'uploadedFiles', maxCount: 10 },
     ]);
-  
+
     // Wrap the multer upload in a promise
     const handleFileUpload = (): Promise<UploadedFiles> => {
       return new Promise((resolve, reject) => {
@@ -133,14 +134,14 @@ export class NewsController {
         });
       });
     };
-  
+
     try {
       const files = await handleFileUpload();
-  
+
       const uploadedFiles = files['uploadedFiles'] || [];
       const banner = files['banner'] ? files['banner'][0] : undefined;
       const bannerName = banner ? 'http://localhost:8000/uploads/news/' + banner.filename : null;
-  
+
       const title = req.body.title;
       const clip = req.body.clip;
       const elements = JSON.parse(req.body.elements);
@@ -148,15 +149,15 @@ export class NewsController {
       const textValues = JSON.parse(req.body.textValues);
       const fileKeys = req.body.uploadedFileKeys;
 
-      if(clip.length > 200){
+      if (clip.length > 200) {
         return res.status(300).send('Унет предугачки исечак текста!');
       }
-  
+
       console.log({ title, clip, banner, elements, headerValues, textValues, uploadedFiles, fileKeys });
-  
+
       let mainQuery: string;
       let values: any[];
-  
+
       if (banner == undefined) {
         mainQuery = 'INSERT INTO news (title, clip) VALUES($1, $2) RETURNING id';
         values = [title, clip];
@@ -164,20 +165,19 @@ export class NewsController {
         mainQuery = 'INSERT INTO news (title, clip, banner) VALUES($1, $2, $3) RETURNING id';
         values = [title, clip, bannerName];
       }
-  
+
       const newsInsertResult = await client.query(mainQuery, values);
       const newsId = newsInsertResult.rows[0].id;
 
       const selectQuery = 'INSERT INTO news_sections (type, content, ordering, news_id) VALUES($1, $2, $3, $4)';
-      if(headerValues){
-        
+      if (headerValues) {
         Object.entries(headerValues).forEach(([key, value]) => {
           const values = ['header', value, key, newsId]
           client.query(selectQuery, values);
         });
       }
 
-      if(textValues){
+      if (textValues) {
         Object.entries(textValues).forEach(([key, value]) => {
           const values = ['text', value, key, newsId]
           client.query(selectQuery, values);
@@ -191,7 +191,7 @@ export class NewsController {
           client.query(selectQuery, sectionValues);
         });
       }
-  
+
       res.status(200).json('Успешно окачена вест');
     } catch (error) {
       console.error(error);
@@ -215,10 +215,84 @@ export class NewsController {
       }
     } catch (err) {
       res.status(500).send('Грешка у бази!');
-    } 
+    }
   }
 
   public updateNews(req: Request, res: Response): void {
     // Implement update logic
+  }
+
+  public async updateTitle(req: Request, res: Response) {
+    const { id } = req.params;
+    const { title } = req.body;
+    try {
+      const query = 'UPDATE news SET title = $1 WHERE id = $2';
+      const values = [title, id];
+      const result = await client.query(query, values);
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'News not found' });
+      }
+      res.json({ message: 'Title updated successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Грешка у бази!');
+    }
+  }
+
+  public async updateClip(req: Request, res: Response) {
+    const { id } = req.params;
+    const { clip } = req.body;
+    try {
+      const query = 'UPDATE news SET clip = $1 WHERE id = $2';
+      const values = [clip, id];
+      const result = await client.query(query, values);
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'News not found' });
+      }
+      res.json({ message: 'Clip updated successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Грешка у бази!');
+    }
+  }
+
+  public async updateBanner(req: Request, res: Response) {
+    const { id } = req.params;
+    const banner = req.file; // Assuming file upload middleware is used
+    if (!banner) {
+      return res.status(400).send('Banner file is required');
+    }
+    try {
+      const bannerName = 'http://localhost:8000/uploads/news/' + banner.filename;
+      const query = 'UPDATE news SET banner = $1 WHERE id = $2';
+      const values = [bannerName, id];
+      const result = await client.query(query, values);
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'News not found' });
+      }
+      res.json({ message: 'Banner updated successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Грешка у бази!');
+    }
+  }
+
+  public async updateNewsSection(req: Request, res: Response) {
+    console.log("BANANOSI", req.body, req.params)
+    const { id } = req.params;
+    const { sectionId, content, type } = req.body;
+    console.log(sectionId, content, type)
+    try {
+      const query = 'UPDATE news_sections SET content = $1, type = $2 WHERE id = $3 AND news_id = $4';
+      const values = [content, type, sectionId, id];
+      const result = await client.query(query, values);
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'News section not found' });
+      }
+      res.json({ message: 'News section updated successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Грешка у бази!');
+    }
   }
 }

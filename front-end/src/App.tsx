@@ -12,6 +12,7 @@ import AdminPanel from './pages/admin-panel/AdminPanel';
 import Login from './pages/login/Login';
 import OneNews from './pages/news/OneNews';
 import { AuthProvider } from './AuthContext';
+import NewPassword from './pages/login/NewPassword';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
               <Route path="/links" element={<Links/>} />
               <Route path="/user-panel" element={<AdminPanel/>} />
               <Route path="/login" element={<Login/>} />
+              <Route path="/new-password" element={<NewPassword/>} />
             </Routes>
           </main>
           <Footer/>

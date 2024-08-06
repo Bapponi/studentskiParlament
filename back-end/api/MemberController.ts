@@ -172,7 +172,6 @@ export class MemberController {
     }
 
     public updateMember(req: Request, res: Response): void {
-        
         upload.single('file')(req, res, (err) => {
             if (err) {
                 return res.status(400).send('Није успело са сланјем логоа!');
@@ -252,31 +251,58 @@ export class MemberController {
     }
 
     public async requestPasswordReset(req: Request, res: Response) {
-        const { email } = req.body;
-        const query = 'SELECT id FROM members WHERE email = $1';
-        const values = [email];
-    
-        try {
-          const result = await client.query(query, values);
-          if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
-          }
-    
-          const user = result.rows[0];
-          const token = crypto.randomBytes(32).toString('hex');
-          const expiration = new Date();
-          expiration.setHours(expiration.getHours() + 1); // Token valid for 1 hour
-    
-          await client.query('INSERT INTO password_reset_tokens (user_id, token, expiration) VALUES ($1, $2, $3)', [user.id, token, expiration]);
-    
-          const resetLink = `http://localhost:3000/reset-password?token=${token}`;
-          await sendEmail(email, 'Прављење нове шифре', `Кликни на овај линк како би поставио нову шифру: ${resetLink}`);
-    
-          res.status(200).json({ message: 'Грешка приликом слања мејла потврде' });
-        } catch (err) {
-          console.error(err);
-          return res.status(500).send('Грешка у бази!');
+      const { email } = req.body;
+      const query = 'SELECT id FROM members WHERE email = $1';
+      const values = [email];
+
+      try {
+        const result = await client.query(query, values);
+        if (result.rows.length === 0) {
+          return res.status(404).json({ message: 'User not found' });
         }
+
+        const user = result.rows[0];
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiration = new Date();
+        expiration.setHours(expiration.getHours() + 1); // Token valid for 1 hour
+
+        await client.query('INSERT INTO password_reset_tokens (user_id, token, expiration) VALUES ($1, $2, $3)', [user.id, token, expiration]);
+
+        const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+        await sendEmail(email, 'Прављење нове шифре', `Кликни на овај линк како би поставио нову шифру: ${resetLink}`);
+
+        res.status(200).json({ message: 'Грешка приликом слања мејла потврде' });
+      } catch (err) {
+        console.error(err);
+        return res.status(500).send('Грешка у бази!');
       }
+    }
+
+
+    public async setNewPassword(req: Request, res: Response) {
+      const { email, password1, password2 } = req.body;
+
+      if (password1 !== password2) {
+        return res.status(400).json("Нису исте шифре!");
+      }
+
+      const hashedPassword = await bcrypt.hash(password1, 10);
+
+      const query = 'UPDATE members SET password = $1 WHERE email = $2';
+      const values = [hashedPassword, email];
+
+      try {
+        const result = await client.query(query, values);
+
+        if (result.rowCount === 0) {
+          return res.status(404).json("Није нађен корисник са датим мејлом");
+        }
+
+        return res.status(200).json("Успешно постављена нова шифра");
+      } catch (err) {
+        console.error(err);
+        return res.status(500).send('Грешка у бази!');
+      }
+    }
 
 }

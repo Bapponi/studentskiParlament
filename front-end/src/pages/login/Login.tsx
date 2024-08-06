@@ -3,7 +3,7 @@ import './login.css'
 import Banner from '../../components/banner/Banner';
 import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 import PopUp from '../../components/pop-up/PopUp';
 
@@ -139,7 +139,10 @@ function Login() {
         <div className='login-button' onClick={sendLoginInfo}>
           <Button text='Пошаљи'/>
         </div>
-        <h3 className='new-password__label' onClick={()=>{setIsPopUpVisible(true)}}>Želite li da postavite novu šifru?</h3>
+        <Link to={`/new-password`} className='news_panel__more'>
+          <h3>Желите ли да поставите нову шифру?</h3>
+        </Link>
+        {/* <h3 className='new-password__label' onClick={()=>{setIsPopUpVisible(true)}}>Желите ли да поставите нову шифру?</h3> */}
       </div>
     </div>
   );

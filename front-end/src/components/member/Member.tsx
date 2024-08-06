@@ -145,7 +145,7 @@ const Member: React.FC<MemberProps> = ({
   
   const roleOptions = [
     { value: '1', label: 'Админ' },
-    { value: '2', label: 'ПР' },
+    // { value: '2', label: 'ПР' },
     { value: '3', label: 'Корисник' },
   ];
 

@@ -181,6 +181,7 @@ export class PollController {
 
   public getMembersWhoVoted(req: Request, res: Response): void {
     const pollId = parseInt(req.params.pollId);
+
     const query = `
       SELECT members.name
       FROM votes

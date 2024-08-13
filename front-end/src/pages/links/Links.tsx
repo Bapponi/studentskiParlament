@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Banner from '../../components/banner/Banner';
 import Link from '../../components/link/Link';
-import Button from '../../components/button/Button'; // Assuming you have a Button component
+import Button from '../../components/button/Button';
 import './links.css';
 import TextInput from '../../components/form-elements/TextInput';
 import FileUpload from '../../components/form-elements/FileUpload';

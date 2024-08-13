@@ -23,6 +23,7 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
   const [votesSum, setVotesSum] = useState<number>(0);
   const {isAdmin} = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [memberNames, setMemberNames] = useState<string[]>([])
 
   const voteOptions = pollOptions.map(option => ({
     value: option.option_name,
@@ -33,6 +34,10 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
     const num: number = pollOptions.reduce((sum, option) => sum + option.votes_num, 0);
     setVotesSum(num);
   }, [pollOptions]);
+
+  useEffect(()=>{
+    getPollMembers();
+  },[])
 
   const deletePoll = async () => {
     try {
@@ -73,13 +78,39 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
     }
   };
 
+  const getPollMembers = async () => {
+    try {
+      const pollId = id
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${pollId}`, {
+        method: 'GET'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Неуспешно дохватање чланова за гласање!');
+      }
+
+      const data = await response.json()
+      setMemberNames(data.members)
+      
+    } catch (error) {
+      console.error('Грешка приликом дохватања гласања:', error);
+    }
+  };
+
   return (
     <div className='poll-container'>
       {isDialogOpen && (
         <ConformationDialog onConfirm={deletePoll} onClose={()=>{setIsDialogOpen(false)}} />
       )}
-      <h3>{title}</h3>
-      <h3>Укупно гласова: <span style={{color: "var(--primary-color)"}}>{votesSum}</span></h3>
+      <h2 style={{color: "var(--primary-color)"}}>{title}</h2>
+      <h3>Чланови који су гласали (укупно <span style={{color: "var(--primary-color)"}}>{votesSum}</span>):</h3>
+      <div className='member-names'>
+        {memberNames.map((name, index) => (
+          <span key={index}>
+            {name}{index < memberNames.length - 1 ? ', ' : ''}
+          </span>
+        ))}
+      </div>
       {!currentActive && <PollBar pollOptions={pollOptions} />}
       {currentActive && <PollVote pollId={id} voteOptions={voteOptions}/>}
       {isAdmin && (

@@ -103,7 +103,7 @@ function OneNews() {
       let body: FormData | string;
       let headers: HeadersInit | undefined = undefined;
   
-      if (type === 'picture') {
+      if (type === 'picture' || type === 'video') {
         const formData = new FormData();
         formData.append('sectionId', sectionId.toString());
         formData.append('type', type);
@@ -129,6 +129,7 @@ function OneNews() {
       }
   
       fetchNewsDetails();
+      console.log(newsDetails)
       setSectionHeaderPopUp(null);
       setSectionTextPopUp(null);
       setSectionImagePopUp(null);

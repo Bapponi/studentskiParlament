@@ -91,6 +91,8 @@ export class NewsController {
       if (!err) {
         let news: News | null = null;
 
+        console.log("bbbbbbb",result.rows[0].news_id)
+
         news = {
           id: result.rows[0].news_id,
           title: result.rows[0].title,
@@ -295,7 +297,7 @@ export class NewsController {
     const type = req.body.type;
     let content = req.body.content;
 
-    if (type === 'picture' && req.file) {
+    if ((type === 'picture' || type === 'video') && req.file) {
       content = 'http://localhost:8000/uploads/news/' + req.file.filename;
     }
 

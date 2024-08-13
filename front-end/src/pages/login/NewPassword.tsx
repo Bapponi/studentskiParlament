@@ -30,7 +30,7 @@ function NewPassword() {
   const newPassword = async () => {
     try {
         console.log(emailValue, password1Value, password2Value)
-      const response = await fetch('http://localhost:8000/member/newPassword/password', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/newPassword/password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

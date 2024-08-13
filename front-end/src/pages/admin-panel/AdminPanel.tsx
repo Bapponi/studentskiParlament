@@ -28,7 +28,7 @@ function AdminPanel() {
 
   const getMember = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/member/name/${userId}`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/name/${userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }

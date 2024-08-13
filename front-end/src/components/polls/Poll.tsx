@@ -36,7 +36,7 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
 
   const deletePoll = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/poll/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${id}`, {
         method: 'DELETE',
       });
 
@@ -56,7 +56,7 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
         active: updateActive
       };
 
-      const response = await fetch(`http://localhost:8000/poll/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

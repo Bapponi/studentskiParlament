@@ -21,7 +21,7 @@ function Polls() {
   useEffect(()=>{
     const fetchPolls = async () => {
       try{
-        const response = await fetch('http://localhost:8000/poll');
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }

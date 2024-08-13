@@ -5,10 +5,11 @@ import fs, { link } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import crypto from 'crypto';  // Make sure to import crypto
-import { sendEmail } from '../utils/EmailService'; // Make sure to imp
+import crypto from 'crypto'; 
+import { sendEmail } from '../utils/EmailService';
+require('dotenv').config();
 
-const SECRET_KEY = 'your_secret_key';
+const SECRET_KEY = `${process.env.SECRET_KEY}`;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

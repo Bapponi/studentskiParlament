@@ -91,8 +91,6 @@ export class NewsController {
       if (!err) {
         let news: News | null = null;
 
-        console.log("bbbbbbb",result.rows[0].news_id)
-
         news = {
           id: result.rows[0].news_id,
           title: result.rows[0].title,

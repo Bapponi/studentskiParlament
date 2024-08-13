@@ -26,7 +26,7 @@ function Login() {
 
   const sendLoginInfo = async () => {
     try {
-      const response = await fetch('http://localhost:8000/member/login', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ function Login() {
 
   const resetPassword = async () => {
     try {
-      const response = await fetch('http://localhost:8000/member/resetPassword', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/resetPassword`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

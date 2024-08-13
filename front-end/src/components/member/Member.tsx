@@ -54,7 +54,7 @@ const Member: React.FC<MemberProps> = ({
 
   const deleteMember = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/member/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/${id}`, {
         method: 'DELETE',
       });
 
@@ -88,7 +88,7 @@ const Member: React.FC<MemberProps> = ({
       formData.append('bio', newBio);
       formData.append('roleId', newRoleId.toString());
   
-      const response = await fetch(`http://localhost:8000/member/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/${id}`, {
         method: 'PUT',
         body: formData,
       });

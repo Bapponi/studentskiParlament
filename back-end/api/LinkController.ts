@@ -38,7 +38,7 @@ export class LinkController {
             }
 
             const fileData = {
-                logo: 'http://localhost:8000/uploads/links/' + req.file.filename,
+                logo: process.env.REACT_APP_BACKEND_LINK + req.file.filename,
                 website: req.body.website,
                 name: req.body.name,
             };

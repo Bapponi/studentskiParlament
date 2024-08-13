@@ -42,7 +42,7 @@ const Members: React.FC = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/member/3`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/3`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -61,7 +61,7 @@ const Members: React.FC = () => {
 
     const fetchAdminMembers = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/member/1`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/1`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -124,7 +124,7 @@ const Members: React.FC = () => {
     formData.append('roleId', roleId);
 
     try {
-      const response = await fetch('http://localhost:8000/member/upload', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/upload`, {
         method: 'POST',
         body: formData,
       });

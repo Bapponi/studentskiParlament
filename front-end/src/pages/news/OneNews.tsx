@@ -52,7 +52,7 @@ function OneNews() {
 
   const fetchNewsDetails = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/news/${id}`, { method: 'GET' });
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}`, { method: 'GET' });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -118,7 +118,7 @@ function OneNews() {
         };
       }
   
-      const response = await fetch(`http://localhost:8000/news/${id}/section`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/section`, {
         method: 'PUT',
         headers: headers,
         body: body,
@@ -129,7 +129,6 @@ function OneNews() {
       }
   
       fetchNewsDetails();
-      console.log(newsDetails)
       setSectionHeaderPopUp(null);
       setSectionTextPopUp(null);
       setSectionImagePopUp(null);
@@ -141,7 +140,7 @@ function OneNews() {
 
   const updateTitle = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/news/${id}/title`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/title`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -162,7 +161,7 @@ function OneNews() {
 
   const updateClip = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/news/${id}/clip`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/clip`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +187,7 @@ function OneNews() {
     formData.append('banner', newBanner);
 
     try {
-      const response = await fetch(`http://localhost:8000/news/${id}/banner`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/banner`, {
         method: 'PUT',
         body: formData,
       });

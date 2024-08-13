@@ -33,7 +33,7 @@ const Links: React.FC = () => {
   useEffect(() => {
     const fetchLinks = async () => {
       try {
-        const response = await fetch('http://localhost:8000/link');
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/link`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -78,7 +78,7 @@ const Links: React.FC = () => {
     formData.append('name', name);
 
     try {
-      const response = await fetch('http://localhost:8000/link/upload', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/link/upload`, {
         method: 'POST',
         body: formData,
       });

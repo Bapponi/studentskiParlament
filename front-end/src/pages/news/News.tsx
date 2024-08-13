@@ -26,7 +26,7 @@ function News() {
 
   const fetchNews = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/news?limit=${limit}&offset=${news.length}`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news?limit=${limit}&offset=${news.length}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }

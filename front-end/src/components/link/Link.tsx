@@ -33,7 +33,7 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
 
   const deleteLink = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/link/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/link/${id}`, {
         method: 'DELETE',
       });
 
@@ -64,7 +64,7 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete }) =>
       formData.append('website', newWebsite);
       formData.append('name', newName);
   
-      const response = await fetch(`http://localhost:8000/link/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/link/${id}`, {
         method: 'PUT',
         body: formData,
       });

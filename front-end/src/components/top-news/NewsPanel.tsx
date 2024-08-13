@@ -21,7 +21,7 @@ const NewsPanel: React.FC<NewsPanelProps> = ({ id, date, title, clip, banner, on
 
   const deleteNews = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/news/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}`, {
         method: 'DELETE',
       });
 

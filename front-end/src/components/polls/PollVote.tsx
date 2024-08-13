@@ -34,7 +34,7 @@ const PollVote: React.FC<PollVoteProps> = ({
     }
 
     try{
-      const response = await fetch('http://localhost:8000/poll/vote', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/vote`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const PollVote: React.FC<PollVoteProps> = ({
   const checkIsVoted = async () =>{
 
     try{
-      const response = await fetch(`http://localhost:8000/poll/${userId}/${pollId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${userId}/${pollId}`, {
         method: 'GET',
       });
 

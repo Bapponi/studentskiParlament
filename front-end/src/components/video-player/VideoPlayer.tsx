@@ -10,10 +10,9 @@ interface VideoPlayerProps {
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, width = '100%', height = 'auto' }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // Effect to handle video source updates
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.load(); // Reloads the video
+      videoRef.current.load();
     }
   }, [src]);
 
@@ -21,7 +20,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, width = '100%', height =
     <div className="video-player">
       <video ref={videoRef} controls width={width} height={height}>
         <source src={src} type="video/mp4" />
-        Your browser does not support the video tag.
+        Твој интернет претраживач не подржава задати формат
       </video>
     </div>
   );

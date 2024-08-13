@@ -8,6 +8,7 @@ import { useAuth } from '../../AuthContext';
 import TextInput from '../../components/form-elements/TextInput';
 import TextArea from '../../components/form-elements/TextArea';
 import FileUpload from '../../components/form-elements/FileUpload';
+import VideoPlayer from '../../components/video-player/VideoPlayer';
 
 interface NewsSection {
   id: number;
@@ -40,9 +41,11 @@ function OneNews() {
   const [sectionHeaderPopUp, setSectionHeaderPopUp] = useState<number | null>(null);
   const [sectionTextPopUp, setSectionTextPopUp] = useState<number | null>(null);
   const [sectionImagePopUp, setSectionImagePopUp] = useState<number | null>(null);
+  const [sectionVideoPopUp, setSectionVideoPopUp] = useState<number | null>(null);
   const [newClip, setNewClip] = useState<string>('');
   const [newTitle, setNewTitle] = useState<string>('');
   const [newBanner, setNewBanner] = useState<File | null>(null);
+  const [sectionVideo, setSectionVideo] = useState<File | null>(null);
   const [sectionImage, setSectionImage] = useState<File | null>(null);
   const [sectionHeader, setSectionHeader] = useState<string>('');
   const [sectionText, setSectionText] = useState<string>('');
@@ -91,6 +94,10 @@ function OneNews() {
     setSectionImage(file);
   };
 
+  const handleSectionVideoChange = (file: File | null) => {
+    setSectionVideo(file);
+  };
+
   const updateNewsSection = async (sectionId: number, content: string | File | null, type: string) => {
     try {
       let body: FormData | string;
@@ -125,6 +132,7 @@ function OneNews() {
       setSectionHeaderPopUp(null);
       setSectionTextPopUp(null);
       setSectionImagePopUp(null);
+      setSectionVideoPopUp(null);
     } catch (error) {
       console.error('Error updating news section:', error);
     }
@@ -337,6 +345,38 @@ function OneNews() {
                     }
                   </div>
                 }
+                {entry.type === 'video' && (
+                  <div className='one-news__admin'>
+                    <VideoPlayer width='63%' height='100%' src={entry.content}/>
+                    {isAdmin && (
+                      <img
+                        src='../refresh.png'
+                        alt='upload'
+                        className='one-news__refresh'
+                        onClick={() => setSectionVideoPopUp(entry.id)}
+                      />
+                    )}
+                    {sectionVideoPopUp === entry.id && (
+                      <PopUp onClose={() => setSectionVideoPopUp(null)}>
+                        <h2>Промени видео вести</h2>
+                        <FileUpload
+                          file={sectionVideo}
+                          onFileChange={handleSectionVideoChange}
+                          placeholder='Превуци видео овде, или кликни да би га изабрао'
+                          fileType={FileType.Video}
+                        />
+                        <div
+                          style={{ width: '100%' }}
+                          onClick={() =>
+                            updateNewsSection(entry.id, sectionVideo, entry.type)
+                          }
+                        >
+                          <Button text='Пошаљи измену' />
+                        </div>
+                      </PopUp>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>

@@ -119,85 +119,97 @@ export class NewsController {
 
   public uploadNewsFile = async (req: Request, res: Response) => {
     const multerUpload = upload.fields([
-      { name: 'banner', maxCount: 1 },
-      { name: 'uploadedFiles', maxCount: 10 },
+        { name: 'banner', maxCount: 1 },
+        { name: 'uploadedFiles', maxCount: 10 },
+        { name: 'uploadedVideo', maxCount: 10 }, // Add this line to handle video uploads
     ]);
 
     // Wrap the multer upload in a promise
     const handleFileUpload = (): Promise<UploadedFiles> => {
-      return new Promise((resolve, reject) => {
-        multerUpload(req, res, (err) => {
-          if (err) {
-            return reject(new Error('File upload error'));
-          }
-          resolve(req.files as UploadedFiles);
+        return new Promise((resolve, reject) => {
+            multerUpload(req, res, (err) => {
+                if (err) {
+                    return reject(new Error('File upload error'));
+                }
+                resolve(req.files as UploadedFiles);
+            });
         });
-      });
     };
 
     try {
-      const files = await handleFileUpload();
+        const files = await handleFileUpload();
 
-      const uploadedFiles = files['uploadedFiles'] || [];
-      const banner = files['banner'] ? files['banner'][0] : undefined;
-      const bannerName = banner ? 'http://localhost:8000/uploads/news/' + banner.filename : null;
+        const uploadedFiles = files['uploadedFiles'] || [];
+        const uploadedVideo = files['uploadedVideo'] || []; // Add this line to extract uploaded videos
+        const banner = files['banner'] ? files['banner'][0] : undefined;
+        const bannerName = banner ? 'http://localhost:8000/uploads/news/' + banner.filename : null;
 
-      const title = req.body.title;
-      const clip = req.body.clip;
-      const elements = JSON.parse(req.body.elements);
-      const headerValues = JSON.parse(req.body.headerValues);
-      const textValues = JSON.parse(req.body.textValues);
-      const fileKeys = req.body.uploadedFileKeys;
+        const title = req.body.title;
+        const clip = req.body.clip;
+        const elements = JSON.parse(req.body.elements);
+        const headerValues = JSON.parse(req.body.headerValues);
+        const textValues = JSON.parse(req.body.textValues);
+        const fileKeys = req.body.uploadedFileKeys;
+        const videoKeys = req.body.uploadedVideoKeys; // Add this line to get video keys
 
-      if (clip.length > 200) {
-        return res.status(300).send('Унет предугачки исечак текста!');
-      }
+        if (clip.length > 200) {
+            return res.status(300).send('Унет предугачки исечак текста!');
+        }
 
-      console.log({ title, clip, banner, elements, headerValues, textValues, uploadedFiles, fileKeys });
+        console.log({ title, clip, banner, elements, headerValues, textValues, uploadedFiles, uploadedVideo, fileKeys, videoKeys });
 
-      let mainQuery: string;
-      let values: any[];
+        let mainQuery: string;
+        let values: any[];
 
-      if (banner == undefined) {
-        mainQuery = 'INSERT INTO news (title, clip) VALUES($1, $2) RETURNING id';
-        values = [title, clip];
-      } else {
-        mainQuery = 'INSERT INTO news (title, clip, banner) VALUES($1, $2, $3) RETURNING id';
-        values = [title, clip, bannerName];
-      }
+        if (banner == undefined) {
+            mainQuery = 'INSERT INTO news (title, clip) VALUES($1, $2) RETURNING id';
+            values = [title, clip];
+        } else {
+            mainQuery = 'INSERT INTO news (title, clip, banner) VALUES($1, $2, $3) RETURNING id';
+            values = [title, clip, bannerName];
+        }
 
-      const newsInsertResult = await client.query(mainQuery, values);
-      const newsId = newsInsertResult.rows[0].id;
+        const newsInsertResult = await client.query(mainQuery, values);
+        const newsId = newsInsertResult.rows[0].id;
 
-      const selectQuery = 'INSERT INTO news_sections (type, content, ordering, news_id) VALUES($1, $2, $3, $4)';
-      if (headerValues) {
-        Object.entries(headerValues).forEach(([key, value]) => {
-          const values = ['header', value, key, newsId]
-          client.query(selectQuery, values);
-        });
-      }
+        const selectQuery = 'INSERT INTO news_sections (type, content, ordering, news_id) VALUES($1, $2, $3, $4)';
+        if (headerValues) {
+            Object.entries(headerValues).forEach(([key, value]) => {
+                const values = ['header', value, key, newsId];
+                client.query(selectQuery, values);
+            });
+        }
 
-      if (textValues) {
-        Object.entries(textValues).forEach(([key, value]) => {
-          const values = ['text', value, key, newsId]
-          client.query(selectQuery, values);
-        });
-      }
+        if (textValues) {
+            Object.entries(textValues).forEach(([key, value]) => {
+                const values = ['text', value, key, newsId];
+                client.query(selectQuery, values);
+            });
+        }
 
-      if (uploadedFiles.length > 0) {
-        uploadedFiles.forEach((file, index) => {
-          const pictureName = 'http://localhost:8000/uploads/news/' + file.filename;
-          const sectionValues = ['picture', pictureName, fileKeys[index], newsId];
-          client.query(selectQuery, sectionValues);
-        });
-      }
+        if (uploadedFiles.length > 0) {
+            uploadedFiles.forEach((file, index) => {
+                const pictureName = 'http://localhost:8000/uploads/news/' + file.filename;
+                const sectionValues = ['picture', pictureName, fileKeys[index], newsId];
+                client.query(selectQuery, sectionValues);
+            });
+        }
 
-      res.status(200).json('Успешно окачена вест');
+        if (uploadedVideo.length > 0) {
+            uploadedVideo.forEach((file, index) => {
+                const videoName = 'http://localhost:8000/uploads/news/' + file.filename;
+                const sectionValues = ['video', videoName, videoKeys[index], newsId];
+                client.query(selectQuery, sectionValues);
+            });
+        }
+
+        res.status(200).json('Успешно окачена вест');
     } catch (error) {
-      console.error(error);
-      res.status(500).send('Грешка у бази!');
+        console.error(error);
+        res.status(500).send('Грешка у бази!');
     }
   };
+
 
   public deleteNews = async (req: Request, res: Response): Promise<void> => {
     const id = parseInt(req.params.id);
@@ -278,6 +290,7 @@ export class NewsController {
   }
 
   public updateNewsSection = async (req: Request, res: Response) => {
+    console.log(req.body)
     const sectionId = parseInt(req.body.sectionId);
     const type = req.body.type;
     let content = req.body.content;

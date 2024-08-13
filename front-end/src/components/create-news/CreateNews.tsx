@@ -64,6 +64,13 @@ function CreateNews() {
       }
     });
 
+    Object.entries(uploadedVideo).forEach(([key, file]) => {
+      if (file) {
+        formData.append('uploadedVideoKeys', key);
+        formData.append('uploadedVideo', file);
+      }
+    });
+
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/upload`, {
         method: 'POST',

@@ -176,8 +176,27 @@ export class PollController {
       }else{
         return res.status(500).json('Грешка у бази!');
       }
+    });  
+  }
+
+  public getMembersWhoVoted(req: Request, res: Response): void {
+    const pollId = parseInt(req.params.pollId);
+    const query = `
+      SELECT members.name
+      FROM votes
+      INNER JOIN members ON votes.member_id = members.id
+      WHERE votes.poll_id = $1;
+    `;
+    const values = [pollId];
+
+    client.query(query, values, (err, result) => {
+      if (!err) {
+        const memberNames = result.rows.map(row => row.name);
+        res.status(200).json({ members: memberNames });
+      } else {
+        return res.status(500).send('Грешка у бази!');
+      }
     });
-    
-}
+  }
 
 }

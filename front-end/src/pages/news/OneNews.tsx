@@ -93,26 +93,34 @@ function OneNews() {
 
   const updateNewsSection = async (sectionId: number, content: string | File | null, type: string) => {
     try {
-      let body;
+      let body: FormData | string;
+      let headers: HeadersInit | undefined = undefined;
+  
       if (type === 'picture') {
         const formData = new FormData();
         formData.append('sectionId', sectionId.toString());
-        formData.append('file', content as File);
+        formData.append('type', type);
+        if (content instanceof File) {
+          formData.append('file', content);
+        }
         body = formData;
       } else {
         body = JSON.stringify({ sectionId, content, type });
+        headers = {
+          'Content-Type': 'application/json',
+        };
       }
-
+  
       const response = await fetch(`http://localhost:8000/news/${id}/section`, {
         method: 'PUT',
-        headers: type !== 'picture' ? { 'Content-Type': 'application/json' } : undefined,
-        body: type !== 'picture' ? JSON.stringify({ sectionId, content, type }) : body,
+        headers: headers,
+        body: body,
       });
-
+  
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Error updating news section!');
       }
-
+  
       fetchNewsDetails();
       setSectionHeaderPopUp(null);
       setSectionTextPopUp(null);

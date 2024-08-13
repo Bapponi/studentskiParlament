@@ -277,22 +277,25 @@ export class NewsController {
     }
   }
 
-  public async updateNewsSection(req: Request, res: Response) {
-    console.log("BANANOSI", req.body, req.params)
-    const { id } = req.params;
-    const { sectionId, content, type } = req.body;
-    console.log(sectionId, content, type)
-    try {
-      const query = 'UPDATE news_sections SET content = $1, type = $2 WHERE id = $3 AND news_id = $4';
-      const values = [content, type, sectionId, id];
-      const result = await client.query(query, values);
-      if (result.rowCount === 0) {
-        return res.status(404).json({ message: 'News section not found' });
-      }
-      res.json({ message: 'News section updated successfully' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Грешка у бази!');
+  public updateNewsSection = async (req: Request, res: Response) => {
+    const sectionId = parseInt(req.body.sectionId);
+    const type = req.body.type;
+    let content = req.body.content;
+
+    if (type === 'picture' && req.file) {
+      content = 'http://localhost:8000/uploads/news/' + req.file.filename;
     }
-  }
+
+    try {
+      const updateQuery = 'UPDATE news_sections SET content = $1 WHERE id = $2';
+      const values = [content, sectionId];
+
+      await client.query(updateQuery, values);
+
+      res.status(200).send('News section updated successfully!');
+    } catch (error) {
+      console.error('Error updating news section:', error);
+      res.status(500).send('Error updating news section');
+    }
+  };
 }

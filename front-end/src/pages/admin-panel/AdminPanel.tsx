@@ -7,6 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 import CreatePoll from '../../components/polls/CreatePoll';
 import Polls from '../../components/polls/Polls';
+import { useFetchMemberName } from '../../hooks/memberHooks/useFetchMemberName';
+import MessageBox from '../../components/message-box/MessageBox';
+import { MessageBoxTypes } from '../members/helpers';
 
 
 function AdminPanel() {
@@ -16,28 +19,13 @@ function AdminPanel() {
   const [createPollsVisible, setCreatePollsVisible] = useState<boolean>(false);
   const [createNewsVisible, setCreateNewsVisible] = useState<boolean>(false);
   const userId = localStorage.getItem('userId');
-  const [memberName, setMemberName] = useState<string>('');
+  const { data: memberName, error: nameError, isLoading: isLoadingName } = useFetchMemberName(userId ? parseInt(userId) : -1);
 
   useEffect(() => {
     if (!isLoggedIn) {
       navigate('/');
-    } else {
-      getMember();
     }
   }, []);
-
-  const getMember = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/name/${userId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      const data = await response.json();
-      setMemberName(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const selectUserActivity = (option: number) => {
     switch (option) {
@@ -86,6 +74,12 @@ function AdminPanel() {
         {createPollsVisible && isAdmin && <CreatePoll />}
         {createNewsVisible && isAdmin && <CreateNews />}
       </div>
+      {nameError && 
+        <MessageBox text={nameError} infoType={MessageBoxTypes.Error}/>
+      }
+      {isLoadingName && 
+        <MessageBox text='Учитава се име корисника...' infoType={MessageBoxTypes.Loading}/>
+      }
     </div>
   );
 }

@@ -145,3 +145,24 @@ export const updateMemberAPI = async ({
   }
 };
 
+export const fetchMemberNameAPI = async ({
+  id,
+}:{
+  id: number
+}) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/name/${id}`);
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+    const data: string = await response.json();
+    return data;
+
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};
+

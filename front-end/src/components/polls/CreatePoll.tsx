@@ -3,15 +3,19 @@ import './polls.css';
 import ElementOptions from '../create-news/ElementOptions';
 import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
+import { usePoll } from '../../hooks/pollHooks/usePoll';
+import MessageBox from '../message-box/MessageBox';
+import { MessageBoxTypes } from './helpers';
 
 function CreatePoll() {
 
-  const [titleValue, setTitleValue] = useState('');
+  const [title, setTitle] = useState('');
   const [elements, setElements] = useState<number[]>([]);
   const [optionValues, setOptionValues] = useState<{ [key: number]: string }>({});
+  const {createPoll, isLoadingCreate, createError, createInfo,} = usePoll();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitleValue(e.target.value);
+    setTitle(e.target.value);
   };
 
   const addElement = () => {
@@ -19,33 +23,10 @@ function CreatePoll() {
   };
 
   const publishPoll = async () => {
-    const payload = {
-      title: titleValue,
-      elements,
-      optionValues
-    };
-
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/upload`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Failed to upload poll: ${errorMessage}`);
-      }
-
-      setTitleValue('');
-      setElements([]);
-      setOptionValues({});
-
-    } catch (error) {
-      console.error('Error uploading poll:', error);
-    }
+    createPoll({title, elements, optionValues})
+    setTitle('');
+    setElements([]);
+    setOptionValues({});
   };
 
   const handleOptionChange = (id: number, value: string) => {
@@ -67,7 +48,7 @@ function CreatePoll() {
           <img src="header.png" alt="header" className='add-image' />  
         </div>
         <TextInput 
-          value={titleValue} 
+          value={title} 
           onChange={handleTitleChange} 
           type="text"
           placeholder='Унесите наслов гласања овде'
@@ -97,6 +78,9 @@ function CreatePoll() {
           <Button text='Објави ново гласање' />
         </div>
       </div>
+      {createError && <MessageBox text={createError} infoType={MessageBoxTypes.Error}/>}
+      {createInfo && <MessageBox text={createInfo} infoType={MessageBoxTypes.Info}/>}
+      {isLoadingCreate && <MessageBox text='Креирање новог гласања...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

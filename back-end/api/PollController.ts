@@ -101,7 +101,6 @@ export class PollController {
   }
 
   public deletePoll = async (req: Request, res: Response): Promise<void> => {
-    
     const id = parseInt(req.params.id);
     const deletePollOptionsQuery = 'DELETE FROM poll_options WHERE poll_id = $1';
     const deletePollQuery = 'DELETE FROM polls WHERE id = $1 RETURNING *';

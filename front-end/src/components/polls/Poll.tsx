@@ -39,22 +39,6 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
     getPollMembers();
   },[])
 
-  const deletePoll = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Неуспешно избрисано гласање!');
-      }
-
-      onDelete(id);
-    } catch (error) {
-      console.error('Грешка приликом брисанја гласања:', error);
-    }
-  };
-
   const updateActivity = async (updateActive: boolean) => {
     try {
       const payload = {
@@ -100,7 +84,7 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
   return (
     <div className='poll-container'>
       {isDialogOpen && (
-        <ConformationDialog onConfirm={deletePoll} onClose={()=>{setIsDialogOpen(false)}} />
+        <ConformationDialog onConfirm={()=>{onDelete(id)}} onClose={()=>{setIsDialogOpen(false)}} />
       )}
       <h2 style={{color: "var(--primary-color)"}}>{title}</h2>
       <h3>Чланови који су гласали (укупно <span style={{color: "var(--primary-color)"}}>{votesSum}</span>):</h3>

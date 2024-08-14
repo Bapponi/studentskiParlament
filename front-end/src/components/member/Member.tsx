@@ -7,23 +7,7 @@ import TextArea from '../form-elements/TextArea';
 import { useAuth } from '../../AuthContext';
 import SelectOption from '../form-elements/SelectOption';
 import ConformationDialog from '../conformation-dialog/ConformationDialog';
-
-enum FileType {
-  Photo = 1,
-  Video,
-  Pdf
-}
-
-interface MemberProps {
-  id: number;
-  position: string;
-  name: string;
-  email: string;
-  bio: string;
-  memberImg: string;
-  roleId: number;
-  onDelete: (id: number) => void;
-}
+import { MemberProps, FileType, positionOptions, roleOptions } from '../../pages/members/helpers';
   
 const Member: React.FC<MemberProps> = ({
     id,
@@ -34,6 +18,7 @@ const Member: React.FC<MemberProps> = ({
     memberImg,
     roleId,
     onDelete,
+    onUpdate,
   }) => {
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -43,30 +28,8 @@ const Member: React.FC<MemberProps> = ({
   const [newPosition, setNewPosition] = useState(position);
   const [newBio, setNewBio] = useState(bio);
   const [newRoleId, setNewRoleId] = useState(roleId);
-  const [currentName, setCurrentName] = useState(name);
-  const [currentEmail, setCurrentEmail] = useState(email);
-  const [currentPosition, setCurrentPosition] = useState(position);
-  const [currentBio, setCurrentBio] = useState(bio);
-  const [currentRoleId, setCurrentRoleId] = useState(roleId);
-  const [currentMemberImg, setCurrentMemberImg] = useState(memberImg);
   const {isAdmin} = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const deleteMember = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Неуспешно избрисан члан!');
-      }
-
-      onDelete(id);
-    } catch (error) {
-      console.error('Грешка приликом брисанја члана:', error);
-    }
-  };
 
   const updatePopUp = () => {
     setIsPopupVisible(true);
@@ -76,41 +39,11 @@ const Member: React.FC<MemberProps> = ({
     setIsPopupVisible(false);
   };
 
-  const updateMember = async () => {
-    try {
-      const formData = new FormData();
-      if (newFile) {
-        formData.append('file', newFile);
-      }
-      formData.append('name', newName);
-      formData.append('email', newEmail);
-      formData.append('position', newPosition);
-      formData.append('bio', newBio);
-      formData.append('roleId', newRoleId.toString());
-  
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/${id}`, {
-        method: 'PUT',
-        body: formData,
-      });
-  
-      if (!response.ok) {
-        throw new Error('Неуспешно ажуриран члан!');
-      } else {
-        const updatedMember = await response.json();
-        setCurrentPosition(updatedMember.position);
-        setCurrentName(updatedMember.name);
-        setCurrentName(updatedMember.email);
-        setCurrentBio(updatedMember.bio);
-        setCurrentRoleId(updatedMember.roleId);
-        setCurrentBio(updatedMember.bio);
-        setCurrentMemberImg(updatedMember.memberImg);
-      }
-  
-      setIsPopupVisible(false);
-    } catch (error) {
-      console.error('Грешка приликом ажурирања члана:', error);
-    }
-  };
+  function handleUpdateMember(){
+    onUpdate({memberToUpdateId: id, file: newFile, name: newName, email: newEmail, position: newPosition, bio: newBio, roleId: newRoleId})
+    setNewFile(null)
+    setIsPopupVisible(false)
+  }
 
   const handleNewFileChange = (file: File | null) => {
     setNewFile(file);
@@ -132,45 +65,32 @@ const Member: React.FC<MemberProps> = ({
     setNewBio(e.target.value);
   };
 
-  //potencijalno greska
   const handleNewRoleIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNewRoleId(parseInt(e.target.value));
   };
 
-  const positionOptions = [
-    { value: 'председник', label: 'Председник' },
-    { value: 'под-председник', label: 'Под-Председник' },
-    { value: 'члан', label: 'Члан' },
-  ];
-  
-  const roleOptions = [
-    { value: '1', label: 'Админ' },
-    // { value: '2', label: 'ПР' },
-    { value: '3', label: 'Корисник' },
-  ];
-
   return (
     <div className='member-container'>
       {isDialogOpen && (
-        <ConformationDialog onConfirm={deleteMember} onClose={()=>{setIsDialogOpen(false)}} />
+        <ConformationDialog onConfirm={()=>{onDelete(id)}} onClose={()=>{setIsDialogOpen(false)}} />
       )}
-      {currentRoleId == 1 && (
+      {roleId == 1 && (
         <div className='admin-member'>
-          <img src={currentMemberImg} alt="member" className='member-image'/>
+          <img src={memberImg} alt="member" className='member-image'/>
           <div>
-              <h1 style={{color: "var(--primary-color)"}}>{currentName}</h1>
-              <h2>{currentPosition}</h2>
-              <p>{currentBio}</p>
+              <h1 style={{color: "var(--primary-color)"}}>{name}</h1>
+              <h2>{position}</h2>
+              <p>{bio}</p>
           </div>
         </div>
       )}
-      {currentRoleId == 3 && (
+      {roleId == 3 && (
         <div className='other-member'>
           <h2>
             <center>
               <span style={{color: "var(--primary-color)"}}>
-                {currentName}
-              </span> - {currentPosition}
+                {name}
+              </span> - {position}
             </center>
           </h2>
         </div>
@@ -226,7 +146,7 @@ const Member: React.FC<MemberProps> = ({
               type={"text"} 
               placeholder='Унеси нову ролу овде'
             /> */}
-            <div onClick={updateMember} className='update-link__button'>
+            <div onClick={handleUpdateMember} className='update-link__button'>
               <Button text='Промени'/>
             </div>
             <img src="cross.png" alt="cross" className='link-cross' onClick={closePopup}/>

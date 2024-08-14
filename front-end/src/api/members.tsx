@@ -166,3 +166,51 @@ export const fetchMemberNameAPI = async ({
   }
 };
 
+export const postLoginInfoAPI = async ({
+  email,
+  password,
+}:{
+  email: string
+  password: string
+}) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    return data;
+    // //ukoliko se loguje drugi clan bez odjavljivanja
+    // localStorage.removeItem('token');
+    // localStorage.removeItem('userId');
+    // localStorage.removeItem('roleId');
+
+    // localStorage.setItem('token', data.token);
+    // localStorage.setItem('userId', data.userId);
+    // localStorage.setItem('userRole', data.userRole);
+
+    // if(data.userRole == 1 ){
+    //   setIsAdmin(true)
+    // }
+    // setIsLoggedIn(true)
+    // navigate('/');
+
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};
+

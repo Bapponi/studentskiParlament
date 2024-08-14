@@ -5,7 +5,7 @@ import { useUpdateMember } from "./useUpdateMember";
 
 export const useMembers = () => {
     
-    const {data: {adminMembers, otherMembers}, error: fetchError, isLoading: isLoadingFetch, refetch}= useFetchMembers();
+    const {data: {adminMembers, otherMembers}, error: fetchError, isLoading: isLoadingFetch, refetch} = useFetchMembers();
     const {deleteMemberQuery, error: deleteError, isLoading: isLoadingDelete, info: deleteInfo} = useDeleteMembers();
     const {createMemberQuery, error: createError, isLoading: isLoadingCreate, info: createInfo} = useCreateNewMember();
     const {updateMemberQuery, error: updateError, isLoading: isLoadingUpdate, info: updateInfo} = useUpdateMember();

@@ -6,64 +6,40 @@ import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 import PopUp from '../../components/pop-up/PopUp';
+import MessageBox from '../../components/message-box/MessageBox';
+import { MessageBoxTypes } from '../members/helpers';
+import { usePostLoginInfo } from '../../hooks/memberHooks/usePostLoginInfo';
 
 function Login() {
 
-  const [emailValue, setEmailValue] = useState('');
-  const [passwordValue, setPasswordValue] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const {setIsLoggedIn, isAdmin, setIsAdmin} = useAuth()
   const [isPopUpVisible, setIsPopUpVisible] = useState<boolean>(false)
+  const {postLoginInfoQuery: postLoginInfo, memberRole,
+    error: loginError, isLoading: isLoadingLogin, info: loginInfo,
+   } = usePostLoginInfo();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailValue(e.target.value);
+    setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordValue(e.target.value);
+    setPassword(e.target.value);
   };
 
   const sendLoginInfo = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: emailValue,
-          password: passwordValue,
-        }),
-      });
+    const data = await postLoginInfo({email, password});
 
-      if (!response.ok) {
-        throw new Error('Неуспешно пријављивање');
-      }
-
-      const data = await response.json();
-
-      //ukoliko se loguje drugi clan bez odjavljivanja
-      localStorage.removeItem('token');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('roleId');
-
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userId', data.userId);
-      localStorage.setItem('userRole', data.userRole);
-
-      if(data.userRole == 1 ){
+    if(loginError != undefined){
+      if(memberRole == 1 ){
         setIsAdmin(true)
       }
       setIsLoggedIn(true)
-      navigate('/');
-
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('An unknown error occurred');
-      }
+      setTimeout(() => {
+        navigate("/")
+      }, 3000);
     }
   };
 
@@ -75,7 +51,7 @@ function Login() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: emailValue,
+          email: email,
         }),
       });
 
@@ -86,11 +62,7 @@ function Login() {
       setIsPopUpVisible(false)
 
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('An unknown error occurred');
-      }
+      console.log("JBG")
     }
   }
 
@@ -104,7 +76,7 @@ function Login() {
               Унесите ваш мејл и биће Вам послати линк за унос нове лозинке
             </p>
             <TextInput 
-              value={emailValue} 
+              value={email} 
               onChange={handleEmailChange} 
               type={"text"}
               placeholder='Унеси мејл овде'
@@ -120,7 +92,7 @@ function Login() {
         <div className='login-part'>
           <h2>Мејл</h2>
           <TextInput 
-            value={emailValue} 
+            value={email} 
             onChange={handleEmailChange} 
             type={"text"}
             placeholder='Унеси мејл овде'
@@ -129,18 +101,24 @@ function Login() {
         <div className='login-part'>
           <h2>Шифра</h2>
           <TextInput 
-            value={passwordValue} 
+            value={password} 
             onChange={handlePasswordChange} 
             type={"password"}
             placeholder='Унеси шифру овде'
           />
         </div>
-        {error && <p className='error-message'>{error}</p>}
         <div className='login-button' onClick={sendLoginInfo}>
           <Button text='Пошаљи'/>
         </div>
         <h3 className='new-password__label' onClick={()=>{setIsPopUpVisible(true)}}>Желите ли да поставите нову шифру?</h3>
       </div>
+      {loginError && 
+        <MessageBox text={loginError} infoType={MessageBoxTypes.Error}/>
+      }
+      {loginInfo && 
+        <MessageBox text={loginInfo} infoType={MessageBoxTypes.Info}/>
+      }
+      {isLoadingLogin && <MessageBox text='Слање информација за пријаву...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

@@ -228,3 +228,42 @@ export const sendConfirmationMailAPI = async ({
   }
 };
 
+export const newPasswordAPI = async ({
+  email,
+  password1,
+  password2,
+  token,
+}:{
+  email: string,
+  password1: string,
+  password2: string,
+  token: string,
+}) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/newPassword/password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password1: password1,
+        password2: password2,
+        token: token,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    // navigate('/login');
+
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+}

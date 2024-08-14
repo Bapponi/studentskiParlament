@@ -9,7 +9,7 @@ import PopUp from '../../components/pop-up/PopUp';
 import MessageBox from '../../components/message-box/MessageBox';
 import { MessageBoxTypes } from '../members/helpers';
 import { usePostLoginInfo } from '../../hooks/memberHooks/usePostLoginInfo';
-import { useResetMemberPassword } from '../../hooks/memberHooks/useResetMemberPassword';
+import { useSendConfirmationMail } from '../../hooks/memberHooks/useSendConfirmationMail';
 
 function Login() {
 
@@ -30,7 +30,7 @@ function Login() {
     error: resetError, 
     isLoading: isLoadingReset, 
     info: resetInfo
-  } = useResetMemberPassword();
+  } = useSendConfirmationMail();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -43,7 +43,7 @@ function Login() {
   const sendLoginInfo = async () => {
     await postLoginInfo({email, password});
 
-    if(loginError != undefined){
+    if(loginError == undefined){
       if(memberRole == 1 ){
         setIsAdmin(true)
       }

@@ -4,58 +4,44 @@ import Banner from '../../components/banner/Banner';
 import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { MessageBoxTypes } from '../members/helpers';
+import MessageBox from '../../components/message-box/MessageBox';
+import { useUpdateMemberPassword } from '../../hooks/memberHooks/useUpdateMemberPassword';
 
 function NewPassword() {
 
-  const [emailValue, setEmailValue] = useState('');
-  const [password1Value, setPassword1Value] = useState('');
-  const [password2Value, setPassword2Value] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [password1, setPassword1] = useState('');
+  const [password2, setPassword2] = useState('');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token') || '';
+  const {
+    updateMemberPasswordQuery: updateMemberPassword ,
+    error: newPasswordError, 
+    isLoading: isLoadingNewPassword, 
+    info: newPasswordInfo
+  } = useUpdateMemberPassword();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailValue(e.target.value);
+    setEmail(e.target.value);
   };
 
   const handlePassword1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword1Value(e.target.value);
+    setPassword1(e.target.value);
   };
 
   const handlePassword2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword2Value(e.target.value);
+    setPassword2(e.target.value);
   };
 
   const newPassword = async () => {
-    try {
-        console.log(emailValue, password1Value, password2Value)
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/newPassword/password`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: emailValue,
-          password1: password1Value,
-          password2: password2Value,
-          token: token,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Неуспешна постављена нова шифра');
-      }
-
-      const data = await response.json();
-      navigate('/login');
-
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('An unknown error occurred');
-      }
+    await updateMemberPassword({email, password1, password2, token});
+    console.log(newPasswordError)
+    if(newPasswordError == undefined){
+      setTimeout(() => {
+        navigate("/login")
+      }, 3000);
     }
   }
 
@@ -66,7 +52,7 @@ function NewPassword() {
         <div className='login-part'>
           <h2>Мејл</h2>
           <TextInput 
-            value={emailValue} 
+            value={email} 
             onChange={handleEmailChange} 
             type={"text"}
             placeholder='Унеси мејл овде'
@@ -75,7 +61,7 @@ function NewPassword() {
         <div className='login-part'>
           <h2>Нова шифра</h2>
           <TextInput 
-            value={password1Value} 
+            value={password1} 
             onChange={handlePassword1Change} 
             type={"password"}
             placeholder='Унеси шифру овде'
@@ -84,17 +70,23 @@ function NewPassword() {
         <div className='login-part'>
           <h2>Понови нову шифру</h2>
           <TextInput 
-            value={password2Value} 
+            value={password2} 
             onChange={handlePassword2Change} 
             type={"password"}
             placeholder='Унеси шифру овде'
           />
         </div>
-        {error && <p className='error-message'>{error}</p>}
         <div className='login-button' onClick={newPassword}>
           <Button text='Постави'/>
         </div>
       </div>
+      {newPasswordError && 
+        <MessageBox text={newPasswordError} infoType={MessageBoxTypes.Error}/>
+      }
+      {newPasswordInfo && 
+        <MessageBox text={newPasswordInfo} infoType={MessageBoxTypes.Info}/>
+      }
+      {isLoadingNewPassword && <MessageBox text='Постављање нове шифре...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

@@ -1,28 +1,31 @@
 import { useCallback, useEffect, useState } from "react";
-import { sendConfirmationMailAPI } from "../../api/members";
+import { newPasswordAPI, updateMemberAPI } from "../../api/members";
 
-export function useResetMemberPassword() {
+export function useUpdateMemberPassword() {
   const [error, setError] = useState<undefined | string>(undefined);
   const [info, setInfo] = useState<undefined | string>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const sendConfirmationMailQuery = useCallback(
-    async (
-      { 
-        email,
-      }: 
-      { 
-        email: string,
-      }) => 
-    {
+  const updateMemberPasswordQuery = useCallback(
+    async ({
+      email,
+      password1,
+      password2,
+      token,
+    }: {
+      email: string,
+      password1: string,
+      password2: string,
+      token: string,
+    }) => {
       setIsLoading(true);
-      setError(undefined);
+      setError(undefined); 
 
       try {
-        await sendConfirmationMailAPI({ email });
-        setInfo("Послат мејл за потврду");
+        await newPasswordAPI({ email, password1, password2, token });
+        setInfo("Успешно промењена шифра, пребацивање на страницу за пријављивање"); 
       } catch (error) {
-        setError(`Грешка приликом слања мејла за потврду: ${error}`);
+        setError(`Грешка приликом мењања шифре: ${error}`);
         setInfo(undefined);
       } finally {
         setIsLoading(false);
@@ -52,7 +55,7 @@ export function useResetMemberPassword() {
   }, [error, info]);
 
   return {
-    sendConfirmationMailQuery,
+    updateMemberPasswordQuery,
     error,
     isLoading,
     info,

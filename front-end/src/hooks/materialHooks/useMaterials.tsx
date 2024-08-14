@@ -6,9 +6,9 @@ import { useUpdateMaterial } from "./useUpdateMaterial"
 export const useMaterials = () => {
     
     const {data: materials, error: fetchError, isLoading: isLoadingFetch, refetch}= useFetchMaterials();
-    const {deleteMaterialQuery, error: deleteError, isLoading: isLoadingDelete} = useDeleteMaterials();
-    const {createMaterialQuery, error: createError, isLoading: isLoadingCreate} = useCreateNewMaterial();
-    const {updateMaterialQuery, error: updateError, isLoading: isLoadingUpdate} = useUpdateMaterial();
+    const {deleteMaterialQuery, error: deleteError, isLoading: isLoadingDelete, info: deleteInfo} = useDeleteMaterials();
+    const {createMaterialQuery, error: createError, isLoading: isLoadingCreate, info: createInfo} = useCreateNewMaterial();
+    const {updateMaterialQuery, error: updateError, isLoading: isLoadingUpdate, info: updateInfo} = useUpdateMaterial();
 
     async function createMaterial({file, title}:{file: undefined | null | File, title: string}){
         await createMaterialQuery({file, title});
@@ -39,12 +39,15 @@ export const useMaterials = () => {
         createMaterial,
         isLoadingCreate,
         createError,
+        createInfo,
         deleteMaterial,
         isLoadingDelete,
         deleteError,
+        deleteInfo,
         updateMaterial,
         isLoadingUpdate,
         updateError,
+        updateInfo,
     }
 
 }

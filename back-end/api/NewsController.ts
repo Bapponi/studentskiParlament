@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import client from '../database';
 import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
+require('dotenv').config();
 
 interface NewsSection {
   id: number,

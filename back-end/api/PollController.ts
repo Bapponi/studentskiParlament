@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import client from '../database';
+require('dotenv').config();
 
 interface PollOption{
   option_name: string,

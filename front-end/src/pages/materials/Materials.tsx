@@ -5,7 +5,7 @@ import Material from '../../components/material/Material';
 import FileUpload from '../../components/form-elements/FileUpload';
 import TextInput from '../../components/form-elements/TextInput';
 import Button from '../../components/button/Button';
-import { useMaterials } from '../../hooks/useMaterials';
+import { useMaterials } from '../../hooks/materialHooks/useMaterials';
 import { useAuth } from '../../AuthContext';
 import MessageBox from '../../components/message-box/MessageBox';
 import { FileType, MessageBoxTypes } from './helpers';
@@ -13,9 +13,9 @@ import { FileType, MessageBoxTypes } from './helpers';
 function Materials() {
 
   const {materials, isLoadingFetch, fetchError,
-         createMaterial, isLoadingCreate, createError, 
-         deleteMaterial, isLoadingDelete, deleteError,
-         updateMaterial, isLoadingUpdate, updateError
+         createMaterial, isLoadingCreate, createError, createInfo, 
+         deleteMaterial, isLoadingDelete, deleteError, deleteInfo,
+         updateMaterial, isLoadingUpdate, updateError, updateInfo
         } = useMaterials();
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>('');
@@ -29,7 +29,7 @@ function Materials() {
     setTitle(e.target.value);
   };
 
-  function handleUploadMaterial(){
+  function handleCreateMaterial(){
     createMaterial({file:file, title:title});
     setTitle('');
     setFile(null)
@@ -62,13 +62,15 @@ function Materials() {
               type={"text"}
               placeholder='Унеси назив фајла'
             />
-            <div onClick={handleUploadMaterial} style={{width: "100%"}}>
+            <div onClick={handleCreateMaterial} style={{width: "100%"}}>
               <Button text='Додај'/>
             </div>
-            {deleteError && <MessageBox text={deleteError} infoType={MessageBoxTypes.Error}/>}
-            {fetchError && <MessageBox text={fetchError} infoType={MessageBoxTypes.Error}/>}
-            {createError && <MessageBox text={createError} infoType={MessageBoxTypes.Error}/>}
-            {updateError && <MessageBox text={updateError} infoType={MessageBoxTypes.Error}/>}
+            {(deleteError || fetchError || createError || updateError) && 
+              <MessageBox text={deleteError || fetchError || createError || updateError} infoType={MessageBoxTypes.Error}/>
+            }
+            {(deleteInfo || createInfo || updateInfo) && 
+              <MessageBox text={deleteInfo || createInfo || updateInfo} infoType={MessageBoxTypes.Info}/>
+            }
             {isLoadingFetch && <MessageBox text='Учитавају се сви материјали...' infoType={MessageBoxTypes.Loading}/>}
             {isLoadingCreate && <MessageBox text='Креирање новог материјала...' infoType={MessageBoxTypes.Loading}/>}
             {isLoadingDelete && <MessageBox text='Брисање материјала...' infoType={MessageBoxTypes.Loading}/>}

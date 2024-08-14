@@ -3,6 +3,7 @@ import client from '../database';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+require('dotenv').config();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -27,7 +28,7 @@ export class LinkController {
         });
     }
 
-    public uploadLinkFile(req: Request, res: Response): void {
+    public createLink(req: Request, res: Response): void {
         upload.single('file')(req, res, (err) => {
             if (err) {
                 return res.status(400).send('Није успело са сланјем логоа!');
@@ -38,7 +39,7 @@ export class LinkController {
             }
 
             const fileData = {
-                logo: process.env.REACT_APP_BACKEND_LINK + req.file.filename,
+                logo: `${process.env.DB_BACKEND_LINK}/uploads/links/${req.file.filename}`,
                 website: req.body.website,
                 name: req.body.name,
             };

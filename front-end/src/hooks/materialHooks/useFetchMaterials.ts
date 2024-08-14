@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { fetchAllMaterialsAPI } from "../api/materials";
-import { MaterialProps } from "../pages/materials/helpers";
+import { fetchAllMaterialsAPI } from "../../api/materials";
+import { MaterialProps } from "../../pages/materials/helpers";
 
 export function useFetchMaterials() {
   const [materials, setMaterials] = useState<undefined | MaterialProps[]>(undefined);

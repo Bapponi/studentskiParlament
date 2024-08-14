@@ -3,6 +3,7 @@ import client from '../database';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+require('dotenv').config();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

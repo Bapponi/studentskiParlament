@@ -9,6 +9,7 @@ import PopUp from '../../components/pop-up/PopUp';
 import MessageBox from '../../components/message-box/MessageBox';
 import { MessageBoxTypes } from '../members/helpers';
 import { usePostLoginInfo } from '../../hooks/memberHooks/usePostLoginInfo';
+import { useResetMemberPassword } from '../../hooks/memberHooks/useResetMemberPassword';
 
 function Login() {
 
@@ -17,9 +18,19 @@ function Login() {
   const navigate = useNavigate();
   const {setIsLoggedIn, isAdmin, setIsAdmin} = useAuth()
   const [isPopUpVisible, setIsPopUpVisible] = useState<boolean>(false)
-  const {postLoginInfoQuery: postLoginInfo, memberRole,
-    error: loginError, isLoading: isLoadingLogin, info: loginInfo,
-   } = usePostLoginInfo();
+  const {
+    postLoginInfoQuery: postLoginInfo, 
+    memberRole, 
+    error: loginError, 
+    isLoading: isLoadingLogin, 
+    info: loginInfo 
+  } = usePostLoginInfo();
+  const {
+    sendConfirmationMailQuery: sendConfirmationMail, 
+    error: resetError, 
+    isLoading: isLoadingReset, 
+    info: resetInfo
+  } = useResetMemberPassword();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -30,7 +41,7 @@ function Login() {
   };
 
   const sendLoginInfo = async () => {
-    const data = await postLoginInfo({email, password});
+    await postLoginInfo({email, password});
 
     if(loginError != undefined){
       if(memberRole == 1 ){
@@ -44,26 +55,8 @@ function Login() {
   };
 
   const resetPassword = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/resetPassword`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Неуспешна обнова шифре');
-      }
-
-      setIsPopUpVisible(false)
-
-    } catch (error) {
-      console.log("JBG")
-    }
+    setIsPopUpVisible(false)
+    await sendConfirmationMail({email})
   }
 
   return (
@@ -112,13 +105,14 @@ function Login() {
         </div>
         <h3 className='new-password__label' onClick={()=>{setIsPopUpVisible(true)}}>Желите ли да поставите нову шифру?</h3>
       </div>
-      {loginError && 
-        <MessageBox text={loginError} infoType={MessageBoxTypes.Error}/>
+      {(loginError || resetError) && 
+        <MessageBox text={loginError || resetError} infoType={MessageBoxTypes.Error}/>
       }
-      {loginInfo && 
-        <MessageBox text={loginInfo} infoType={MessageBoxTypes.Info}/>
+      {(loginInfo || resetInfo) && 
+        <MessageBox text={loginInfo || resetInfo} infoType={MessageBoxTypes.Info}/>
       }
       {isLoadingLogin && <MessageBox text='Слање информација за пријаву...' infoType={MessageBoxTypes.Loading}/>}
+      {isLoadingReset && <MessageBox text='Шаље се мејл за потврду...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

@@ -1,39 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
-import { postLoginInfoAPI } from "../../api/members";
+import { sendConfirmationMailAPI } from "../../api/members";
 
-export function usePostLoginInfo() {
-  const [memberRole, setMemberRole] = useState<undefined | number>(undefined)
+export function useResetMemberPassword() {
   const [error, setError] = useState<undefined | string>(undefined);
   const [info, setInfo] = useState<undefined | string>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const postLoginInfoQuery = useCallback(
+  const sendConfirmationMailQuery = useCallback(
     async (
       { 
         email,
-        password, 
       }: 
       { 
         email: string,
-        password: string,
       }) => 
     {
       setIsLoading(true);
       setError(undefined);
 
       try {
-        const memberResponse = await postLoginInfoAPI({ email, password });
-        setMemberRole(memberResponse.userRole);
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('roleId');
-
-        localStorage.setItem('token', memberResponse.token);
-        localStorage.setItem('userId', memberResponse.userId);
-        localStorage.setItem('userRole', memberResponse.userRole);
-        setInfo("Успешна пријава, пребацивање на почетну страну...");
+        await sendConfirmationMailAPI({ email });
+        setInfo("Послат мејл за потврду");
       } catch (error) {
-        setError(`Грешка приликом пријаве: ${error}`);
+        setError(`Грешка приликом слања мејла за потврду: ${error}`);
         setInfo(undefined);
       } finally {
         setIsLoading(false);
@@ -63,8 +52,7 @@ export function usePostLoginInfo() {
   }, [error, info]);
 
   return {
-    postLoginInfoQuery,
-    memberRole,
+    sendConfirmationMailQuery,
     error,
     isLoading,
     info,

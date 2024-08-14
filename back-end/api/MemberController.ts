@@ -259,7 +259,7 @@ export class MemberController {
       try {
         const result = await client.query(query, values);
         if (result.rows.length === 0) {
-          return res.status(404).json({ message: 'User not found' });
+          return res.status(404).json('Није пронађен корисник са датим мејлом!');
         }
 
         const user = result.rows[0];

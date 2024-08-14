@@ -192,21 +192,35 @@ export const postLoginInfoAPI = async ({
 
     const data = await response.json();
     return data;
-    // //ukoliko se loguje drugi clan bez odjavljivanja
-    // localStorage.removeItem('token');
-    // localStorage.removeItem('userId');
-    // localStorage.removeItem('roleId');
 
-    // localStorage.setItem('token', data.token);
-    // localStorage.setItem('userId', data.userId);
-    // localStorage.setItem('userRole', data.userRole);
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};
 
-    // if(data.userRole == 1 ){
-    //   setIsAdmin(true)
-    // }
-    // setIsLoggedIn(true)
-    // navigate('/');
+export const sendConfirmationMailAPI = async ({
+  email
+}:{
+  email: string
+}) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/member/resetPassword`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
 
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+    // setIsPopUpVisible(false)
   } catch (error) {
     const errorMessage = errorToString(error);
     console.error(errorMessage);

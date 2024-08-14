@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { postLoginInfoAPI } from "../../api/members";
+import { useAuth } from "../../AuthContext";
 
 export function usePostLoginInfo() {
   const [memberRole, setMemberRole] = useState<undefined | number>(undefined)
   const [error, setError] = useState<undefined | string>(undefined);
   const [info, setInfo] = useState<undefined | string>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {setIsLoggedIn, isAdmin, setIsAdmin} = useAuth()
 
   const postLoginInfoQuery = useCallback(
     async (
@@ -31,6 +33,12 @@ export function usePostLoginInfo() {
         localStorage.setItem('token', memberResponse.token);
         localStorage.setItem('userId', memberResponse.userId);
         localStorage.setItem('userRole', memberResponse.userRole);
+
+        if(memberResponse.userRole == 1){
+          setIsAdmin(true)
+        }
+        setIsLoggedIn(true)
+
         setInfo("Успешна пријава, пребацивање на почетну страну...");
       } catch (error) {
         setError(`Грешка приликом пријаве: ${error}`);

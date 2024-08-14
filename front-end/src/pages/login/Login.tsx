@@ -16,7 +16,6 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const {setIsLoggedIn, isAdmin, setIsAdmin} = useAuth()
   const [isPopUpVisible, setIsPopUpVisible] = useState<boolean>(false)
   const {
     postLoginInfoQuery: postLoginInfo, 
@@ -44,10 +43,6 @@ function Login() {
     await postLoginInfo({email, password});
 
     if(loginError == undefined){
-      if(memberRole == 1 ){
-        setIsAdmin(true)
-      }
-      setIsLoggedIn(true)
       setTimeout(() => {
         navigate("/")
       }, 3000);

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './top-news.css';
 import NewsClip from './NewsClip';
+import { useNews } from '../../hooks/newsHooks/useNews';
+import { MessageBoxTypes, NewsProps } from '../../pages/news/helpers';
+import MessageBox from '../message-box/MessageBox';
 
 interface NewsClipProps {
   id: number;
@@ -12,35 +15,14 @@ interface NewsClipProps {
 
 function TopNews() {
 
-  const [news, setNews] = useState<NewsClipProps[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
   const limit = 2;
   const offset = 0;
 
-  const fetchNews = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news?limit=${limit}&offset=${offset}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      const data = await response.json();
-      setNews(data.news);
-      
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('An unknown error occurred');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {data, isLoadingFetch, fetchError} = useNews(limit, offset);
+  const { news = [] } = data || {};
 
   useEffect(() => {
-    fetchNews();
+    
   }, []);
 
   return (
@@ -49,22 +31,20 @@ function TopNews() {
         <h2>НАЈНОВИЈЕ ВЕСТИ</h2>
       </div>
       <div className='the-top__news'>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>{error}</p>
-        ) : (
-          news.map((entry) => (
-            <NewsClip 
-              key={entry.id}
-              id={entry.id}
-              date={entry.date}
-              title={entry.title}
-              description={entry.clip}
-            />
-          ))
-        )}
+        {news && news.map((entry) => (
+          <NewsClip 
+            key={entry.id}
+            id={entry.id}
+            date={entry.date}
+            title={entry.title}
+            description={entry.clip}
+          />
+        ))}
       </div>
+      {(fetchError) && 
+        <MessageBox text={fetchError} infoType={MessageBoxTypes.Error}/>
+      }
+      {isLoadingFetch && <MessageBox text='Учитавају се вести...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

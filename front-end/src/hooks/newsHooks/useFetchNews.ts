@@ -13,8 +13,9 @@ export function useFetchNews(limit: number, newsLength: number) {
     
     try {
       const newNewsInfo = await fetchAllNewsAPI({limit, newsLength});
-      const newPanels: NewsProps[] = news.concat(newNewsInfo.news);
-      setNews(newPanels)
+      const newsPanels: NewsProps[] = news.concat(newNewsInfo.news);
+      
+      setNews(newsPanels)
       setTotalCount(newNewsInfo.totalCount);
     } catch (error) {
       setError(`Грешка приликом учитавања свих вести: ${error}`);

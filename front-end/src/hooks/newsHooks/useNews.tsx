@@ -2,6 +2,7 @@ import { useDeleteNews } from "./useDeleteNews";
 import { useCreateNewLink } from "./useCreateNewNews";
 import { useUpdateLink } from "./useUpdateNews";
 import { useFetchNews } from "./useFetchNews";
+import { useEffect } from "react";
 
 export const useNews = (limit: number | undefined, offset: number | undefined) => {
 
@@ -31,6 +32,10 @@ export const useNews = (limit: number | undefined, offset: number | undefined) =
   ) {
     await updateLinkQuery({ file, name, website, id: linkToUpdateId });
   }
+
+  useEffect(()=>{
+    console.log(data)
+  }, [])
 
   return {
     data,

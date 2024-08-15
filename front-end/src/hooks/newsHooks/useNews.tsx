@@ -1,5 +1,5 @@
 import { useDeleteNews } from "./useDeleteNews";
-import { useCreateNewLink } from "./useCreateNewNews";
+import { useCreateNewNews } from "./useCreateNewNews";
 import { useUpdateLink } from "./useUpdateNews";
 import { useFetchNews } from "./useFetchNews";
 import { useEffect } from "react";
@@ -11,11 +11,29 @@ export const useNews = (limit: number | undefined, offset: number | undefined) =
 
   const { data, error: fetchError, isLoading: isLoadingFetch, refetch: fetchNews } = useFetchNews(actualLimit, actualOffset);
   const { deleteNewsQuery, error: deleteError, isLoading: isLoadingDelete, info: deleteInfo } = useDeleteNews();
-  const { createLinkQuery, error: createError, isLoading: isLoadingCreate, info: createInfo } = useCreateNewLink();
+  const { createNewsQuery, error: createError, isLoading: isLoadingCreate, info: createInfo } = useCreateNewNews();
   const { updateLinkQuery, error: updateError, isLoading: isLoadingUpdate, info: updateInfo } = useUpdateLink();
 
-  async function createLink({ file, website, name }: { file: undefined | null | File, website: string, name: string }) {
-    await createLinkQuery({ file, website, name });
+  async function createNews({
+    banner,
+    title,
+    clip,
+    elements,
+    headerValues,
+    textValues,
+    uploadedPictures,
+    uploadedVideos,
+  }:{
+    banner: File | null,
+    title: string,
+    clip: string,
+    elements: number[],
+    headerValues: { [key: number]: string },
+    textValues: { [key: number]: string },
+    uploadedPictures: { [key: number]: File | null },
+    uploadedVideos: { [key: number]: File | null },
+  }){
+    await createNewsQuery({banner, title, clip, elements, headerValues, textValues, uploadedPictures, uploadedVideos});
   }
 
   async function deleteNews({ newsToDeleteId }: { newsToDeleteId: number }) {
@@ -33,16 +51,12 @@ export const useNews = (limit: number | undefined, offset: number | undefined) =
     await updateLinkQuery({ file, name, website, id: linkToUpdateId });
   }
 
-  useEffect(()=>{
-    console.log(data)
-  }, [])
-
   return {
     data,
     isLoadingFetch,
     fetchError,
     fetchNews,
-    createLink,
+    createNews,
     isLoadingCreate,
     createError,
     createInfo,

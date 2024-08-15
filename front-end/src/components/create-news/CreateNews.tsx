@@ -5,6 +5,9 @@ import Button from '../button/Button';
 import TextInput from '../form-elements/TextInput';
 import FileUpload from '../form-elements/FileUpload';
 import TextArea from '../form-elements/TextArea';
+import { useNews } from '../../hooks/newsHooks/useNews';
+import { MessageBoxTypes } from '../../pages/news/helpers';
+import MessageBox from '../message-box/MessageBox';
 
 enum FileType {
   Photo = 1,
@@ -14,25 +17,26 @@ enum FileType {
 
 function CreateNews() {
 
-  const [titleValue, setTitleValue] = useState('');
-  const [clipValue, setClipValue] = useState('');
-  const [uploadedBanner, setUploadedBanner] = useState<File | null>(null);
+  const [title, setTitle] = useState('');
+  const [clip, setClip] = useState('');
+  const [banner, setBanner] = useState<File | null>(null);
   const [elements, setElements] = useState<number[]>([]);
   const [headerValues, setHeaderValues] = useState<{ [key: number]: string }>({});
   const [textValues, setTextValues] = useState<{ [key: number]: string }>({});
-  const [uploadedFiles, setUploadedFiles] = useState<{ [key: number]: File | null }>({});
-  const [uploadedVideo, setUploadedVideo] = useState<{ [key: number]: File | null }>({});
+  const [uploadedPictures, setUploadedPictures] = useState<{ [key: number]: File | null }>({});
+  const [uploadedVideos, setUploadedVideos] = useState<{ [key: number]: File | null }>({});
+  const {createNews, isLoadingCreate, createError, createInfo} = useNews(undefined, undefined);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitleValue(e.target.value);
+    setTitle(e.target.value);
   };
 
   const handleClipChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setClipValue(e.target.value);
+    setClip(e.target.value);
   };
 
   const handleBannerChange = (file: File | null) => {
-    setUploadedBanner(file);
+    setBanner(file);
   };
 
   const addElement = () => {
@@ -40,52 +44,15 @@ function CreateNews() {
   };
 
   const publishNews = async () => {
-    console.log(uploadedBanner);
-    console.log(titleValue);
-    console.log(clipValue);
-    console.log(elements, headerValues, textValues, uploadedFiles, uploadedVideo);
-
-    const formData = new FormData();
-
-    if (uploadedBanner) {
-      formData.append('banner', uploadedBanner);
-    }
-
-    formData.append('title', titleValue);
-    formData.append('clip', clipValue);
-    formData.append('elements', JSON.stringify(elements));
-    formData.append('headerValues', JSON.stringify(headerValues));
-    formData.append('textValues', JSON.stringify(textValues));
-
-    Object.entries(uploadedFiles).forEach(([key, file]) => {
-      if (file) {
-        formData.append('uploadedFileKeys', key);
-        formData.append('uploadedFiles', file);
-      }
-    });
-
-    Object.entries(uploadedVideo).forEach(([key, file]) => {
-      if (file) {
-        formData.append('uploadedVideoKeys', key);
-        formData.append('uploadedVideo', file);
-      }
-    });
-
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/upload`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Failed to upload news: ${errorMessage}`);
-      }
-
-      console.log(await response.json());
-    } catch (error) {
-      console.error('Error uploading news:', error);
-    }
+    createNews({banner, title, clip, elements, headerValues, textValues, uploadedPictures, uploadedVideos});
+    setBanner(null);
+    setTitle('');
+    setClip('');
+    setElements([]);
+    setHeaderValues([]);
+    setTextValues([]);
+    setUploadedPictures([]);
+    setUploadedVideos([]);
   };
 
   const handleHeaderChange = (id: number, value: string) => {
@@ -96,12 +63,12 @@ function CreateNews() {
     setTextValues({ ...textValues, [id]: value });
   };
 
-  const handleFilesChange = (id: number, files: File | null) => {
-    setUploadedFiles({ ...uploadedFiles, [id]: files });
+  const handlePicturesChange = (id: number, files: File | null) => {
+    setUploadedPictures({ ...uploadedPictures, [id]: files });
   };
 
-  const handleVideoFileChange = (id: number, files: File | null) => {
-    setUploadedVideo({ ...uploadedVideo, [id]: files });
+  const handleVideosChange = (id: number, files: File | null) => {
+    setUploadedVideos({ ...uploadedVideos, [id]: files });
   };
 
   const handleDeleteElement = (id: number) => {
@@ -110,10 +77,10 @@ function CreateNews() {
     setHeaderValues(newHeaderValues);
     const { [id]: __, ...newTextValues } = textValues;
     setTextValues(newTextValues);
-    const { [id]: ___, ...newUploadedFiles } = uploadedFiles;
-    setUploadedFiles(newUploadedFiles);
-    const { [id]: ____, ...newUploadedVideo } = uploadedVideo;
-    setUploadedVideo(newUploadedVideo);
+    const { [id]: ___, ...newUploadedPictures } = uploadedPictures;
+    setUploadedPictures(newUploadedPictures);
+    const { [id]: ____, ...newUploadedVideos } = uploadedVideos;
+    setUploadedVideos(newUploadedVideos);
   };
 
   return (
@@ -125,7 +92,7 @@ function CreateNews() {
             <img src="header.png" alt="header" className='add-image' />  
         </div>
         <TextInput 
-          value={titleValue} 
+          value={title} 
           onChange={handleTitleChange} 
           type={"text"}
           placeholder='Унесите наслов вести овде'
@@ -137,7 +104,7 @@ function CreateNews() {
             <img src="header.png" alt="header" className='add-image' />  
         </div>
         <TextArea
-          value={clipValue} 
+          value={clip} 
           onChange={handleClipChange}
           placeholder='Унети максимално 200 карактера'
         />
@@ -148,7 +115,7 @@ function CreateNews() {
             <img src="photo.png" alt="header" className='add-image' />  
         </div>
         <FileUpload 
-          file={uploadedBanner} 
+          file={banner} 
           onFileChange={handleBannerChange}
           placeholder='Превуци банер овде, или кликни да би га изабрао'
           fileType={FileType.Photo}  
@@ -164,10 +131,10 @@ function CreateNews() {
               onHeaderChange={handleHeaderChange}
               textValue={textValues[id] || ''}
               onTextChange={handleTextChange}
-              uploadedFiles={uploadedFiles[id] || null}
-              onFileChange={handleFilesChange}
-              uploadedVideo={uploadedVideo[id] || null}
-              onVideoFileChange={handleVideoFileChange}
+              uploadedFiles={uploadedPictures[id] || null}
+              onFileChange={handlePicturesChange}
+              uploadedVideo={uploadedVideos[id] || null}
+              onVideoFileChange={handleVideosChange}
               onDelete={handleDeleteElement}
               headerTitle='Заглавље'
               single={false}
@@ -184,6 +151,13 @@ function CreateNews() {
           <Button text='Објави вест' />
         </div>
       </div>
+      {(createError) && 
+        <MessageBox text={createError} infoType={MessageBoxTypes.Error}/>
+      }
+      {(createInfo) && 
+        <MessageBox text={createInfo} infoType={MessageBoxTypes.Info}/>
+      }
+      {isLoadingCreate && <MessageBox text='Прављење нове вести...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

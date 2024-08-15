@@ -1,22 +1,40 @@
 import { useCallback, useEffect, useState} from "react"
-import { createLinkAPI } from "../../api/links";
+import { createNewsAPI } from "../../api/news";
 
 
-export function useCreateNewLink () {
+export function useCreateNewNews () {
 
     const [error, setError] = useState<undefined | string>(undefined);
     const [info, setInfo] = useState<undefined | string>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const createLinkQuery = useCallback(
-        async ({file, website, name}:{file: undefined | File | null, website: string, name: string}) => {
+    const createNewsQuery = useCallback(
+      async ({
+        banner,
+        title,
+        clip,
+        elements,
+        headerValues,
+        textValues,
+        uploadedPictures,
+        uploadedVideos,
+      }:{
+        banner: File | null,
+        title: string,
+        clip: string,
+        elements: number[],
+        headerValues: { [key: number]: string },
+        textValues: { [key: number]: string },
+        uploadedPictures: { [key: number]: File | null },
+        uploadedVideos: { [key: number]: File | null },
+      }) => {
         setIsLoading(true);
 
         try {
-          await createLinkAPI({file, website, name});
-          setInfo("Успешно креиран нови линк");
+          await createNewsAPI({banner, title, clip, elements, headerValues, textValues, uploadedPictures, uploadedVideos});
+          setInfo("Успешно креирана нова вест");
         } catch (error) {
-          setError(`Грешка приликом креирања новог линка: ${error}`);
+          setError(`Грешка приликом креирања нове вести: ${error}`);
         } finally {
           setIsLoading(false);
         }
@@ -45,7 +63,7 @@ export function useCreateNewLink () {
     }, [error, info]);
 
     return {
-      createLinkQuery,
+      createNewsQuery,
       error, 
       isLoading,
       info

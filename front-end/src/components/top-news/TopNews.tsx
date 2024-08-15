@@ -17,13 +17,8 @@ function TopNews() {
 
   const limit = 2;
   const offset = 0;
-
   const {data, isLoadingFetch, fetchError} = useNews(limit, offset);
   const { news = [] } = data || {};
-
-  useEffect(() => {
-    
-  }, []);
 
   return (
     <div className='top-news'>

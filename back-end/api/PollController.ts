@@ -137,7 +137,6 @@ export class PollController {
   }
 
   public pollVote(req: Request, res: Response){
-    console.log(req.body)
 
     if(req.body.voteOption == ''){
       return res.status(400).send('Молим вас да унесете за шта гласате');
@@ -193,7 +192,7 @@ export class PollController {
     client.query(query, values, (err, result) => {
       if (!err) {
         const memberNames = result.rows.map(row => row.name);
-        res.status(200).json({ members: memberNames });
+        res.status(200).json(memberNames);
       } else {
         return res.status(500).send('Грешка у бази!');
       }

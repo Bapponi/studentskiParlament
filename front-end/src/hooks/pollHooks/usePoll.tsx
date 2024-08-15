@@ -1,12 +1,14 @@
 import { useDeletePolls } from "./useDeletePoll";
 import { useFetchPolls } from "./useFetchPoll";
 import { useCreateNewPoll } from "./useCreateNewPoll";
+import { useUpdatePollActivity } from "./useUpdatePollActivity";
 
 export const usePoll = () => {
     
     const {data: polls, error: fetchError, isLoading: isLoadingFetch, refetch}= useFetchPolls();
     const {deletePollQuery, error: deleteError, isLoading: isLoadingDelete, info: deleteInfo} = useDeletePolls();
     const {createPollQuery, error: createError, isLoading: isLoadingCreate, info: createInfo} = useCreateNewPoll();
+    const {updatePollActivityQuery, error: updateActivityError, isLoading: isLoadingUpdateActivity, info: updateActivityInfo} = useUpdatePollActivity();
 
     async function createPoll({
           title,
@@ -25,6 +27,17 @@ export const usePoll = () => {
         refetch();
     }
 
+    async function updatePollActivity({
+        id,
+        updateActive,
+      }:{
+        id: number,
+        updateActive: boolean,
+  }){
+      await updatePollActivityQuery({id, updateActive});
+      refetch();
+  }
+
     return {
         polls,
         isLoadingFetch,
@@ -37,6 +50,10 @@ export const usePoll = () => {
         isLoadingDelete,
         deleteError,
         deleteInfo,
+        updatePollActivity,
+        isLoadingUpdateActivity,
+        updateActivityError,
+        updateActivityInfo,
     }
 
 }

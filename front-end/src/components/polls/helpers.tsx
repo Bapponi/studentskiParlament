@@ -9,6 +9,10 @@ export interface PollProps{
   active: boolean
   pollOptions: PollOption[]
   onDelete: (id: number) => void;
+  onUpdate: ({ id, updateActive }: {
+    id: number;
+    updateActive: boolean
+  }) => void;
 }
 
 export enum FileType {

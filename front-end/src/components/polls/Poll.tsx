@@ -4,26 +4,17 @@ import PollVote from './PollVote'; // Import the new PollVote component
 import PollBar from './PollBar';
 import { useAuth } from '../../AuthContext';
 import ConformationDialog from '../conformation-dialog/ConformationDialog';
+import { useFetchPollMemberNames } from '../../hooks/pollHooks/useFetchPollMemberNames';
+import MessageBox from '../message-box/MessageBox';
+import { MessageBoxTypes } from './helpers';
+import { PollProps } from './helpers';
 
-interface PollOption {
-  option_name: string;
-  votes_num: number;
-}
-
-interface PollProps {
-  id: number;
-  title: string;
-  active: boolean;
-  pollOptions: PollOption[];
-  onDelete: (id: number) => void;
-}
-
-const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete }) => {
+const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete, onUpdate }) => {
   const [currentActive, setCurrentActive] = useState<boolean>(active);
   const [votesSum, setVotesSum] = useState<number>(0);
   const {isAdmin} = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [memberNames, setMemberNames] = useState<string[]>([])
+  const {data: pollMemberNames, error: fetchNamesError, isLoading: isLoadingFetchNames, refetch: banana} = useFetchPollMemberNames(id);
 
   const voteOptions = pollOptions.map(option => ({
     value: option.option_name,
@@ -35,50 +26,9 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
     setVotesSum(num);
   }, [pollOptions]);
 
-  useEffect(()=>{
-    getPollMembers();
-  },[])
-
   const updateActivity = async (updateActive: boolean) => {
-    try {
-      const payload = {
-        active: updateActive
-      };
-
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error('Неуспешно ажурирано гласање!');
-      }
-      setCurrentActive(!currentActive);
-    } catch (error) {
-      console.error('Грешка приликом брисанја гласања:', error);
-    }
-  };
-
-  const getPollMembers = async () => {
-    try {
-      const pollId = id
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${pollId}`, {
-        method: 'GET'
-      });
-      
-      if (!response.ok) {
-        throw new Error('Неуспешно дохватање чланова за гласање!');
-      }
-
-      const data = await response.json()
-      setMemberNames(data.members)
-      
-    } catch (error) {
-      console.error('Грешка приликом дохватања гласања:', error);
-    }
+    onUpdate({id, updateActive});
+    setCurrentActive(!currentActive);
   };
 
   return (
@@ -89,9 +39,9 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
       <h2 style={{color: "var(--primary-color)"}}>{title}</h2>
       <h3>Чланови који су гласали (укупно <span style={{color: "var(--primary-color)"}}>{votesSum}</span>):</h3>
       <div className='member-names'>
-        {memberNames.map((name, index) => (
+        {pollMemberNames && pollMemberNames.map((name, index) => (
           <span key={index}>
-            {name}{index < memberNames.length - 1 ? ', ' : ''}
+            {name}{index < pollMemberNames.length - 1 ? ', ' : ''}
           </span>
         ))}
       </div>
@@ -110,6 +60,10 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete })
           </button>
         </div>
       )}
+      {fetchNamesError && 
+        <MessageBox text={fetchNamesError} infoType={MessageBoxTypes.Error}/>
+      }
+      {isLoadingFetchNames && <MessageBox text='Учитавају се имена људи који су гласали...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

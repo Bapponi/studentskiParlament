@@ -13,7 +13,7 @@ const ConformationDialog: React.FC<ConformationDialogProps> = ({ onConfirm, onCl
       <div className='conformation-dialog'>
         <h2>Jeste li sigurni?</h2>
         <div className='conformation-dialog__buttons'>
-            <div className='conformation-dialog__button' onClick={onConfirm}>
+            <div className='conformation-dialog__button' onClick={()=>{onClose(); onConfirm();}}>
                 <Button text='DA'/>
             </div>
             <div className='conformation-dialog__button' onClick={onClose}>

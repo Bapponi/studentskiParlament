@@ -32,24 +32,51 @@ export const fetchAllNewsAPI = async ({
 };
 
 export const createNewsAPI = async ({
-    file,
-    website,
-    name,
+    banner,
+    title,
+    clip,
+    elements,
+    headerValues,
+    textValues,
+    uploadedPictures,
+    uploadedVideos,
 }:{
-    file: undefined | File | null,
-    website: string,
-    name: string,
+    banner: File | null,
+    title: string,
+    clip: string,
+    elements: number[],
+    headerValues: { [key: number]: string },
+    textValues: { [key: number]: string },
+    uploadedPictures: { [key: number]: File | null },
+    uploadedVideos: { [key: number]: File | null },
 }) => {
   try {
 
-    if (!file) {
-      throw new Error("Молим Вас да унесете фајл")      
-    }
-  
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('website', website);
-    formData.append('name', name);
+
+    if (banner) {
+      formData.append('banner', banner);
+    }
+
+    formData.append('title', title);
+    formData.append('clip', clip);
+    formData.append('elements', JSON.stringify(elements));
+    formData.append('headerValues', JSON.stringify(headerValues));
+    formData.append('textValues', JSON.stringify(textValues));
+
+    Object.entries(uploadedPictures).forEach(([key, file]) => {
+      if (file) {
+        formData.append('uploadedFileKeys', key);
+        formData.append('uploadedFiles', file);
+      }
+    });
+
+    Object.entries(uploadedVideos).forEach(([key, file]) => {
+      if (file) {
+        formData.append('uploadedVideoKeys', key);
+        formData.append('uploadedVideo', file);
+      }
+    });
   
     const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/upload`, {
       method: 'POST',

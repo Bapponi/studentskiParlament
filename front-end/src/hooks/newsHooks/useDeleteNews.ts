@@ -1,22 +1,22 @@
 import { useCallback, useEffect, useState} from "react"
-import { deleteLinkAPI } from "../../api/links";
+import { deleteNewsAPI } from "../../api/news";
 
 
-export function useDeleteLinks () {
+export function useDeleteNews () {
 
     const [error, setError] = useState<undefined | string>(undefined);
     const [info, setInfo] = useState<undefined | string>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const deleteLinkQuery = useCallback(
+    const deleteNewsQuery = useCallback(
         async ({id}:{id:number}) => {
           setIsLoading(true);
             
           try {
-            await deleteLinkAPI({id});
-            setInfo("Успешно избрисан линк")
+            await deleteNewsAPI({id});
+            setInfo("Успешно избрисана вест")
           } catch (error) {
-            setError(`Грешка приликом брисања линка: ${error}`);
+            setError(`Грешка приликом брисања вести: ${error}`);
           } finally {
             setIsLoading(false);
           }
@@ -45,7 +45,7 @@ export function useDeleteLinks () {
     }, [error, info]);
 
     return {
-        deleteLinkQuery,
+        deleteNewsQuery,
         isLoading,
         error, 
         info,

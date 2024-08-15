@@ -18,9 +18,21 @@ export interface NewsResponse {
   totalCount: number;
 }
 
-interface NewsClipProps {
+export interface NewsClipProps {
   id: number;
   date: string;
   title: string;
   description: string;
+}
+
+export enum FileType {
+  Photo = 1,
+  Video,
+  Pdf
+}
+
+export enum MessageBoxTypes{
+  Info = 1,
+  Error,
+  Loading
 }

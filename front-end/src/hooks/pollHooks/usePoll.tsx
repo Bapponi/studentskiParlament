@@ -2,6 +2,7 @@ import { useDeletePolls } from "./useDeletePoll";
 import { useFetchPolls } from "./useFetchPoll";
 import { useCreateNewPoll } from "./useCreateNewPoll";
 import { useUpdatePollActivity } from "./useUpdatePollActivity";
+import { useSendPollVote } from "./useSendPollVote";
 
 export const usePoll = () => {
     
@@ -9,6 +10,7 @@ export const usePoll = () => {
     const {deletePollQuery, error: deleteError, isLoading: isLoadingDelete, info: deleteInfo} = useDeletePolls();
     const {createPollQuery, error: createError, isLoading: isLoadingCreate, info: createInfo} = useCreateNewPoll();
     const {updatePollActivityQuery, error: updateActivityError, isLoading: isLoadingUpdateActivity, info: updateActivityInfo} = useUpdatePollActivity();
+    const {sendPollVoteQuery, error: sendError, isLoading: isLoadingSend, info: sendInfo} = useSendPollVote();
 
     async function createPoll({
           title,
@@ -33,10 +35,23 @@ export const usePoll = () => {
       }:{
         id: number,
         updateActive: boolean,
-  }){
-      await updatePollActivityQuery({id, updateActive});
-      refetch();
-  }
+    }){
+        await updatePollActivityQuery({id, updateActive});
+        refetch();
+    }
+
+    async function sendPollVote({
+        pollId,
+        userId,
+        voteOption,
+      }:{
+        pollId: number,
+        userId: number,
+        voteOption: string,
+    }){
+        await sendPollVoteQuery({pollId, userId, voteOption});
+        refetch();
+    }
 
     return {
         polls,
@@ -54,6 +69,10 @@ export const usePoll = () => {
         isLoadingUpdateActivity,
         updateActivityError,
         updateActivityInfo,
+        sendPollVote,
+        isLoadingSend,
+        sendError,
+        sendInfo,
     }
 
 }

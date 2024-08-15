@@ -140,3 +140,67 @@ export const updatePollActivityAPI = async ({
     throw errorMessage;
   }
 };
+
+export const sendPollVoteAPI = async ({
+  pollId,
+  userId,
+  voteOption,
+}:{
+  pollId: number,
+  userId: number,
+  voteOption: string,
+}) => {
+
+  const payload = {
+    pollId: pollId,
+    userId: userId,
+    voteOption: voteOption,
+  }
+
+  try{
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/vote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+}
+
+export const isVotedOnPollAPI = async ({
+  pollId,
+  userId,
+}:{
+  pollId: number,
+  userId: number,
+}) => {
+
+  try{
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${userId}/${pollId}`, {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    return data.voted
+
+  }catch(error){
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+}

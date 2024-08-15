@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import SelectOption from '../form-elements/SelectOption';
 import Button from '../button/Button';
+import { usePoll } from '../../hooks/pollHooks/usePoll';
+import MessageBox from '../message-box/MessageBox';
+import { MessageBoxTypes } from './helpers';
+import { useFetchVoteOnPoll } from '../../hooks/pollHooks/useFetchVoteOnPoll';
 
 interface PollOption {
   value: string;
@@ -19,60 +23,16 @@ const PollVote: React.FC<PollVoteProps> = ({
 
   const [voteOption, setVoteOption] = useState<string>('')
   const userId = parseInt(localStorage.getItem('userId') || '-1');
-  const [voted, setVoted] = useState<boolean>(false)
+  const {sendPollVote, sendError, sendInfo, isLoadingSend,} = usePoll()
+  const {data: voted, error: fetchVoteError, isLoading: isLoadingFetchVote,} = useFetchVoteOnPoll(pollId, userId);
 
   const handleVoteOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setVoteOption(e.target.value);
   };
 
   const sendVote = async () =>{
-
-    const payload = {
-      pollId: pollId,
-      userId: userId,
-      voteOption: voteOption,
-    }
-
-    try{
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/vote`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error('Неуспешно гласање!');
-      }
-
-    }catch(error){
-        console.error(error)
-    }
+    sendPollVote({pollId, userId, voteOption})
   }
-
-  const checkIsVoted = async () =>{
-
-    try{
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${userId}/${pollId}`, {
-        method: 'GET',
-      });
-
-      if (!response.ok) {
-        throw new Error('Неуспешно хватање стања гласањеа!');
-      }
-
-      const data = await response.json();
-      setVoted(data.voted)
-
-    }catch(error){
-        console.error(error)
-    }
-  }
-
-  useEffect(()=>{
-    checkIsVoted()
-  },[])
 
   return (
     <div >
@@ -92,7 +52,11 @@ const PollVote: React.FC<PollVoteProps> = ({
         <h3 style={{color: "var(--primary-color)"}}>
           Ваше гласање на овој анкети је забележено!
         </h3>
-      )}  
+      )}
+      {sendInfo && <MessageBox text={sendInfo} infoType={MessageBoxTypes.Info}/>}
+      {(sendError || fetchVoteError) && <MessageBox text={sendError || fetchVoteError} infoType={MessageBoxTypes.Error}/>}
+      {isLoadingSend && <MessageBox text='Слање гласа у току...' infoType={MessageBoxTypes.Loading}/>} 
+      {isLoadingFetchVote && <MessageBox text='Хватање стања гласања корисника...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

@@ -9,6 +9,9 @@ import TextInput from '../../components/form-elements/TextInput';
 import TextArea from '../../components/form-elements/TextArea';
 import FileUpload from '../../components/form-elements/FileUpload';
 import VideoPlayer from '../../components/video-player/VideoPlayer';
+import { useOneNews } from '../../hooks/newsHooks/useOneNews';
+import MessageBox from '../../components/message-box/MessageBox';
+import { MessageBoxTypes } from './helpers';
 
 interface NewsSection {
   id: number;
@@ -34,7 +37,7 @@ enum FileType {
 function OneNews() {
   const { id } = useParams<{ id: string }>();
   const { isAdmin } = useAuth();
-  const [newsDetails, setNewsDetails] = useState<NewsPanelProps | null>(null);
+  // const [newsDetails, setNewsDetails] = useState<NewsPanelProps | null>(null);
   const [bannerPopUp, setBannerPopUp] = useState<boolean>(false);
   const [titlePopUp, setTitlePopUp] = useState<boolean>(false);
   const [clipPopUp, setClipPopUp] = useState<boolean>(false);
@@ -49,26 +52,14 @@ function OneNews() {
   const [sectionImage, setSectionImage] = useState<File | null>(null);
   const [sectionHeader, setSectionHeader] = useState<string>('');
   const [sectionText, setSectionText] = useState<string>('');
-
-  const fetchNewsDetails = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}`, { method: 'GET' });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      setNewsDetails(data);
-      setNewTitle(data.title);
-      setNewClip(data.clip);
-      console.log(data)
-    } catch (error) {
-      console.error('Error fetching news details:', error);
-    }
-  };
+  const {data: newsDetails, isLoadingFetch, fetchError, fetchNewsDetails} = useOneNews(id ? parseInt(id): -1);
 
   useEffect(() => {
-    fetchNewsDetails();
-  }, [id]);
+    if(newsDetails){
+      setNewTitle(newsDetails.title);
+      setNewClip(newsDetails.clip);
+    }
+  }, [newsDetails]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewTitle(e.target.value);
@@ -382,6 +373,13 @@ function OneNews() {
           </div>
         </div>
       )}
+      {/* {(deleteInfo) && 
+        <MessageBox text={deleteInfo} infoType={MessageBoxTypes.Info}/>
+      } */}
+      {(fetchError) && 
+        <MessageBox text={fetchError} infoType={MessageBoxTypes.Error}/>
+      }
+      {isLoadingFetch && <MessageBox text='Учитавају се вести...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

@@ -155,3 +155,24 @@ export const updateNewsAPI = async ({
   }
 };
 
+export const fetchOneNewsAPI = async ({
+  id,
+}:{
+  id: number,
+}) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}`, { method: 'GET' });
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};
+

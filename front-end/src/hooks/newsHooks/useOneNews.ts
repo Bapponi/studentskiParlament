@@ -1,6 +1,6 @@
 import { useDeleteNews } from "./useDeleteNews";
 import { useCreateNewNews } from "./useCreateNewNews";
-import { useUpdateLink } from "./useUpdateNews";
+import { useUpdateNewsTitle } from "./useUpdateNewsTitle";
 import { useEffect } from "react";
 import { useFetchOneNews } from "./useFetchOneNews";
 
@@ -9,7 +9,7 @@ export const useOneNews = (id: number) => {
   const { data, error: fetchError, isLoading: isLoadingFetch, refetch: fetchNewsDetails } = useFetchOneNews(id);
   const { deleteNewsQuery, error: deleteError, isLoading: isLoadingDelete, info: deleteInfo } = useDeleteNews();
   const { createNewsQuery, error: createError, isLoading: isLoadingCreate, info: createInfo } = useCreateNewNews();
-  const { updateLinkQuery, error: updateError, isLoading: isLoadingUpdate, info: updateInfo } = useUpdateLink();
+  const { updateNewsTitleQuery, error: updateTitleError, isLoading: isLoadingTitleUpdate, info: updateTitleInfo } = useUpdateNewsTitle();
 
   async function createNews({
     banner,
@@ -37,15 +37,13 @@ export const useOneNews = (id: number) => {
     await deleteNewsQuery({ id: newsToDeleteId });
   }
 
-  async function updateLink({ file, name, website, linkToUpdateId }:
-    {
-      file: undefined | null | File,
-      name: string,
-      website: string,
-      linkToUpdateId: number,
-    }
-  ) {
-    await updateLinkQuery({ file, name, website, id: linkToUpdateId });
+  async function updateNewsTitle({
+      title 
+    }:{
+      title: string,
+    }) {
+    await updateNewsTitleQuery({ id, title });
+    fetchNewsDetails();
   }
 
   return {
@@ -61,9 +59,9 @@ export const useOneNews = (id: number) => {
     isLoadingDelete,
     deleteError,
     deleteInfo,
-    updateLink,
-    isLoadingUpdate,
-    updateError,
-    updateInfo,
+    updateNewsTitle,
+    isLoadingTitleUpdate,
+    updateTitleError,
+    updateTitleInfo,
   };
 };

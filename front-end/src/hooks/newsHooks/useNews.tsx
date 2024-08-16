@@ -1,6 +1,5 @@
 import { useDeleteNews } from "./useDeleteNews";
 import { useCreateNewNews } from "./useCreateNewNews";
-import { useUpdateLink } from "./useUpdateNews";
 import { useFetchNews } from "./useFetchNews";
 import { useEffect } from "react";
 
@@ -12,7 +11,6 @@ export const useNews = (limit: number | undefined, offset: number | undefined) =
   const { data, error: fetchError, isLoading: isLoadingFetch, refetch: fetchNews } = useFetchNews(actualLimit, actualOffset);
   const { deleteNewsQuery, error: deleteError, isLoading: isLoadingDelete, info: deleteInfo } = useDeleteNews();
   const { createNewsQuery, error: createError, isLoading: isLoadingCreate, info: createInfo } = useCreateNewNews();
-  const { updateLinkQuery, error: updateError, isLoading: isLoadingUpdate, info: updateInfo } = useUpdateLink();
 
   async function createNews({
     banner,
@@ -40,17 +38,6 @@ export const useNews = (limit: number | undefined, offset: number | undefined) =
     await deleteNewsQuery({ id: newsToDeleteId });
   }
 
-  async function updateLink({ file, name, website, linkToUpdateId }:
-    {
-      file: undefined | null | File,
-      name: string,
-      website: string,
-      linkToUpdateId: number,
-    }
-  ) {
-    await updateLinkQuery({ file, name, website, id: linkToUpdateId });
-  }
-
   return {
     data,
     isLoadingFetch,
@@ -64,9 +51,5 @@ export const useNews = (limit: number | undefined, offset: number | undefined) =
     isLoadingDelete,
     deleteError,
     deleteInfo,
-    updateLink,
-    isLoadingUpdate,
-    updateError,
-    updateInfo,
   };
 };

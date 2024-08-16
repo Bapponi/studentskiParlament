@@ -176,3 +176,31 @@ export const fetchOneNewsAPI = async ({
   }
 };
 
+export const updateNewsTitleAPI = async ({
+  id,
+  title,
+}:{
+  id: number,
+  title: string,
+}) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/title`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ title }),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+    
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};
+

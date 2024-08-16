@@ -52,7 +52,9 @@ function OneNews() {
   const [sectionImage, setSectionImage] = useState<File | null>(null);
   const [sectionHeader, setSectionHeader] = useState<string>('');
   const [sectionText, setSectionText] = useState<string>('');
-  const {data: newsDetails, isLoadingFetch, fetchError, fetchNewsDetails} = useOneNews(id ? parseInt(id): -1);
+  const {data: newsDetails, isLoadingFetch, fetchError, fetchNewsDetails,
+         isLoadingTitleUpdate, updateTitleError, updateTitleInfo, updateNewsTitle
+  } = useOneNews(id ? parseInt(id): -1);
 
   useEffect(() => {
     if(newsDetails){
@@ -130,24 +132,8 @@ function OneNews() {
   };
 
   const updateTitle = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/title`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title: newTitle }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      fetchNewsDetails();
-      setTitlePopUp(false);
-    } catch (error) {
-      console.error('Error updating title:', error);
-    }
+    updateNewsTitle({title: newTitle})
+    setTitlePopUp(false);
   };
 
   const updateClip = async () => {
@@ -379,7 +365,7 @@ function OneNews() {
       {(fetchError) && 
         <MessageBox text={fetchError} infoType={MessageBoxTypes.Error}/>
       }
-      {isLoadingFetch && <MessageBox text='Учитавају се вести...' infoType={MessageBoxTypes.Loading}/>}
+      {isLoadingFetch && <MessageBox text='Учитава се вест...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

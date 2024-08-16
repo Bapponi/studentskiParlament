@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useState} from "react"
-import { updateLinkAPI } from "../../api/links";
+import { updateNewsTitleAPI } from "../../api/news";
 
-export function useUpdateLink () {
+export function useUpdateNewsTitle () {
 
     const [error, setError] = useState<undefined | string>(undefined);
     const [info, setInfo] = useState<undefined | string>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const updateLinkQuery = useCallback(
-        async ({file, name, website, id}:{file: undefined | File | null, name: string, website: string, id: number}) => {
+    const updateNewsTitleQuery = useCallback(
+        async ({id, title,}:{id: number, title: string}) => {
         setIsLoading(true);
         
         try {
-          await updateLinkAPI({file, name, website, id});
-          setInfo("Успешно ажуриран линк")
+          await updateNewsTitleAPI({id, title});
+          setInfo("Успешно ажуриран наслов вести")
         } catch (error) {
-          setError(`Грешка приликом ажурирања линка: ${error}`);
+          setError(`Грешка приликом ажурирања наслова вести: ${error}`);
         } finally {
           setIsLoading(false);
         }
@@ -44,7 +44,7 @@ export function useUpdateLink () {
     }, [error, info]);
 
     return {
-        updateLinkQuery,
+        updateNewsTitleQuery,
         error, 
         isLoading,
         info,

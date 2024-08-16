@@ -55,6 +55,7 @@ function OneNews() {
          isLoadingTitleUpdate, updateTitleError, updateTitleInfo, updateNewsTitle,
          isLoadingClipUpdate, updateClipError, updateClipInfo, updateNewsClip,
          isLoadingBannerUpdate, updateBannerError, updateBannerInfo, updateNewsBanner,
+         isLoadingSectionUpdate, updateSectionError, updateSectionInfo, updateNewsSection,
   } = useOneNews(id ? parseInt(id): -1);
 
   useEffect(() => {
@@ -92,44 +93,12 @@ function OneNews() {
     setSectionVideo(file);
   };
 
-  const updateNewsSection = async (sectionId: number, content: string | File | null, type: string) => {
-    try {
-      let body: FormData | string;
-      let headers: HeadersInit | undefined = undefined;
-  
-      if (type === 'picture' || type === 'video') {
-        const formData = new FormData();
-        formData.append('sectionId', sectionId.toString());
-        formData.append('type', type);
-        if (content instanceof File) {
-          formData.append('file', content);
-        }
-        body = formData;
-      } else {
-        body = JSON.stringify({ sectionId, content, type });
-        headers = {
-          'Content-Type': 'application/json',
-        };
-      }
-  
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/section`, {
-        method: 'PUT',
-        headers: headers,
-        body: body,
-      });
-  
-      if (!response.ok) {
-        throw new Error('Error updating news section!');
-      }
-  
-      fetchNewsDetails();
-      setSectionHeaderPopUp(null);
-      setSectionTextPopUp(null);
-      setSectionImagePopUp(null);
-      setSectionVideoPopUp(null);
-    } catch (error) {
-      console.error('Error updating news section:', error);
-    }
+  const updateSection = async (sectionId: number, content: string | File | null, type: string) => {
+    updateNewsSection({sectionId, content, type})
+    setSectionHeaderPopUp(null);
+    setSectionTextPopUp(null);
+    setSectionImagePopUp(null);
+    setSectionVideoPopUp(null);    
   };
 
   const updateTitle = async () => {
@@ -235,7 +204,7 @@ function OneNews() {
                           type={"text"}
                           placeholder='Унеси нови поднаслов овде'
                         />
-                        <div style={{ width: '100%' }} onClick={() => updateNewsSection(entry.id, sectionHeader, entry.type)}>
+                        <div style={{ width: '100%' }} onClick={() => updateSection(entry.id, sectionHeader, entry.type)}>
                           <Button text='Пошаљи измену'/>
                         </div>
                       </PopUp>
@@ -260,7 +229,7 @@ function OneNews() {
                           onChange={handleSectionTextChange}
                           placeholder='Унесите нови параграф текста овде' 
                         />
-                        <div style={{ width: '100%' }} onClick={() => updateNewsSection(entry.id, sectionText, entry.type)}>
+                        <div style={{ width: '100%' }} onClick={() => updateSection(entry.id, sectionText, entry.type)}>
                           <Button text='Пошаљи измену'/>
                         </div>
                       </PopUp>
@@ -282,7 +251,7 @@ function OneNews() {
                           placeholder='Превуци слику овде, или кликни да би је изабрао'
                           fileType={FileType.Photo}
                         />
-                        <div style={{ width: '100%' }} onClick={() => updateNewsSection(entry.id, sectionImage, entry.type)} >
+                        <div style={{ width: '100%' }} onClick={() => updateSection(entry.id, sectionImage, entry.type)} >
                           <Button text='Пошаљи измену'/>
                         </div>
                       </PopUp>
@@ -312,7 +281,7 @@ function OneNews() {
                         <div
                           style={{ width: '100%' }}
                           onClick={() =>
-                            updateNewsSection(entry.id, sectionVideo, entry.type)
+                            updateSection(entry.id, sectionVideo, entry.type)
                           }
                         >
                           <Button text='Пошаљи измену' />
@@ -326,15 +295,17 @@ function OneNews() {
           </div>
         </div>
       )}
-      {(updateTitleInfo || updateClipInfo) && 
-        <MessageBox text={updateTitleInfo || updateClipInfo} infoType={MessageBoxTypes.Info}/>
+      {(updateTitleInfo || updateClipInfo || updateBannerInfo || updateSectionInfo) && 
+        <MessageBox text={updateTitleInfo || updateClipInfo || updateBannerInfo || updateSectionInfo} infoType={MessageBoxTypes.Info}/>
       }
-      {(fetchError || updateTitleError || updateClipError) && 
-        <MessageBox text={fetchError || updateTitleError || updateClipError} infoType={MessageBoxTypes.Error}/>
+      {(fetchError || updateTitleError || updateClipError || updateBannerError || updateSectionError) && 
+        <MessageBox text={fetchError || updateTitleError || updateClipError || updateBannerError || updateSectionError} infoType={MessageBoxTypes.Error}/>
       }
       {isLoadingFetch && <MessageBox text='Учитава се вест...' infoType={MessageBoxTypes.Loading}/>}
       {isLoadingTitleUpdate && <MessageBox text='Мења се наслов вести...' infoType={MessageBoxTypes.Loading}/>}
       {isLoadingClipUpdate && <MessageBox text='Мења се исечак вести...' infoType={MessageBoxTypes.Loading}/>}
+      {isLoadingBannerUpdate && <MessageBox text='Мења се банер вести...' infoType={MessageBoxTypes.Loading}/>}
+      {isLoadingSectionUpdate && <MessageBox text='Мења се секција вести...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

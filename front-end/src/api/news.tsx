@@ -263,3 +263,52 @@ export const updateNewsBannerAPI = async ({
     throw errorMessage;
   }
 };
+
+export const updateNewsSectionAPI = async ({
+  id,
+  sectionId,
+  content,
+  type,
+}:{
+  id: number,
+  sectionId: number,
+  content: string | File | null,
+  type: string,
+}) => {
+  
+  try {
+    let body: FormData | string;
+    let headers: HeadersInit | undefined = undefined;
+
+    if (type === 'picture' || type === 'video') {
+      const formData = new FormData();
+      formData.append('sectionId', sectionId.toString());
+      formData.append('type', type);
+      if (content instanceof File) {
+        formData.append('file', content);
+      }
+      body = formData;
+    } else {
+      body = JSON.stringify({ sectionId, content, type });
+      headers = {
+        'Content-Type': 'application/json',
+      };
+    }
+
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/section`, {
+      method: 'PUT',
+      headers: headers,
+      body: body,
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+    
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};

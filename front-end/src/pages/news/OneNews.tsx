@@ -37,7 +37,6 @@ enum FileType {
 function OneNews() {
   const { id } = useParams<{ id: string }>();
   const { isAdmin } = useAuth();
-  // const [newsDetails, setNewsDetails] = useState<NewsPanelProps | null>(null);
   const [bannerPopUp, setBannerPopUp] = useState<boolean>(false);
   const [titlePopUp, setTitlePopUp] = useState<boolean>(false);
   const [clipPopUp, setClipPopUp] = useState<boolean>(false);
@@ -53,7 +52,9 @@ function OneNews() {
   const [sectionHeader, setSectionHeader] = useState<string>('');
   const [sectionText, setSectionText] = useState<string>('');
   const {data: newsDetails, isLoadingFetch, fetchError, fetchNewsDetails,
-         isLoadingTitleUpdate, updateTitleError, updateTitleInfo, updateNewsTitle
+         isLoadingTitleUpdate, updateTitleError, updateTitleInfo, updateNewsTitle,
+         isLoadingClipUpdate, updateClipError, updateClipInfo, updateNewsClip,
+         isLoadingBannerUpdate, updateBannerError, updateBannerInfo, updateNewsBanner,
   } = useOneNews(id ? parseInt(id): -1);
 
   useEffect(() => {
@@ -137,47 +138,13 @@ function OneNews() {
   };
 
   const updateClip = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/clip`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ clip: newClip }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      fetchNewsDetails();
-      setClipPopUp(false);
-    } catch (error) {
-      console.error('Error updating clip:', error);
-    }
+    updateNewsClip({clip: newClip})
+    setClipPopUp(false);
   };
 
   const updateBanner = async () => {
-    if (!newBanner) return;
-
-    const formData = new FormData();
-    formData.append('banner', newBanner);
-
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/banner`, {
-        method: 'PUT',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      fetchNewsDetails();
-      setBannerPopUp(false);
-    } catch (error) {
-      console.error('Error updating banner:', error);
-    }
+    updateNewsBanner({banner: newBanner})
+    setBannerPopUp(false);
   };
 
   return (
@@ -359,13 +326,15 @@ function OneNews() {
           </div>
         </div>
       )}
-      {/* {(deleteInfo) && 
-        <MessageBox text={deleteInfo} infoType={MessageBoxTypes.Info}/>
-      } */}
-      {(fetchError) && 
-        <MessageBox text={fetchError} infoType={MessageBoxTypes.Error}/>
+      {(updateTitleInfo || updateClipInfo) && 
+        <MessageBox text={updateTitleInfo || updateClipInfo} infoType={MessageBoxTypes.Info}/>
+      }
+      {(fetchError || updateTitleError || updateClipError) && 
+        <MessageBox text={fetchError || updateTitleError || updateClipError} infoType={MessageBoxTypes.Error}/>
       }
       {isLoadingFetch && <MessageBox text='Учитава се вест...' infoType={MessageBoxTypes.Loading}/>}
+      {isLoadingTitleUpdate && <MessageBox text='Мења се наслов вести...' infoType={MessageBoxTypes.Loading}/>}
+      {isLoadingClipUpdate && <MessageBox text='Мења се исечак вести...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

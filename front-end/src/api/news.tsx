@@ -204,3 +204,62 @@ export const updateNewsTitleAPI = async ({
   }
 };
 
+export const updateNewsClipAPI = async ({
+  id,
+  clip,
+}:{
+  id: number,
+  clip: string,
+}) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/clip`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ clip }),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+    
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};
+
+export const updateNewsBannerAPI = async ({
+  id,
+  banner,
+}:{
+  id: number,
+  banner: File | null,
+}) => {
+  if (!banner){
+    throw new Error("Није постављен нови банер");
+  }
+
+  const formData = new FormData();
+  formData.append('banner', banner);
+
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/news/${id}/banner`, {
+      method: 'PUT',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+    
+  } catch (error) {
+    const errorMessage = errorToString(error);
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};

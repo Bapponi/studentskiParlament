@@ -3,6 +3,8 @@ import { useCreateNewNews } from "./useCreateNewNews";
 import { useUpdateNewsTitle } from "./useUpdateNewsTitle";
 import { useEffect } from "react";
 import { useFetchOneNews } from "./useFetchOneNews";
+import { useUpdateNewsClip } from "./useUpdateNewsClip";
+import { useUpdateNewsBanner } from "./useUpdateNewsBanner";
 
 export const useOneNews = (id: number) => {
 
@@ -10,6 +12,8 @@ export const useOneNews = (id: number) => {
   const { deleteNewsQuery, error: deleteError, isLoading: isLoadingDelete, info: deleteInfo } = useDeleteNews();
   const { createNewsQuery, error: createError, isLoading: isLoadingCreate, info: createInfo } = useCreateNewNews();
   const { updateNewsTitleQuery, error: updateTitleError, isLoading: isLoadingTitleUpdate, info: updateTitleInfo } = useUpdateNewsTitle();
+  const { updateNewsClipQuery, error: updateClipError, isLoading: isLoadingClipUpdate, info: updateClipInfo } = useUpdateNewsClip();
+  const { updateNewsBannerQuery, error: updateBannerError, isLoading: isLoadingBannerUpdate, info: updateBannerInfo } = useUpdateNewsBanner();
 
   async function createNews({
     banner,
@@ -46,6 +50,24 @@ export const useOneNews = (id: number) => {
     fetchNewsDetails();
   }
 
+  async function updateNewsClip({
+      clip 
+  }:{
+      clip: string,
+  }) {
+    await updateNewsClipQuery({ id, clip });
+    fetchNewsDetails();
+  }
+
+  async function updateNewsBanner({
+      banner 
+  }:{
+    banner: File | null,
+  }) {
+    await updateNewsBannerQuery({ id, banner });
+    fetchNewsDetails();
+  }
+
   return {
     data,
     isLoadingFetch,
@@ -63,5 +85,13 @@ export const useOneNews = (id: number) => {
     isLoadingTitleUpdate,
     updateTitleError,
     updateTitleInfo,
+    updateNewsClip,
+    isLoadingClipUpdate,
+    updateClipError,
+    updateClipInfo,
+    updateNewsBanner,
+    isLoadingBannerUpdate,
+    updateBannerError,
+    updateBannerInfo,
   };
 };

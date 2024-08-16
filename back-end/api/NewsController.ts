@@ -229,10 +229,6 @@ export class NewsController {
     }
   }
 
-  public updateNews(req: Request, res: Response): void {
-    // Implement update logic
-  }
-
   public async updateTitle(req: Request, res: Response) {
     const { id } = req.params;
     const { title } = req.body;

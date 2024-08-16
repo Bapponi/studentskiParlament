@@ -13,21 +13,6 @@ import { useOneNews } from '../../hooks/newsHooks/useOneNews';
 import MessageBox from '../../components/message-box/MessageBox';
 import { MessageBoxTypes } from './helpers';
 
-interface NewsSection {
-  id: number;
-  type: string;
-  content: string;
-}
-
-interface NewsPanelProps {
-  id: number;
-  title: string;
-  banner: string;
-  clip: string;
-  date: string;
-  newsSection: NewsSection[];
-}
-
 enum FileType {
   Photo = 1,
   Video,

@@ -18,7 +18,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="App">
+        <div>
           <Navbar/>
           <main>
             <Routes>

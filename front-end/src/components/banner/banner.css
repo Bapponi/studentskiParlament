@@ -36,8 +36,14 @@
 }
 
 .banner-image{
-    width: calc(100vw - 17px);
+    width: calc(100vw - 25px);
     height: 250px;
     object-fit: cover;
     z-index: -3;
+}
+
+@media screen and (max-width: 600px) {
+    .banner-image{
+        width: 100%;
+    }
 }

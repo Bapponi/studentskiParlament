@@ -7,11 +7,12 @@ import MessageBox from '../message-box/MessageBox';
 
 function Polls() {
 
+  const userId = localStorage.getItem('userId')
   const {polls, fetchError, isLoadingFetch,
          deletePoll, isLoadingDelete, deleteError, deleteInfo,
          updatePollActivity, updateActivityError, isLoadingUpdateActivity, updateActivityInfo,
          sendPollVote, isLoadingSend, sendError, sendInfo,
-  } = usePoll();
+  } = usePoll(userId ? parseInt(userId) : -1);
 
   const handleDelete = (id: number) => {
     deletePoll({pollToDeleteId :id})
@@ -33,15 +34,16 @@ function Polls() {
           />
         ))}
       </div>
-      {(deleteError || fetchError || updateActivityError) && 
-        <MessageBox text={deleteError || fetchError || updateActivityError} infoType={MessageBoxTypes.Error}/>
+      {(deleteError || fetchError || updateActivityError || sendError) && 
+        <MessageBox text={deleteError || fetchError || updateActivityError || sendError} infoType={MessageBoxTypes.Error}/>
       }
-      {(deleteInfo || updateActivityInfo) && 
-        <MessageBox text={deleteInfo || updateActivityInfo} infoType={MessageBoxTypes.Info}/>
+      {(deleteInfo || updateActivityInfo || sendInfo) && 
+        <MessageBox text={deleteInfo || updateActivityInfo || sendInfo} infoType={MessageBoxTypes.Info}/>
       }
       {isLoadingFetch && <MessageBox text='Учитавају се сва гласања...' infoType={MessageBoxTypes.Loading}/>}
       {isLoadingDelete && <MessageBox text='Брисање гласања...' infoType={MessageBoxTypes.Loading}/>}
       {isLoadingUpdateActivity && <MessageBox text='Мењање стања активности код гласања...' infoType={MessageBoxTypes.Loading}/>}
+      {isLoadingSend && <MessageBox text='Шаље се глас...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

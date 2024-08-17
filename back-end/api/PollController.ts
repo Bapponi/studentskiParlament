@@ -13,6 +13,7 @@ interface Poll{
   active: boolean
   poll_options: PollOption[],
   members_voted: string[],
+  voted: boolean,
 }
 
 const toCamelCase = (str: string): string => {
@@ -32,6 +33,8 @@ const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Record<s
 export class PollController {
 
   public getAllPolls(req: Request, res: Response): void {
+    const { userId } = req.params;
+  
     const pollsQuery = `
       SELECT 
         polls.id AS poll_id, 
@@ -62,7 +65,8 @@ export class PollController {
               title: row.title,
               active: row.active,
               poll_options: [],
-              members_voted: [] // Add a new field to store member names
+              members_voted: [], 
+              voted: false,
             };
             currentId = row.poll_id;
           }
@@ -79,28 +83,11 @@ export class PollController {
           polls.push(poll);
         }
   
-        const fetchMembersForPoll = (poll: Poll): Promise<void> => {
-          const membersQuery = `
-            SELECT members.name 
-            FROM votes 
-            INNER JOIN members ON votes.member_id = members.id 
-            WHERE votes.poll_id = $1;
-          `;
-          return new Promise((resolve, reject) => {
-            client.query(membersQuery, [poll.id], (membersErr, membersResult) => {
-              if (!membersErr) {
-                poll.members_voted = membersResult.rows.map((row) => row.name);
-                resolve();
-              } else {
-                reject('Грешка у бази!');
-              }
-            });
-          });
-        };
+        const fetchAllMembersAndCheckVotes = polls.map((poll) =>
+          this.fetchMembersForPoll(poll).then(() => this.checkUserVoted(poll, parseInt(userId)))
+        );
   
-        const fetchAllMembers = polls.map((poll) => fetchMembersForPoll(poll));
-  
-        Promise.all(fetchAllMembers)
+        Promise.all(fetchAllMembersAndCheckVotes)
           .then(() => {
             const camelCaseLinks = polls.map(convertKeysToCamelCase);
             res.status(200).send(camelCaseLinks);
@@ -113,6 +100,39 @@ export class PollController {
       }
     });
   }
+  
+  private fetchMembersForPoll = (poll: Poll): Promise<void> => {
+    const membersQuery = `
+      SELECT members.name 
+      FROM votes 
+      INNER JOIN members ON votes.member_id = members.id 
+      WHERE votes.poll_id = $1;
+    `;
+    return new Promise((resolve, reject) => {
+      client.query(membersQuery, [poll.id], (membersErr, membersResult) => {
+        if (!membersErr) {
+          poll.members_voted = membersResult.rows.map((row) => row.name);
+          resolve();
+        } else {
+          reject('Грешка у бази!');
+        }
+      });
+    });
+  };
+  
+  private checkUserVoted = (poll: Poll, userId: number): Promise<void> => {
+    const userVotedQuery = 'SELECT COUNT(*) FROM votes WHERE member_id = $1 AND poll_id = $2';
+    return new Promise((resolve, reject) => {
+      client.query(userVotedQuery, [userId, poll.id], (userVotedErr, userVotedResult) => {
+        if (!userVotedErr) {
+          poll.voted = userVotedResult.rows[0].count > 0;
+          resolve();
+        } else {
+          reject('Грешка у бази!');
+        }
+      });
+    });
+  };
 
   public async uploadPoll(req: Request, res: Response) {
     const { title, elements, optionValues } = req.body;
@@ -199,46 +219,6 @@ export class PollController {
       return res.status(500).send('Грешка у бази!');
     }
     
-  }
-
-  public votedOnPoll(req: Request, res: Response){
-    const { userId, pollId } = req.params;
-    const query = 'SELECT COUNT(*) FROM votes WHERE member_id = $1 AND poll_id = $2';
-    const values = [userId, pollId]
-
-    client.query(query, values, (err, result) => {
-      if(!err){
-        if(result.rows[0].count > 0){
-          return res.status(200).json({voted: true});
-        }else{
-          return res.status(200).json({voted: false});
-        }
-        
-      }else{
-        return res.status(500).json('Грешка у бази!');
-      }
-    });  
-  }
-
-  public getMembersWhoVoted(req: Request, res: Response): void {
-    const pollId = parseInt(req.params.pollId);
-
-    const query = `
-      SELECT members.name
-      FROM votes
-      INNER JOIN members ON votes.member_id = members.id
-      WHERE votes.poll_id = $1;
-    `;
-    const values = [pollId];
-
-    client.query(query, values, (err, result) => {
-      if (!err) {
-        const memberNames = result.rows.map(row => row.name);
-        res.status(200).json(memberNames);
-      } else {
-        return res.status(500).send('Грешка у бази!');
-      }
-    });
   }
 
 }

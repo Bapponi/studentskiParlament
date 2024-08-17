@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import './polls.css';
-import PollVote from './PollVote'; // Import the new PollVote component
+import PollVote from './PollVote';
 import PollBar from './PollBar';
 import { useAuth } from '../../AuthContext';
 import ConformationDialog from '../conformation-dialog/ConformationDialog';
-import { useFetchPollMemberNames } from '../../hooks/pollHooks/useFetchPollMemberNames';
-import MessageBox from '../message-box/MessageBox';
-import { MessageBoxTypes } from './helpers';
 import { PollProps } from './helpers';
 
-const Poll: React.FC<PollProps> = ({ id, title, active, membersVoted, pollOptions, onDelete, onUpdate, sendPollVote, isLoadingSend, sendError, sendInfo }) => {
+const Poll: React.FC<PollProps> = ({ 
+  id, 
+  title, 
+  active, 
+  membersVoted, 
+  pollOptions, 
+  voted,
+  onDelete, 
+  onUpdate, 
+  sendPollVote, 
+  isLoadingSend, 
+  sendError, 
+  sendInfo,
+}) => {
   const [currentActive, setCurrentActive] = useState<boolean>(active);
   const [votesSum, setVotesSum] = useState<number>(0);
   const {isAdmin} = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const {data: pollMemberNames, error: fetchNamesError, isLoading: isLoadingFetchNames, refetch: banana} = useFetchPollMemberNames(id);
 
   const voteOptions = pollOptions.map(option => ({
     value: option.option_name,
@@ -50,6 +59,7 @@ const Poll: React.FC<PollProps> = ({ id, title, active, membersVoted, pollOption
         <PollVote 
           pollId={id} 
           voteOptions={voteOptions} 
+          voted={voted}
           sendPollVote={sendPollVote}
           isLoadingSend={isLoadingSend}
           sendError={sendError}
@@ -68,10 +78,6 @@ const Poll: React.FC<PollProps> = ({ id, title, active, membersVoted, pollOption
           </button>
         </div>
       )}
-      {fetchNamesError && 
-        <MessageBox text={fetchNamesError} infoType={MessageBoxTypes.Error}/>
-      }
-      {isLoadingFetchNames && <MessageBox text='Учитавају се имена људи који су гласали...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

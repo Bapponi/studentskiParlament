@@ -7,9 +7,13 @@ const errorToString = (error: unknown): string => {
   return String(error);
 };
 
-export const fetchAllPollsAPI = async () => {
+export const fetchAllPollsAPI = async ({
+  userId,
+}:{
+  userId: number,
+}) => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${userId}`);
     if (!response.ok) {
       const errorMessage = await response.text();
       throw new Error(errorMessage);
@@ -85,32 +89,6 @@ export const deletePollAPI = async ({
   }
 };
 
-export const fetchPollMemberNamesAPI = async ({
-  id,
-}:{
-  id: number,
-}) => {
-  try {
-    const pollId = id
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${pollId}`, {
-      method: 'GET'
-    });
-    
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage);
-    }
-
-    const data: string[] = await response.json()
-    return data;
-
-  } catch (error) {
-    const errorMessage = errorToString(error);
-    console.error(errorMessage);
-    throw errorMessage;
-  }
-};
-
 export const updatePollActivityAPI = async ({
   id,
   updateActive,
@@ -172,34 +150,6 @@ export const sendPollVoteAPI = async ({
       throw new Error(errorMessage);
     }
   } catch (error) {
-    const errorMessage = errorToString(error);
-    console.error(errorMessage);
-    throw errorMessage;
-  }
-}
-
-export const isVotedOnPollAPI = async ({
-  pollId,
-  userId,
-}:{
-  pollId: number,
-  userId: number,
-}) => {
-
-  try{
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${userId}/${pollId}`, {
-      method: 'GET',
-    });
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage);
-    }
-
-    const data = await response.json();
-    return data.voted
-
-  }catch(error){
     const errorMessage = errorToString(error);
     console.error(errorMessage);
     throw errorMessage;

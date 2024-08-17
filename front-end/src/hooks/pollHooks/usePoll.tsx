@@ -4,9 +4,9 @@ import { useCreateNewPoll } from "./useCreateNewPoll";
 import { useUpdatePollActivity } from "./useUpdatePollActivity";
 import { useSendPollVote } from "./useSendPollVote";
 
-export const usePoll = () => {
+export const usePoll = (userId: number) => {
     
-    const {data: polls, error: fetchError, isLoading: isLoadingFetch, refetch}= useFetchPolls();
+    const {data: polls, error: fetchError, isLoading: isLoadingFetch, refetch}= useFetchPolls(userId);
     const {deletePollQuery, error: deleteError, isLoading: isLoadingDelete, info: deleteInfo} = useDeletePolls();
     const {createPollQuery, error: createError, isLoading: isLoadingCreate, info: createInfo} = useCreateNewPoll();
     const {updatePollActivityQuery, error: updateActivityError, isLoading: isLoadingUpdateActivity, info: updateActivityInfo} = useUpdatePollActivity();
@@ -26,7 +26,7 @@ export const usePoll = () => {
 
     async function deletePoll({pollToDeleteId}:{pollToDeleteId: number}){
         await deletePollQuery({id: pollToDeleteId});
-        refetch();
+        refetch({userId});
     }
 
     async function updatePollActivity({
@@ -37,7 +37,7 @@ export const usePoll = () => {
         updateActive: boolean,
     }){
         await updatePollActivityQuery({id, updateActive});
-        refetch();
+        refetch({userId});
     }
 
     async function sendPollVote({
@@ -51,7 +51,7 @@ export const usePoll = () => {
     }){
         await sendPollVoteQuery({pollId, userId, voteOption});
         console.log('poslao je');
-        refetch();
+        refetch({userId});
     }
 
     return {

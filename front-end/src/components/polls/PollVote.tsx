@@ -4,7 +4,6 @@ import Button from '../button/Button';
 import { usePoll } from '../../hooks/pollHooks/usePoll';
 import MessageBox from '../message-box/MessageBox';
 import { MessageBoxTypes } from './helpers';
-import { useFetchVoteOnPoll } from '../../hooks/pollHooks/useFetchVoteOnPoll';
 
 interface PollOption {
   value: string;
@@ -14,6 +13,7 @@ interface PollOption {
 interface PollVoteProps {
   pollId: number
   voteOptions: PollOption[];
+  voted: boolean
   sendPollVote: ({
     pollId, 
     userId, 
@@ -31,6 +31,7 @@ interface PollVoteProps {
 const PollVote: React.FC<PollVoteProps> = ({
   pollId,
   voteOptions,
+  voted,
   sendPollVote,
   sendError,
   sendInfo,
@@ -39,7 +40,6 @@ const PollVote: React.FC<PollVoteProps> = ({
 
   const [voteOption, setVoteOption] = useState<string>('')
   const userId = parseInt(localStorage.getItem('userId') || '-1');
-  const {data: voted, error: fetchVoteError, isLoading: isLoadingFetchVote,} = useFetchVoteOnPoll(pollId, userId);
 
   const handleVoteOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setVoteOption(e.target.value);
@@ -69,9 +69,8 @@ const PollVote: React.FC<PollVoteProps> = ({
         </h3>
       )}
       {sendInfo && <MessageBox text={sendInfo} infoType={MessageBoxTypes.Info}/>}
-      {(sendError || fetchVoteError) && <MessageBox text={sendError || fetchVoteError} infoType={MessageBoxTypes.Error}/>}
+      {(sendError) && <MessageBox text={sendError} infoType={MessageBoxTypes.Error}/>}
       {isLoadingSend && <MessageBox text='Слање гласа у току...' infoType={MessageBoxTypes.Loading}/>} 
-      {isLoadingFetchVote && <MessageBox text='Хватање стања гласања корисника...' infoType={MessageBoxTypes.Loading}/>}
     </div>
   );
 }

@@ -12,7 +12,7 @@ function CreatePoll() {
   const [title, setTitle] = useState('');
   const [elements, setElements] = useState<number[]>([]);
   const [optionValues, setOptionValues] = useState<{ [key: number]: string }>({});
-  const {createPoll, isLoadingCreate, createError, createInfo,} = usePoll();
+  const {createPoll, isLoadingCreate, createError, createInfo,} = usePoll(-1);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);

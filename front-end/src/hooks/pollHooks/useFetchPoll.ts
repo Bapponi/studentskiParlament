@@ -2,16 +2,20 @@ import { useCallback, useEffect, useState } from "react";
 import { fetchAllPollsAPI } from "../../api/polls";
 import { PollProps } from "../../components/polls/helpers";
 
-export function useFetchPolls() {
+export function useFetchPolls(userId: number) {
   const [polls, setPolls] = useState<undefined | PollProps[]>(undefined);
   const [error, setError] = useState<undefined | string>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchAllPolls = useCallback(async () => {
+  const fetchAllPolls = useCallback(async ({
+    userId,
+  }:{
+    userId: number
+  }) => {
     setIsLoading(true);
     
     try {
-      const newPolls = await fetchAllPollsAPI();
+      const newPolls = await fetchAllPollsAPI({userId});
       console.log('REFetch', newPolls);
       setPolls(newPolls);
     } catch (error) {
@@ -23,7 +27,8 @@ export function useFetchPolls() {
   }, [setIsLoading, setPolls, polls, setError]);
 
   useEffect(() => {
-    fetchAllPolls();
+    fetchAllPolls({userId});
+    console.log("aaaaaaa",polls)
   }, []);
 
   useEffect(() => {

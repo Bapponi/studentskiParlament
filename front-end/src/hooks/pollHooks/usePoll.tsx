@@ -50,6 +50,7 @@ export const usePoll = () => {
         voteOption: string,
     }){
         await sendPollVoteQuery({pollId, userId, voteOption});
+        console.log('poslao je');
         refetch();
     }
 

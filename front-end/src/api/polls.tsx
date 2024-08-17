@@ -67,6 +67,7 @@ export const deletePollAPI = async ({
 }:{
   id: number,
 }) => {
+  console.log("adadadad")
   try {
     const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/poll/${id}`, {
       method: 'DELETE',

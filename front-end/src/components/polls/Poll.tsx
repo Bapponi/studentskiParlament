@@ -9,7 +9,7 @@ import MessageBox from '../message-box/MessageBox';
 import { MessageBoxTypes } from './helpers';
 import { PollProps } from './helpers';
 
-const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete, onUpdate }) => {
+const Poll: React.FC<PollProps> = ({ id, title, active, membersVoted, pollOptions, onDelete, onUpdate, sendPollVote, isLoadingSend, sendError, sendInfo }) => {
   const [currentActive, setCurrentActive] = useState<boolean>(active);
   const [votesSum, setVotesSum] = useState<number>(0);
   const {isAdmin} = useAuth();
@@ -39,14 +39,22 @@ const Poll: React.FC<PollProps> = ({ id, title, active, pollOptions, onDelete, o
       <h2 style={{color: "var(--primary-color)"}}>{title}</h2>
       <h3>Чланови који су гласали (укупно <span style={{color: "var(--primary-color)"}}>{votesSum}</span>):</h3>
       <div className='member-names'>
-        {pollMemberNames && pollMemberNames.map((name, index) => (
+        {membersVoted && membersVoted.map((name, index) => (
           <span key={index}>
-            {name}{index < pollMemberNames.length - 1 ? ', ' : ''}
+            {name}{index < membersVoted.length - 1 ? ', ' : ''}
           </span>
         ))}
       </div>
       {!currentActive && <PollBar pollOptions={pollOptions} />}
-      {currentActive && <PollVote pollId={id} voteOptions={voteOptions}/>}
+      {currentActive && 
+        <PollVote 
+          pollId={id} 
+          voteOptions={voteOptions} 
+          sendPollVote={sendPollVote}
+          isLoadingSend={isLoadingSend}
+          sendError={sendError}
+          sendInfo={sendInfo}
+        />}
       {isAdmin && (
         <div>
           <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={()=>{setIsDialogOpen(true)}} />

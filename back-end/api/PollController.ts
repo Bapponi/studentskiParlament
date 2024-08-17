@@ -12,6 +12,7 @@ interface Poll{
   title: string,
   active: boolean
   poll_options: PollOption[],
+  members_voted: string[],
 }
 
 const toCamelCase = (str: string): string => {
@@ -31,42 +32,82 @@ const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Record<s
 export class PollController {
 
   public getAllPolls(req: Request, res: Response): void {
-    const query = 'SELECT * FROM polls INNER JOIN poll_options ON polls.id = poll_options.poll_id ORDER BY polls.id DESC, poll_options.id;';
-    client.query(query, (err, result) => {
-      if (!err) {
+    const pollsQuery = `
+      SELECT 
+        polls.id AS poll_id, 
+        polls.title, 
+        polls.active, 
+        poll_options.id AS option_id, 
+        poll_options.option_name, 
+        poll_options.votes_num 
+      FROM polls 
+      INNER JOIN poll_options ON polls.id = poll_options.poll_id 
+      ORDER BY polls.id DESC, poll_options.id;
+    `;
+  
+    client.query(pollsQuery, (pollsErr, pollsResult) => {
+      if (!pollsErr) {
         let polls: Poll[] = [];
         let poll: Poll | null = null;
         let currentId: number | null = null;
-
-        result.rows.forEach((row)=>{
+  
+        pollsResult.rows.forEach((row) => {
           if (currentId !== row.poll_id) {
             if (poll) {
               polls.push(poll);
             }
-
+  
             poll = {
               id: row.poll_id,
               title: row.title,
               active: row.active,
-              poll_options: []
+              poll_options: [],
+              members_voted: [] // Add a new field to store member names
             };
             currentId = row.poll_id;
           }
-
+  
           if (poll) {
             poll.poll_options.push({
               option_name: row.option_name,
               votes_num: row.votes_num
             });
           }
-        })
-
+        });
+  
         if (poll) {
           polls.push(poll);
         }
-
-        const camelCaseLinks = polls.map(convertKeysToCamelCase);
-        res.status(200).send(camelCaseLinks);
+  
+        const fetchMembersForPoll = (poll: Poll): Promise<void> => {
+          const membersQuery = `
+            SELECT members.name 
+            FROM votes 
+            INNER JOIN members ON votes.member_id = members.id 
+            WHERE votes.poll_id = $1;
+          `;
+          return new Promise((resolve, reject) => {
+            client.query(membersQuery, [poll.id], (membersErr, membersResult) => {
+              if (!membersErr) {
+                poll.members_voted = membersResult.rows.map((row) => row.name);
+                resolve();
+              } else {
+                reject('Грешка у бази!');
+              }
+            });
+          });
+        };
+  
+        const fetchAllMembers = polls.map((poll) => fetchMembersForPoll(poll));
+  
+        Promise.all(fetchAllMembers)
+          .then(() => {
+            const camelCaseLinks = polls.map(convertKeysToCamelCase);
+            res.status(200).send(camelCaseLinks);
+          })
+          .catch((err) => {
+            res.status(500).send(err);
+          });
       } else {
         return res.status(500).send('Грешка у бази!');
       }
@@ -101,6 +142,7 @@ export class PollController {
   }
 
   public deletePoll = async (req: Request, res: Response): Promise<void> => {
+    console.log("1")
     const id = parseInt(req.params.id);
     const deletePollOptionsQuery = 'DELETE FROM poll_options WHERE poll_id = $1';
     const deletePollQuery = 'DELETE FROM polls WHERE id = $1 RETURNING *';

@@ -14,16 +14,31 @@ interface PollOption {
 interface PollVoteProps {
   pollId: number
   voteOptions: PollOption[];
+  sendPollVote: ({
+    pollId, 
+    userId, 
+    voteOption
+  }:{
+    pollId: number,
+    userId: number,
+    voteOption: string}
+  )=>void,
+  sendError: string | undefined,
+  sendInfo: string | undefined,
+  isLoadingSend: boolean;
 }
 
 const PollVote: React.FC<PollVoteProps> = ({
   pollId,
   voteOptions,
+  sendPollVote,
+  sendError,
+  sendInfo,
+  isLoadingSend,
 }) => {
 
   const [voteOption, setVoteOption] = useState<string>('')
   const userId = parseInt(localStorage.getItem('userId') || '-1');
-  const {sendPollVote, sendError, sendInfo, isLoadingSend,} = usePoll()
   const {data: voted, error: fetchVoteError, isLoading: isLoadingFetchVote,} = useFetchVoteOnPoll(pollId, userId);
 
   const handleVoteOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

@@ -4,15 +4,28 @@ export interface PollOption{
 }
   
 export interface PollProps{
-  id: number
-  title: string
-  active: boolean
+  id: number;
+  title: string;
+  active: boolean;
+  membersVoted: string[];
   pollOptions: PollOption[]
   onDelete: (id: number) => void;
   onUpdate: ({ id, updateActive }: {
     id: number;
     updateActive: boolean
   }) => void;
+  sendPollVote: ({
+    pollId, 
+    userId, 
+    voteOption
+  }:{
+    pollId: number,
+    userId: number,
+    voteOption: string}
+  )=>void,
+  sendError: string | undefined,
+  sendInfo: string | undefined,
+  isLoadingSend: boolean;
 }
 
 export enum FileType {

@@ -12,6 +12,7 @@ export function useFetchPolls() {
     
     try {
       const newPolls = await fetchAllPollsAPI();
+      console.log('REFetch', newPolls);
       setPolls(newPolls);
     } catch (error) {
       setError(`Грешка приликом учитавања свих гласања: ${error}`);

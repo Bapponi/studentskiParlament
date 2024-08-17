@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import './polls.css';
 import Poll from './Poll';
 import { usePoll } from '../../hooks/pollHooks/usePoll';
-import { MessageBoxTypes, PollOption, PollProps } from './helpers';
+import { MessageBoxTypes } from './helpers';
 import MessageBox from '../message-box/MessageBox';
 
 function Polls() {
 
   const {polls, fetchError, isLoadingFetch,
          deletePoll, isLoadingDelete, deleteError, deleteInfo,
-         updatePollActivity, updateActivityError, isLoadingUpdateActivity, updateActivityInfo
+         updatePollActivity, updateActivityError, isLoadingUpdateActivity, updateActivityInfo,
+         sendPollVote, isLoadingSend, sendError, sendInfo,
   } = usePoll();
 
   const handleDelete = (id: number) => {
@@ -21,7 +22,15 @@ function Polls() {
       <h1 style={{color: "var(--primary-color)"}}>Све активне анкете</h1>
       <div className='polls-content'>
         {polls && polls.map((entry) => (
-          <Poll key={entry.id} {...entry} onDelete={handleDelete} onUpdate={updatePollActivity}/>
+          <Poll 
+            key={entry.id} {...entry} 
+            onDelete={handleDelete} 
+            onUpdate={updatePollActivity}
+            sendPollVote={sendPollVote}
+            isLoadingSend={isLoadingSend}
+            sendError={sendError}
+            sendInfo={sendInfo}
+          />
         ))}
       </div>
       {(deleteError || fetchError || updateActivityError) && 

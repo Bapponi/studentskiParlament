@@ -1,6 +1,6 @@
-.member-container{
+/* .member-container{
     position: relative;
-}
+} */
 
 .admin-member{
     display: flex;
@@ -22,11 +22,72 @@
 .other-member{
     border-radius: 5px;
     border: 2px solid var(--text-color);
-    height: 35px;
+    /* height: 35px; */
     padding: 5px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+}
+
+.member-admin__container{
+    display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.member-admin{
+    width: 25px;
+    padding: 5px;
+    border: 2px solid var(--text-color);
+    border-radius: 5px;
+    transition: 0.3s;
+    background-color: var(--secondary-color);
+}
+
+.member-delete{
+    right: 5px;
+}
+
+.member-update{
+    right: 50px;
+}
+
+.member-delete:hover{
+    background-color: var(--primary-color);
+}
+
+.member-update:hover{
+    background-color: var(--complementary-color);
+}
+
+.update-member__button{
+    width: 100%;
+}
+
+.member-cross{
+    position: absolute;
+    top: 5px;
+    right: 18px;
+    width: 50px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.member-cross:hover{
+    background-color: var(--primary-color);
+    border-radius: 50%;
+}
+
+.member-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-member__text{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 @media screen and (max-width: 640px){

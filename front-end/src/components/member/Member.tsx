@@ -78,27 +78,46 @@ const Member: React.FC<MemberProps> = ({
         <div className='admin-member'>
           <img src={memberImg} alt="member" className='member-image'/>
           <div>
-              <h1 style={{color: "var(--primary-color)"}}>{name}</h1>
-              <h2>{position}</h2>
-              <p>{bio}</p>
+            <div className='admin-member__text'>
+              <h2>
+                <div className='member-text'>
+                  <span style={{color: "var(--primary-color)"}}>
+                    {name}
+                  </span>
+                  <span>
+                    {position}
+                  </span>
+                </div>
+              </h2>
+              {isAdmin && (
+                <div className='member-admin__container'>
+                  <img src="refresh.png" alt="upload" className='member-admin member-update' onClick={updatePopUp} />
+                  <img src="bin.png" alt="bin" className='member-admin member-delete' onClick={()=>{setIsDialogOpen(true)}}/>
+                </div>
+              )}
+            </div>
+            <p>{bio}</p>
           </div>
         </div>
       )}
       {roleId == 3 && (
         <div className='other-member'>
           <h2>
-            <center>
+            <div className='member-text'>
               <span style={{color: "var(--primary-color)"}}>
                 {name}
-              </span> - {position}
-            </center>
+              </span>
+              <span>
+                {position}
+              </span>
+            </div>
           </h2>
-        </div>
-      )}
-      {isAdmin && (
-        <div>
-          <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={()=>{setIsDialogOpen(true)}}/>
-          <img src="refresh.png" alt="upload" className='link-admin link-update' onClick={updatePopUp} />
+          {isAdmin && (
+            <div className='member-admin__container'>
+              <img src="refresh.png" alt="upload" className='member-admin member-update' onClick={updatePopUp} />
+              <img src="bin.png" alt="bin" className='member-admin member-delete' onClick={()=>{setIsDialogOpen(true)}}/>
+            </div>
+          )}
         </div>
       )}
       {isPopupVisible && isAdmin && (
@@ -140,16 +159,10 @@ const Member: React.FC<MemberProps> = ({
               options={roleOptions}
               placeholder='Унеси ролу члана'
             />
-            {/* <TextInput 
-              value={newRoleId.toString()} 
-              onChange={handleNewRoleIdChange} 
-              type={"text"} 
-              placeholder='Унеси нову ролу овде'
-            /> */}
-            <div onClick={handleUpdateMember} className='update-link__button'>
+            <div onClick={handleUpdateMember} className='update-member__button'>
               <Button text='Промени'/>
             </div>
-            <img src="cross.png" alt="cross" className='link-cross' onClick={closePopup}/>
+            <img src="cross.png" alt="cross" className='member-cross' onClick={closePopup}/>
           </div>
         </div>
       )}

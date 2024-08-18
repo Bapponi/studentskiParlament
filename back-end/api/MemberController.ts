@@ -41,7 +41,7 @@ export class MemberController {
     public getAllMembers(req: Request, res: Response): void {
         const roleId = parseInt(req.params.roleId);
 
-        const query = 'SELECT * FROM members WHERE role_id = $1';
+        const query = 'SELECT * FROM members WHERE role_id = $1 ORDER BY id';
         const values = [roleId]
 
         client.query(query, values, (err, members) => {

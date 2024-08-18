@@ -15,15 +15,16 @@
 }
 
 .app{
-  scrollbar-width: none;
+  /* transform: scale(0.75);
+  transform-origin: top left;
+  width: 133.33vw; 
+  height: 133.33vh; */
 }
 
 main{
   display: flex;
   justify-content: center;
   min-height: calc(100vh - 200px);
-  /* width: 99%; */
-  /* margin: 0 0.3% 0 0.5%; */
   width: 100%;
 }
   

@@ -1,7 +1,3 @@
-/* .member-container{
-    position: relative;
-} */
-
 .admin-member{
     display: flex;
     align-items: center;
@@ -22,7 +18,6 @@
 .other-member{
     border-radius: 5px;
     border: 2px solid var(--text-color);
-    /* height: 35px; */
     padding: 5px;
     display: flex;
     align-items: center;

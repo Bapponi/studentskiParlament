@@ -48,17 +48,19 @@ const LinkSite: React.FC<LinkProps> = ({ id, logo, website, name, onDelete, onUp
       {isDialogOpen && (
         <ConformationDialog onConfirm={()=>{onDelete(id)}} onClose={()=>{setIsDialogOpen(false)}} />
       )}
-      <a href={website} target='_blank' className='link'>
-        <img src={logo} alt="link-logo" className='link-logo' />
-        <h2>{name}</h2>
-      </a>
-      { isAdmin && (
-          <div>
-            <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={()=>{setIsDialogOpen(true)}} />
-            <img src="refresh.png" alt="upload" className='link-admin link-update' onClick={updatePopUp} />
-          </div>
-        )
-      }
+      <div className='link'>
+        <a href={website} target='_blank' className='link-content' style={isAdmin ? { width: 'calc(100% - 50px)' } : { width: '100%' }}>
+          <img src={logo} alt="link-logo" className='link-logo'/>
+          <h2>{name}</h2>
+        </a>
+        { isAdmin && (
+            <div className='link-admin__container'>
+              <img src="refresh.png" alt="upload" className='link-admin link-update' onClick={updatePopUp} />
+              <img src="bin.png" alt="bin" className='link-admin link-delete' onClick={()=>{setIsDialogOpen(true)}} />
+            </div>
+          )
+        }
+      </div>
       {isPopupVisible && isAdmin && (
         <div className='popup'>
           <div className='popup-content'>

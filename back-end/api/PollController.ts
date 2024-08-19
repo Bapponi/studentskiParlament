@@ -134,8 +134,9 @@ export class PollController {
     });
   };
 
-  public async uploadPoll(req: Request, res: Response) {
+  public async createPoll(req: Request, res: Response) {
     const { title, elements, optionValues } = req.body;
+    console.log(title, elements, optionValues)
 
     try {
       const pollInsertQuery = 'INSERT INTO polls (title) VALUES ($1) RETURNING id';
@@ -143,15 +144,12 @@ export class PollController {
       const pollId = pollInsertResult.rows[0].id;
 
       const pollOptionInsertQuery = 'INSERT INTO poll_options (option_name, poll_id) VALUES ($1, $2)';
-      
-      let i: number = 1
-      for (const element of elements) {
-        
-        const optionValue = optionValues[i];
-        if (optionValue) {
-          await client.query(pollOptionInsertQuery, [optionValue, pollId]);
-        }
-        i++
+
+      if (optionValues) {
+        Object.entries(optionValues).forEach(([key, value]) => {
+            const values = [value, pollId];
+            client.query(pollOptionInsertQuery, values);
+        });
       }
       
       return res.status(200).send('Успешно качење гласања!');

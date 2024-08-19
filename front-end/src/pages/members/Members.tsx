@@ -100,7 +100,7 @@ const Members: React.FC = () => {
             <FileUpload
               file={file}
               onFileChange={handleFileChange}
-              placeholder='Превуци слику члана овде, или кликни да би је изабрао'
+              placeholder='Опционо превуци слику члана овде, или кликни да би је изабрао'
               fileType={FileType.Photo}
             />
             <TextInput
@@ -124,7 +124,7 @@ const Members: React.FC = () => {
             <TextArea
               value={bio}
               onChange={handleBioChange}
-              placeholder='Унеси биографију члана'
+              placeholder='Опционо унеси биографију члана'
             />
             <SelectOption
               value={roleId}

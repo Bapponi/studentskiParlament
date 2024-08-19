@@ -25,12 +25,16 @@
     border: 2px solid var(--text-color);
     border-radius: 10px;
     width: 100%;
-    position: relative;
+}
+
+.poll-admin__container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
 }
 
 .poll-admin{
-    top: 5px;
-    position: absolute;
     padding: 5px;
     border: 2px solid var(--text-color);
     border-radius: 5px;
@@ -41,12 +45,10 @@
 }
 
 .poll-delete{
-    right: 5px;
     width: 25px;
 }
 
 .poll-toggle__active{
-    right: 50px;
     height: 38px;
 }
 

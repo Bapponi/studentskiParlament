@@ -45,7 +45,22 @@ const Poll: React.FC<PollProps> = ({
       {isDialogOpen && (
         <ConformationDialog onConfirm={()=>{onDelete(id)}} onClose={()=>{setIsDialogOpen(false)}} />
       )}
-      <h2 style={{color: "var(--primary-color)"}}>{title}</h2>
+      <div className='poll-admin__container'>
+        <h2 style={{color: "var(--primary-color)"}}>{title}</h2>
+        {isAdmin && (
+          <div className='poll-admin__container'>
+            <button className='poll-admin poll-toggle__active'>
+              <div>
+                {currentActive ? (
+                  <h3 onClick={() => { updateActivity(false) }}>Деактивирај</h3>) : (
+                  <h3 onClick={() => { updateActivity(true) }}>Активирај</h3>)
+                }
+              </div>
+            </button>
+            <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={()=>{setIsDialogOpen(true)}} />
+          </div>
+        )}
+      </div>
       <h3>Чланови који су гласали (укупно <span style={{color: "var(--primary-color)"}}>{votesSum}</span>):</h3>
       <div className='member-names'>
         {membersVoted && membersVoted.map((name, index) => (
@@ -65,19 +80,6 @@ const Poll: React.FC<PollProps> = ({
           sendError={sendError}
           sendInfo={sendInfo}
         />}
-      {isAdmin && (
-        <div>
-          <img src="bin.png" alt="bin" className='poll-admin poll-delete' onClick={()=>{setIsDialogOpen(true)}} />
-          <button className='poll-admin poll-toggle__active'>
-            <div>
-              {currentActive ? (
-                <h3 onClick={() => { updateActivity(false) }}>Деактивирај</h3>) : (
-                <h3 onClick={() => { updateActivity(true) }}>Активирај</h3>)
-              }
-            </div>
-          </button>
-        </div>
-      )}
     </div>
   );
 }

@@ -128,7 +128,7 @@ function Navbar() {
               </NavLink>
               {isLoggedIn && (
                 <div className='admin-list__mobile'>
-                  <NavLink to='/admin-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
+                  <NavLink to='/user-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
                     <div onClick={toggleMenu}>
                       КОРИСНИЧКИ ПАНЕЛ
                     </div>

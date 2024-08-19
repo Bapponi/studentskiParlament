@@ -16,10 +16,8 @@
 .one-news{
     display: flex;
     justify-content: center;
-    /* align-items: center; */
     flex-direction: column;
     gap: 10px;
-    margin: 10px auto;
     max-width: 900px;
 }
 
@@ -39,16 +37,10 @@
     color: var(--primary-color);
 }
 
-.news-banner__container{
-    position: relative;
-}
-
 .news-banner__buttons{
-    top: 5px;
-    right: 10px;
-    position: absolute;
     display: flex;
     gap: 10px;
+    align-self: center;
 }
 
 .one-news__admin{
@@ -92,7 +84,7 @@
 }
 
 .one-news{
-    width: 90%;
+    width: 85vw;
 }
 
 }

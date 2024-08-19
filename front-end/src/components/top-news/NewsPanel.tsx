@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Banner from '../../components/banner/Banner';
 import './top-news.css'
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
@@ -24,15 +23,17 @@ const NewsPanel: React.FC<NewsPanelProps> = ({ id, date, title, clip, banner, on
       {isDialogOpen && (
         <ConformationDialog onConfirm={()=>{onDelete(id)}} onClose={()=>{setIsDialogOpen(false)}} />
       )}
-      {isAdmin && 
-        <img src="bin.png" alt="bin" className='news-delete' onClick={()=>{setIsDialogOpen(true)}}/>
-      }
       <img src={banner} alt="news-panel__banner" className='news-panel__baner'/>
       <div className='news-panel__text'>
         <div>
-          <h3>{date}</h3>
           <div className='news-panel__title'>
-            <h2>{title}</h2>
+            <div>
+              <h3>{date}</h3>
+              <h2 style={{color: "var(--primary-color)"}}>{title}</h2>
+            </div>
+            {isAdmin && 
+              <img src="bin.png" alt="bin" className='news-delete' onClick={()=>{setIsDialogOpen(true)}}/>
+            }
           </div>
           <p>{clip}</p>
         </div>

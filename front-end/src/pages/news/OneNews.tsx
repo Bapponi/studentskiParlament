@@ -151,8 +151,10 @@ function OneNews() {
 
       {newsDetails && (
         <div>
-          <div className='news-banner__container'>
-            <Banner title={newsDetails.title} bannerImg={newsDetails.banner} />
+          <div className='one-news'>
+            <div className='news-banner__container'>
+              <Banner title={newsDetails.title} bannerImg={newsDetails.banner} />
+            </div>
             {isAdmin &&
               <div className='news-banner__buttons'>
                 <div onClick={() => { setBannerPopUp(true) }}>
@@ -163,8 +165,6 @@ function OneNews() {
                 </div>
               </div>
             }
-          </div>
-          <div className='one-news'>
             <h3>Објављено: <span style={{ color: "var(--primary-color)" }}>{newsDetails.date}</span></h3>
             {isAdmin && 
               <div className='one-news__admin'>

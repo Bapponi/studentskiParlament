@@ -40,16 +40,18 @@ const Material: React.FC<MaterialProps> = ({id, title, documentLink, onDelete, o
     {isDialogOpen && (
       <ConformationDialog onConfirm={()=>{onDelete(id)}} onClose={()=>{setIsDialogOpen(false)}} />
     )}
-    <a href={documentLink} target='blank' className='material'>
-      <img src="document.png" alt="document" className='document-image'/>
-      <h2>{title}</h2>
-    </a>
-    { isAdmin && (
-      <div>
-        <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={()=>{setIsDialogOpen(true)}} />
-        <img src="refresh.png" alt="upload" className='material-admin material-update' onClick={updatePopUp} />
-      </div>
-    )}
+    <div className='material'>
+      <a href={documentLink} target='blank' className='material-content'>
+        <img src="document.png" alt="document" className='document-image'/>
+        <h2>{title}</h2>
+      </a>
+      { isAdmin && (
+        <div className='material-admin__container'>
+          <img src="bin.png" alt="bin" className='material-admin material-delete' onClick={()=>{setIsDialogOpen(true)}} />
+          <img src="refresh.png" alt="upload" className='material-admin material-update' onClick={updatePopUp} />
+        </div>
+      )}
+    </div>
     {isPopupVisible && isAdmin && (
       <div className='popup'>
         <div className='popup-content'>

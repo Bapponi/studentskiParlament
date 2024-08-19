@@ -59,13 +59,13 @@ function AdminPanel() {
       <div className="admin-panel">
         {isAdmin && (
           <div className="user-buttons">
-            <div onClick={() => selectUserActivity(1)}>
+            <div onClick={() => selectUserActivity(1)} className='user-button'>
               <Button text="Преглед свих гласања" active={pollsVisible} />
             </div>
-            <div onClick={() => selectUserActivity(2)}>
+            <div onClick={() => selectUserActivity(2)} className='user-button'>
               <Button text="Прављење новог гласања" active={createPollsVisible} />
             </div>
-            <div onClick={() => selectUserActivity(3)}>
+            <div onClick={() => selectUserActivity(3)} className='user-button'>
               <Button text="Прављење нових вести" active={createNewsVisible} />
             </div>
           </div>

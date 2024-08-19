@@ -49,7 +49,6 @@
 }
 
 .news-panel{
-    position: relative;
     width: 380px;
     height: 380px;
     padding: 10px;
@@ -74,8 +73,9 @@
 }
 
 .news-panel__title{
-    color: var(--primary-color);
     height: 3em;
+    display: flex;
+    justify-content: space-between;
 }
 
 .news_panel__more{
@@ -91,16 +91,13 @@
 }
 
 .news-delete{
-    right: 5px;
-    top: 5px;
-    position: absolute;
     width: 25px;
+    height: 25px;
     padding: 5px;
     border: 2px solid var(--text-color);
     border-radius: 5px;
     transition: 0.3s;
     background-color: var(--secondary-color);
-    z-index: 2;
     cursor: pointer;
 }
 

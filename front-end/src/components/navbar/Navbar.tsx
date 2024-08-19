@@ -5,7 +5,7 @@ import { useAuth } from '../../AuthContext';
 
 function Navbar() {
   const navigate = useNavigate();
-  const {isLoggedIn, setIsLoggedIn, setIsAdmin} = useAuth();
+  const { isLoggedIn, setIsLoggedIn, setIsAdmin } = useAuth();
   const [adminListToggle, setAdminListToggle] = useState<boolean>(false);
 
   useEffect(() => {
@@ -17,11 +17,11 @@ function Navbar() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('roleId');
-    setAdminListToggle(false)
-    setIsLoggedIn(false)
-    setIsAdmin(false)
+    setAdminListToggle(false);
+    setIsLoggedIn(false);
+    setIsAdmin(false);
     navigate('/');
-  }
+  };
 
   let menuVisible: boolean = false;
   const toggleMenu = () => {
@@ -48,7 +48,11 @@ function Navbar() {
     setAdminListToggle(!adminListToggle);
   };
 
-  // iz nekog razloga ../ radi za slike i nakon rutiranja
+  const handleShadowClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target instanceof HTMLDivElement && event.target.classList.contains('mobile-menu__shadow')) {
+      toggleMenu();
+    }
+  };
 
   return (
     <header className='nav-bar'>
@@ -78,8 +82,8 @@ function Navbar() {
         </NavLink>
         {isLoggedIn && (
           <div className='nav-admin'>
-            <img src='../user.png' alt='admin' className='admin-icon' onClick={handleAdminIconClick}/>
-            { adminListToggle && (
+            <img src='../user.png' alt='admin' className='admin-icon' onClick={handleAdminIconClick} />
+            {adminListToggle && (
               <div className='admin-list'>
                 <NavLink to='/user-panel' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')} onClick={handleAdminIconClick}>
                   КОРИСНИЧКИ ПАНЕЛ
@@ -97,11 +101,11 @@ function Navbar() {
         <div className='burger-bar center'></div>
         <div className='burger-bar bottom'></div>
       </div>
-      <div className='mobile-menu__shadow'>
-        <div className='mobile-menu__container'>
+      <div className='mobile-menu__shadow' onClick={handleShadowClick}>
+        <div className='mobile-menu__container' onClick={(e) => e.stopPropagation()}>
           <nav className='mobile-menu'>
             <div className='mobile-menu__links'>
-              <NavLink to='/' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')} >
+              <NavLink to='/' className={({ isActive }) => (isActive ? 'nav-page active' : 'nav-page')}>
                 <div onClick={toggleMenu}>
                   ПОЧЕТНА
                 </div>
@@ -133,7 +137,7 @@ function Navbar() {
                       КОРИСНИЧКИ ПАНЕЛ
                     </div>
                   </NavLink>
-                  <div className='nav-page' onClick={logout} style={{alignSelf: 'flex-start'}}>
+                  <div className='nav-page' onClick={logout} style={{ alignSelf: 'flex-start' }}>
                     ОДЈАВИ СЕ
                   </div>
                 </div>

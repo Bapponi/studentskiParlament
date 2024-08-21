@@ -1,4 +1,5 @@
 export interface Material{
+    id: number,
     title: string,
-    document_link: string
+    documentLink: string
 }

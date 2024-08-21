@@ -3,7 +3,12 @@ import client from '../database';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+import { Material } from '../models/Material';
 require('dotenv').config();
+
+interface CustomRequest extends Request {
+  fileValidationError?: string;
+}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -14,20 +19,32 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  fileFilter: (req: CustomRequest, file, cb) => {
+    if (file.mimetype === 'application/pdf' || file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      req.fileValidationError = 'Неисправан тип фајл податка!';
+      cb(null, false);
+    }
+  },
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+  
 
 const toCamelCase = (str: string): string => {
   return str.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
 };
 
-const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Record<string, any> => {
+const convertKeysToCamelCase = <T extends Record<string, any>>(obj: T): Material => {
   const newObj: Record<string, any> = {};
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       newObj[toCamelCase(key)] = obj[key];
     }
   }
-  return newObj;
+  return newObj as Material;
 };
 
 export class MaterialController {
@@ -35,16 +52,21 @@ export class MaterialController {
     public getAllMaterials(req: Request, res: Response): void {
         client.query('SELECT * FROM materials ORDER BY id ASC', (err, links) => {
             if (!err) {
-                const camelCaseLinks = links.rows.map(convertKeysToCamelCase);
-                res.status(200).send(camelCaseLinks);
+                const camelCaseLinks: Material[] = links.rows.map((row: any) => convertKeysToCamelCase(row));
+                res.status(200).json(camelCaseLinks);
             } else {
-                return res.status(500).send('Грешка у бази!');
+                console.error("Database error:", err.message);
+                res.status(500).send('Грешка у бази!');
             }
         });
     }
 
-    public uploadMaterialFile(req: Request, res: Response): void {
+    public createMaterial(req: CustomRequest, res: Response): void {
         upload.single('file')(req, res, (err) => {
+            if (req.fileValidationError) {
+                return res.status(400).send(req.fileValidationError);
+            }
+
             if (err) {
                 return res.status(400).send('Није успело са сланјем фајла!');
             }
@@ -54,11 +76,11 @@ export class MaterialController {
             }
 
             const fileData = {
-                document_link: 'http://localhost:8000/uploads/materials/' + req.file.filename,
-                title: req.body.title,
+                document_link: `${process.env.BASE_URL}/uploads/materials/${req.file.filename}`,
+                title: req.body.title.trim(),
             };
 
-            if (fileData.title == "") {
+            if (!fileData.title) {
                 return res.status(400).send('Потребно је да се унесе име!');
             }
 
@@ -67,11 +89,10 @@ export class MaterialController {
 
             client.query(query, values, (err, result) => {
                 if (err) {
-                    console.error(err);
-                    return res.status(500).send('Greška u bazi!');
-                }else{
-                    const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
-                    return res.status(201).send(camelCaseLinks[0]);
+                    return res.status(500).send('Грешка у бази!');
+                } else {
+                    const camelCaseLinks = result.rows.map((row: any) => convertKeysToCamelCase(row));
+                    return res.status(201).json(camelCaseLinks[0]);
                 }
             });
         });
@@ -83,12 +104,10 @@ export class MaterialController {
         const selectQuery = 'SELECT document_link FROM materials WHERE id = $1';
         client.query(selectQuery, [id], (err, result) => {
             if (err) {
-                console.error(err.message);
                 return res.status(500).send('Грешка у бази!');
             }
 
             if (result.rows.length === 0) {
-                console.log(`Material with ID ${id} not found.`);
                 return res.status(404).send('Материјал није пронађен!');
             }
 
@@ -97,59 +116,54 @@ export class MaterialController {
             const fileToDelete = path.join(__dirname, '..', '..', 'uploads/materials', path.basename(filePath));
             fs.unlink(fileToDelete, (err) => {
                 if (err) {
-                    console.error('Error deleting file:', err);
                     return res.status(500).send('Грешка приликом брисанја фајла!');
                 }
 
                 const deleteQuery = 'DELETE FROM materials WHERE id = $1 RETURNING *';
                 client.query(deleteQuery, [id], (err, result) => {
                     if (err) {
-                        console.error(err.message);
                         return res.status(500).send('Грешка у бази!');
                     }
-                    res.status(200).json(result.rows[0]);
+                    res.status(200).json(convertKeysToCamelCase(result.rows[0]));
                 });
             });
         });
     }
 
     public updateMaterial(req: Request, res: Response): void {
-        
         upload.single('file')(req, res, (err) => {
             if (err) {
                 return res.status(400).send('Није успело качење фајла!');
             }
 
-            const document_link = req.file ? 'http://localhost:8000/uploads/materials/' + req.file.filename : null;
+            const document_link = req.file ? `${process.env.BASE_URL}/uploads/materials/${req.file.filename}` : null;
 
             const fileData = {
                 document_link: document_link,
-                title: req.body.title,
+                title: req.body.title.trim(),
             };
             const id = parseInt(req.params.id);
 
-            if (fileData.title == "") {
+            if (!fileData.title) {
                 return res.status(400).send('Потребно је да се унесе име!');
             }
 
-            let query
-            let values
-            if(document_link != null){
+            let query;
+            let values;
+            if (document_link != null) {
                 query = 'UPDATE materials SET title = $1, document_link = $2 WHERE id = $3 RETURNING *';
                 values = [fileData.title, fileData.document_link, id];
-            }else{
+            } else {
                 query = 'UPDATE materials SET title = $1 WHERE id = $2 RETURNING *';
                 values = [fileData.title, id];
             }
 
-            console.log(fileData.document_link)
-
             client.query(query, values, (err, result) => {
                 if (err) {
                     return res.status(500).send('Грешка у бази!');
-                }else{
-                    const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
-                    return res.status(201).send(camelCaseLinks[0]);
+                } else {
+                    const camelCaseLinks = result.rows.map((row: any) => convertKeysToCamelCase(row));
+                    return res.status(200).json(camelCaseLinks[0]);
                 }
             });
         });

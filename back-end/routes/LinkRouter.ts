@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { LinkController } from '../api/LinkController';
+import { LinkController } from '../controllers/LinkController';
 
 const router = Router();
 const linkController = new LinkController();

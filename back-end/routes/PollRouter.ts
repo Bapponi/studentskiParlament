@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PollController } from '../api/PollController';
+import { PollController } from '../controllers/PollController';
 
 const router = Router();
 const pollController = new PollController();

@@ -9,7 +9,9 @@ const errorToString = (error: unknown): string => {
 
 export const fetchAllMaterialsAPI = async () => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/material`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_LINK}/material`, {
+      method: 'GET',
+    });
     if (!response.ok) {
       const errorMessage = await response.text();
       throw new Error(errorMessage);

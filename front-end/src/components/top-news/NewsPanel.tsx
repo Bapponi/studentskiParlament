@@ -38,7 +38,7 @@ const NewsPanel: React.FC<NewsPanelProps> = ({ id, date, title, clip, banner, on
           <p>{clip}</p>
         </div>
         <Link to={`/news/${id}`} className='news_panel__more'>
-          <h3>Detaljnije...</h3>
+          <h3>Детаљније...</h3>
         </Link>
       </div>
     </div>

@@ -86,7 +86,7 @@ export class NewsController {
     const id = parseInt(req.params.id);
     const query = 'SELECT * FROM news INNER JOIN news_sections ON news.id = news_sections.news_id WHERE news.id = $1 ORDER BY news_sections.ordering;';
     const values = [id];
-    client.query(query, values, (err, result) => { //sredi ovo kasnije i najbolje da ide iz 2 query-ja
+    client.query(query, values, (err, result) => {
       if (!err) {
         let news: News | null = null;
 
@@ -120,10 +120,9 @@ export class NewsController {
     const multerUpload = upload.fields([
         { name: 'banner', maxCount: 1 },
         { name: 'uploadedFiles', maxCount: 10 },
-        { name: 'uploadedVideo', maxCount: 10 }, // Add this line to handle video uploads
+        { name: 'uploadedVideo', maxCount: 10 }, 
     ]);
 
-    // Wrap the multer upload in a promise
     const handleFileUpload = (): Promise<UploadedFiles> => {
         return new Promise((resolve, reject) => {
             multerUpload(req, res, (err) => {
@@ -139,7 +138,7 @@ export class NewsController {
         const files = await handleFileUpload();
 
         const uploadedFiles = files['uploadedFiles'] || [];
-        const uploadedVideo = files['uploadedVideo'] || []; // Add this line to extract uploaded videos
+        const uploadedVideo = files['uploadedVideo'] || [];
         const banner = files['banner'] ? files['banner'][0] : undefined;
         const bannerName = banner ? 'http://localhost:8000/uploads/news/' + banner.filename : null;
 
@@ -149,13 +148,21 @@ export class NewsController {
         const headerValues = JSON.parse(req.body.headerValues);
         const textValues = JSON.parse(req.body.textValues);
         const fileKeys = req.body.uploadedFileKeys;
-        const videoKeys = req.body.uploadedVideoKeys; // Add this line to get video keys
+        const videoKeys = req.body.uploadedVideoKeys;
 
-        if (clip.length > 200) {
-            return res.status(300).send('Унет предугачки исечак текста!');
+        if(!title || !clip){
+          return res.status(400).send('Потребно је унети наслов и исечак вести!');
+        }
+        
+        if(elements.length < 1){
+          return res.status(400).send('Мора да се унесе минимум један нови елемент вести!');
         }
 
-        console.log({ title, clip, banner, elements, headerValues, textValues, uploadedFiles, uploadedVideo, fileKeys, videoKeys });
+        if (clip.length > 200) {
+          return res.status(400).send('Унет предугачки исечак текста!');
+        }
+
+        console.log(elements);
 
         let mainQuery: string;
         let values: any[];

@@ -19,7 +19,7 @@ const NewsClip: React.FC<NewsClipProps> = ({ id, date, title, description}) => {
             <p>{description}</p>
         </div>
         <Link to={`/news/${id}`} className='news_panel__more'>
-          <h3>Detaljnije...</h3>
+          <h3>Детаљније...</h3>
         </Link>
     </div>
   );

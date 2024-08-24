@@ -135,8 +135,11 @@ export class PollController {
   };
 
   public async createPoll(req: Request, res: Response) {
-    const { title, elements, optionValues } = req.body;
-    console.log(title, elements, optionValues)
+    const { title, optionValues } = req.body;
+    
+    if(Object.keys(optionValues).length < 2){
+      return res.status(400).send('Морају да постоје минимун две опције у склопу анкете!');
+    }
 
     try {
       const pollInsertQuery = 'INSERT INTO polls (title) VALUES ($1) RETURNING id';
@@ -154,13 +157,11 @@ export class PollController {
       
       return res.status(200).send('Успешно качење гласања!');
     } catch (error) {
-      console.error('Error uploading poll:', error);
       return res.status(500).send('Грешка у бази!');
     }
   }
 
   public deletePoll = async (req: Request, res: Response): Promise<void> => {
-    console.log("1")
     const id = parseInt(req.params.id);
     const deletePollOptionsQuery = 'DELETE FROM poll_options WHERE poll_id = $1';
     const deletePollQuery = 'DELETE FROM polls WHERE id = $1 RETURNING *';

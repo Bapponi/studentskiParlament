@@ -178,18 +178,18 @@ export class NewsController {
         const newsInsertResult = await client.query(mainQuery, values);
         const newsId = newsInsertResult.rows[0].id;
 
-        const selectQuery = 'INSERT INTO news_sections (type, content, ordering, news_id) VALUES($1, $2, $3, $4)';
+        const insertQuery = 'INSERT INTO news_sections (type, content, ordering, news_id) VALUES($1, $2, $3, $4)';
         if (headerValues) {
             Object.entries(headerValues).forEach(([key, value]) => {
                 const values = ['header', value, key, newsId];
-                client.query(selectQuery, values);
+                client.query(insertQuery, values);
             });
         }
 
         if (textValues) {
             Object.entries(textValues).forEach(([key, value]) => {
                 const values = ['text', value, key, newsId];
-                client.query(selectQuery, values);
+                client.query(insertQuery, values);
             });
         }
 
@@ -197,7 +197,7 @@ export class NewsController {
             uploadedFiles.forEach((file, index) => {
                 const pictureName = 'http://localhost:8000/uploads/news/' + file.filename;
                 const sectionValues = ['picture', pictureName, fileKeys[index], newsId];
-                client.query(selectQuery, sectionValues);
+                client.query(insertQuery, sectionValues);
             });
         }
 
@@ -205,7 +205,7 @@ export class NewsController {
             uploadedVideo.forEach((file, index) => {
                 const videoName = 'http://localhost:8000/uploads/news/' + file.filename;
                 const sectionValues = ['video', videoName, videoKeys[index], newsId];
-                client.query(selectQuery, sectionValues);
+                client.query(insertQuery, sectionValues);
             });
         }
 

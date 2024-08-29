@@ -11,13 +11,13 @@ const ConformationDialog: React.FC<ConformationDialogProps> = ({ onConfirm, onCl
   return (
     <div className='conformation-dialog__container'>
       <div className='conformation-dialog'>
-        <h2>Jeste li sigurni?</h2>
+        <h2>Да ли сте сигурни?</h2>
         <div className='conformation-dialog__buttons'>
             <div className='conformation-dialog__button' onClick={()=>{onClose(); onConfirm();}}>
-                <Button text='DA'/>
+                <Button text='ДА'/>
             </div>
             <div className='conformation-dialog__button' onClick={onClose}>
-                <Button text='NE'/>
+                <Button text='НЕ'/>
             </div>
         </div>
         <img src="cross.png" alt="cross" className='material-cross' onClick={onClose}/>

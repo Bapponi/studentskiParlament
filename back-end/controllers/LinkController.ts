@@ -19,7 +19,7 @@ const upload = multer({ storage });
 export class LinkController {
 
     public getAllLinks(req: Request, res: Response): void {
-        client.query('SELECT * FROM links', (err, links) => {
+        client.query('SELECT * FROM links ORDER BY id', (err, links) => {
             if (!err) {
                 res.status(200).send(links.rows);
             } else {

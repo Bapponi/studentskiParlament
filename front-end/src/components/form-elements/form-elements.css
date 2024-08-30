@@ -2,6 +2,10 @@
     width: 100%;
 }
 
+/* input[type='file'] {
+    display: block !important;
+} */
+
 .input-field{
     border-radius: 10px;
     border: solid 2px var(--text-color);

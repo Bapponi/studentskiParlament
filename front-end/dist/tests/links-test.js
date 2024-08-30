@@ -57,6 +57,44 @@ const path = require('path');
         throw new Error('Link was not created successfully');
       }
 
+      // Click the "refresh" icon to open the update popup for the last link
+      const editButtons = await driver.findElements(By.css('img.link-update')); // Update selector if needed
+      if (editButtons.length === 0) {
+        throw new Error('No edit buttons found.');
+      }
+
+      const lastEditButton = editButtons[editButtons.length - 1];
+      await lastEditButton.click();
+
+      // Wait for the specific popup to appear
+      const popups = await driver.findElements(By.css('.popup')); // Find all popups
+      const targetPopup = popups[popups.length - 1]; // Assuming the last popup corresponds to the last edit button
+
+      await driver.wait(until.elementIsVisible(targetPopup), 10000);
+
+      // Interact with the specific popup
+      const updatedNameInput = await targetPopup.findElement(By.css('input[placeholder="Унеси ново име овде"]'));
+      const updatedWebsiteInput = await targetPopup.findElement(By.css('input[placeholder="Унеси нови линк овде типа https://..."]'));
+      const updatedFileInput = await targetPopup.findElement(By.css('input[type="file"]')); // Assuming the file input is still present
+      const saveButton = await targetPopup.findElement(By.css('div.update-link__button')); // Update selector if needed
+
+      await updatedNameInput.clear();
+      await updatedNameInput.sendKeys('Updated Link Name');
+      await updatedWebsiteInput.clear();
+      await updatedWebsiteInput.sendKeys('https://updated-example.com');
+      await updatedFileInput.sendKeys(filePath); // Upload the file again if needed
+      await saveButton.click();
+
+      // Wait for the specific popup to close (become stale)
+      await driver.wait(until.stalenessOf(targetPopup), 15000);
+
+      // Verify the link was updated
+      const updatedLinkList = await driver.findElement(By.css('.links'));
+      const updatedLinkText = await updatedLinkList.getText();
+      if (!updatedLinkText.includes('Updated Link Name')) {
+        throw new Error('Link was not updated successfully');
+      }
+
       // Find all delete buttons and target the last one
       const deleteButtons = await driver.findElements(By.css('img.link-delete')); // Update this selector as needed
       if (deleteButtons.length === 0) {
@@ -70,11 +108,12 @@ const path = require('path');
       const confirmButton = await driver.wait(until.elementLocated(By.css('.conformation-dialog__button:nth-child(1)')), 10000);
       await confirmButton.click();
       
-      const updatedLinkList = await driver.findElement(By.css('.links'));
-      const updatedLinkText = await updatedLinkList.getText();
-      console.log("Успешно одрађен тест за линкове")
-      if (updatedLinkText.includes('Test Link')) {
-        throw new Error('\nЛинк није успешно избрисан');
+      // Verify the link was deleted
+      const finalLinkList = await driver.findElement(By.css('.links'));
+      const finalLinkText = await finalLinkList.getText();
+      console.log("Успешно одрађен тест за линкове");
+      if (finalLinkText.includes('Updated Link Name')) {
+        throw new Error('Link was not deleted successfully');
       }
     } else {
       throw new Error('Test image file not found.');

@@ -4,13 +4,12 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
-(async function linkTests() {
+(async function materialTests() {
   let driver = await new Builder().forBrowser('chrome').build();
 
   try {
     await driver.get('http://localhost:3000/login');
 
-    // Fill in the login form
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
     const passwordInput = await driver.findElement(By.css('input[placeholder="Унеси шифру овде"]'));
     const loginButton = await driver.findElement(By.css('div.login-button'));
@@ -21,34 +20,32 @@ require('dotenv').config();
 
     await driver.wait(until.urlIs('http://localhost:3000/'), 15000);
 
-    await driver.get('http://localhost:3000/links');
+    await driver.get('http://localhost:3000/materials');
 
-    await driver.wait(until.elementLocated(By.css('.create-link')), 10000);
+    await driver.wait(until.elementLocated(By.css('.create-material')), 10000);
 
-    const filePath = path.resolve(__dirname, '../tests/test-image.jpg');
-    console.log('Качење фајла са путање: ', filePath);
-    
+    const filePath = path.resolve(__dirname, '../tests/test-document.pdf');
+    console.log('Качење фајла са путање:', filePath);
+
     if (fs.existsSync(filePath)) {
       const fileInput = await driver.findElement(By.css('input[type="file"]'));
-      const nameInput = await driver.findElement(By.css('input[placeholder="Унеси назив фајла"]'));
-      const websiteInput = await driver.findElement(By.css('input[placeholder="Унеси линк овде типа https://..."]'));
+      const titleInput = await driver.findElement(By.css('input[placeholder="Унеси назив фајла"]'));
       const addButton = await driver.wait(until.elementLocated(By.css('div.button-container')), 10000);
 
       await fileInput.sendKeys(filePath);
 
-      await nameInput.sendKeys('Име линка');
-      await websiteInput.sendKeys('https://example.com');
+      await titleInput.sendKeys('Назив материјала');
 
       await driver.wait(until.elementIsVisible(addButton), 10000);
       await addButton.click();
 
-      const linkList = await driver.findElement(By.css('.links'));
-      const linkText = await linkList.getText();
-      if (!linkText.includes('Име линка')) {
-        throw new Error('Неуспешно креирање новог линка');
+      const materialList = await driver.findElement(By.css('.materials'));
+      const materialText = await materialList.getText();
+      if (!materialText.includes('Назив материјала')) {
+        throw new Error('Неуспешно креирање новог материјала');
       }
 
-      const editButtons = await driver.findElements(By.css('img.link-update'));
+      const editButtons = await driver.findElements(By.css('img.material-update'));
       if (editButtons.length === 0) {
         throw new Error('Није пронађено дугме за ажурирање података.');
       }
@@ -60,27 +57,24 @@ require('dotenv').config();
       const targetPopup = popups[popups.length - 1];
       await driver.wait(until.elementIsVisible(targetPopup), 10000);
 
-      const updatedNameInput = await targetPopup.findElement(By.css('input[placeholder="Унеси ново име овде"]'));
-      const updatedWebsiteInput = await targetPopup.findElement(By.css('input[placeholder="Унеси нови линк овде типа https://..."]'));
+      const updatedTitleInput = await targetPopup.findElement(By.css('input[placeholder="Унеси нови наслов овде"]'));
       const updatedFileInput = await targetPopup.findElement(By.css('input[type="file"]'));
-      const saveButton = await targetPopup.findElement(By.css('div.update-link__button'));
+      const saveButton = await targetPopup.findElement(By.css('div.update-material__button'));
 
-      await updatedNameInput.clear();
-      await updatedNameInput.sendKeys('Ново име линка');
-      await updatedWebsiteInput.clear();
-      await updatedWebsiteInput.sendKeys('https://updated-example.com');
+      await updatedTitleInput.clear();
+      await updatedTitleInput.sendKeys('Нови назив материјала');
       await updatedFileInput.sendKeys(filePath);
       await saveButton.click();
 
       await driver.wait(until.stalenessOf(targetPopup), 15000);
 
-      const updatedLinkList = await driver.findElement(By.css('.links'));
-      const updatedLinkText = await updatedLinkList.getText();
-      if (!updatedLinkText.includes('Ново име линка')) {
-        throw new Error('Линк неуспешно ажуриран');
+      const updatedMaterialList = await driver.findElement(By.css('.materials'));
+      const updatedMaterialText = await updatedMaterialList.getText();
+      if (!updatedMaterialText.includes('Нови назив материјала')) {
+        throw new Error('Материјал неуспешно ажуриран');
       }
 
-      const deleteButtons = await driver.findElements(By.css('img.link-delete'));
+      const deleteButtons = await driver.findElements(By.css('img.material-delete'));
       if (deleteButtons.length === 0) {
         throw new Error('Није пронађено дугме за брисање података');
       }
@@ -91,14 +85,14 @@ require('dotenv').config();
       const confirmButton = await driver.wait(until.elementLocated(By.css('.conformation-dialog__button:nth-child(1)')), 10000);
       await confirmButton.click();
       
-      const finalLinkList = await driver.findElement(By.css('.links'));
-      const finalLinkText = await finalLinkList.getText();
-      console.log("Успешно одрађен тест за линкове");
-      if (finalLinkText.includes('Ново име линка')) {
-        throw new Error('Линк неуспешно ажуриран');
+      const finalMaterialList = await driver.findElement(By.css('.materials'));
+      const finalMaterialText = await finalMaterialList.getText();
+      console.log("Успешно одрађен тест за материјале");
+      if (finalMaterialText.includes('Нови назив материјала')) {
+        throw new Error('Материјал неуспешно обрисан');
       }
     } else {
-      throw new Error('Није пронађена слика за линк');
+      throw new Error('Није пронађен фајл за материјал');
     }
 
   } finally {

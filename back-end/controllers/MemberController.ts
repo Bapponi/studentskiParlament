@@ -100,6 +100,8 @@ export class MemberController {
                 roleId: roleId,
             };
 
+            console.log(fileData)
+
             if(!this.validateEmail(fileData.email)){
                 return res.status(400).send('Лоше форматиран мејл!');
             }

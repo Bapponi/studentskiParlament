@@ -3,7 +3,7 @@ import './pop-up.css';
 
 interface PopUpProps {
   onClose: () => void;
-  children: React.ReactNode; // Add children prop to the interface
+  children: React.ReactNode;
 }
 
 const PopUp: React.FC<PopUpProps> = ({ onClose, children }) => {

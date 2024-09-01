@@ -175,7 +175,7 @@ function OneNews() {
             {newsDetails.newsSection.map((entry) => (
               <div key={entry.id} className='one-news__sections'>
                 {entry.type === 'header' && 
-                  <div className='one-news__admin'>
+                  <div className='one-news__admin hh'>
                     <h2 className='news-section__header'>{entry.content}</h2>
                     {isAdmin &&
                       <img src="../refresh.png" alt="upload" className='one-news__refresh' onClick={() => { setSectionHeaderPopUp(entry.id) }} />
@@ -197,7 +197,7 @@ function OneNews() {
                   </div>
                 }
                 {entry.type === 'text' && (
-                  <div className='one-news__admin'>
+                  <div className='one-news__admin tt'>
                     <div>
                       {entry.content.split('\n').map((line, lineIdx) => (
                         <p key={lineIdx}>{line}</p>
@@ -212,7 +212,7 @@ function OneNews() {
                         <TextArea
                           value={sectionText}
                           onChange={handleSectionTextChange}
-                          placeholder='Унесите нови параграф текста овде' 
+                          placeholder='Унесите нови текст параграфа овде' 
                         />
                         <div style={{ width: '100%' }} onClick={() => updateSection(entry.id, sectionText, entry.type)}>
                           <Button text='Пошаљи измену'/>
@@ -222,7 +222,7 @@ function OneNews() {
                   </div>  
                 )}
                 {entry.type === 'picture' && 
-                  <div className='one-news__admin'>
+                  <div className='one-news__admin pp'>
                     <img src={entry.content} alt={`News section ${entry.id}`} className='news-section__picture'/>
                     {isAdmin &&
                       <img src="../refresh.png" alt="upload" className='one-news__refresh' onClick={() => { setSectionImagePopUp(entry.id) }} />
@@ -244,7 +244,7 @@ function OneNews() {
                   </div>
                 }
                 {entry.type === 'video' && (
-                  <div className='one-news__admin'>
+                  <div className='one-news__admin vv'>
                     <VideoPlayer width='63%' height='100%' src={entry.content}/>
                     {isAdmin && (
                       <img

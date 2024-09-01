@@ -98,11 +98,11 @@ require('dotenv').config();
     const moreDetailsLink = await driver.findElement(By.xpath("//div[contains(@class, 'news-clip')]//a[contains(@class, 'news_panel__more')]"));
     await moreDetailsLink.click();
 
-    await driver.sleep(5000)
-
     await driver.wait(until.elementLocated(By.css('.news-banner__buttons div')), 10000);
     const changeBannerButton = await driver.findElement(By.xpath("//div[contains(@class, 'news-banner__buttons')]//div[1]"));
     await changeBannerButton.click();
+
+    // await driver.sleep(5000)
 
     const newBannerFilePath = path.resolve(__dirname, '../tests/test-image.jpg');
     const newBannerInput = await driver.findElement(By.css('input[type="file"]'));
@@ -113,7 +113,7 @@ require('dotenv').config();
         throw new Error('Није пронађена нова слика члана');
     }
 
-    const submitBannerButton = await driver.findElement(By.xpath("//div[@class='pop-up']//button[text()='Пошаљи измену']"));
+    const submitBannerButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Пошаљи измену']]"));
     await submitBannerButton.click();
 
     const changeTitleButton = await driver.findElement(By.xpath("//div[contains(@class, 'news-banner__buttons')]//div[2]"));
@@ -123,19 +123,50 @@ require('dotenv').config();
     await newTitleInput.clear();
     await newTitleInput.sendKeys('Нови наслов вести');
 
-    const submitTitleButton = await driver.findElement(By.xpath("//div[@class='pop-up']//button[text()='Пошаљи измену']"));
+    const submitTitleButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Пошаљи измену']]"));
     await submitTitleButton.click();
 
-    const changeClipButton = await driver.findElement(By.xpath("//img[@class='one-news__refresh']"));
+    const changeClipButton = await driver.findElement(By.css(".one-news__admin .one-news__refresh"));
     await changeClipButton.click();
 
     const newClipInput = await driver.findElement(By.css('textarea[placeholder="Унесите нови исечак текста овде"]'));
     await newClipInput.clear();
     await newClipInput.sendKeys('Нови исечак вести.');
 
-    const submitClipButton = await driver.findElement(By.xpath("//div[@class='pop-up']//button[text()='Пошаљи измену']"));
-
+    const submitClipButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Пошаљи измену']]"));
     await submitClipButton.click();
+
+    const updateDetails = [
+      { type: 'Header', changeButtonXpath: "//div[contains(@class, 'one-news__admin hh')]//img[contains(@src, 'refresh.png')]", inputCss: 'input[placeholder="Унеси нови поднаслов овде"]', value: 'Нови поднаслов вести' },
+      { type: 'Text',   changeButtonXpath: "//div[contains(@class, 'one-news__admin tt')]//img[contains(@src, 'refresh.png')]", inputCss: 'textarea[placeholder="Унесите нови текст параграфа овде"]', value: 'Нови текст параграфа.' },
+      { type: 'Image',  changeButtonXpath: "//div[contains(@class, 'one-news__admin pp')]//img[contains(@src, 'refresh.png')]", inputCss: 'input[type="file"]', filePath: '../tests/test-image.jpg' },
+      { type: 'Video',  changeButtonXpath: "//div[contains(@class, 'one-news__admin vv')]//img[contains(@src, 'refresh.png')]", inputCss: 'input[type="file"]', filePath: '../tests/test-video.mp4' }
+    ];
+  
+    for (let detail of updateDetails) {
+      await driver.sleep(3000)
+      const changeButton = await driver.findElement(By.xpath(detail.changeButtonXpath));
+      await changeButton.click();
+  
+      if (detail.inputCss && detail.value) {
+        const inputElement = await driver.findElement(By.css(detail.inputCss));
+        await inputElement.clear();
+        await inputElement.sendKeys(detail.value);
+      } else if (detail.filePath) {
+        const inputElement = await driver.findElement(By.css(detail.inputCss));
+        const resolvedFilePath = path.resolve(__dirname, detail.filePath);
+  
+        if (fs.existsSync(resolvedFilePath)) {
+          await inputElement.sendKeys(resolvedFilePath);
+        } else {
+          throw new Error(`Није пронађена датотека: ${detail.filePath}`);
+        }
+      }
+  
+      const submitButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Пошаљи измену']]"));
+      await submitButton.click();
+    }
+
 
     await driver.sleep(3000)
     

@@ -271,7 +271,7 @@ export class MemberController {
 
         await client.query('INSERT INTO password_reset_tokens (user_id, token, expiration) VALUES ($1, $2, $3)', [user.id, token, expiration]);
 
-        const resetLink = `http://localhost:3000/new-password?token=${token}`;
+        const resetLink = `${process.env.DB_FRONTEND_LINK}/new-password?token=${token}`;
         await sendEmail(email, 'Прављење нове шифре', `Кликни на овај линк како би поставио нову шифру у року од наредних сат времена: ${resetLink}`);
 
         res.status(200).json({ message: 'Грешка приликом слања мејла потврде' });

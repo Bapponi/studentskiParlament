@@ -8,7 +8,7 @@ require('dotenv').config();
   let driver = await new Builder().forBrowser('chrome').build();
 
   try {
-    await driver.get('http://localhost:3000/login');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/login`);
 
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
     const passwordInput = await driver.findElement(By.css('input[placeholder="Унеси шифру овде"]'));
@@ -18,9 +18,9 @@ require('dotenv').config();
     await passwordInput.sendKeys(`${process.env.REACT_APP_ADMIN_PASSWORD}`);
     await loginButton.click();
 
-    await driver.wait(until.urlIs('http://localhost:3000/'), 15000);
+    await driver.wait(until.urlIs(`${process.env.REACT_APP_FRONTEND_LINK}/`), 15000);
 
-    await driver.get('http://localhost:3000/materials');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/materials`);
 
     await driver.wait(until.elementLocated(By.css('.create-material')), 10000);
 

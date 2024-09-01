@@ -8,7 +8,7 @@ require('dotenv').config();
   let driver = await new Builder().forBrowser('chrome').build();
 
   try {
-    await driver.get('http://localhost:3000/login');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/login`);
 
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
     const passwordInput = await driver.findElement(By.css('input[placeholder="Унеси шифру овде"]'));
@@ -18,9 +18,9 @@ require('dotenv').config();
     await passwordInput.sendKeys(`${process.env.REACT_APP_ADMIN_PASSWORD}`);
     await loginButton.click();
 
-    await driver.wait(until.urlIs('http://localhost:3000/'), 15000);
+    await driver.wait(until.urlIs(`${process.env.REACT_APP_FRONTEND_LINK}/`), 15000);
 
-    await driver.get('http://localhost:3000/members');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/members`);
 
     await driver.wait(until.elementLocated(By.css('.create-member')), 10000);
 
@@ -44,7 +44,6 @@ require('dotenv').config();
         }
       }
 
-      // Handle role selection
       const roleSelectOption = await driver.findElement(By.css('.form-element__container .select-field'));
       await roleSelectOption.click();
 
@@ -120,8 +119,6 @@ require('dotenv').config();
       await updatedEmailInput.sendKeys('novo.ime@example.com');
       await updatedFileInput.sendKeys(filePath);
       await saveButton.click();
-
-      await driver.sleep(5000);
 
       await driver.wait(until.stalenessOf(targetPopup), 15000);
 

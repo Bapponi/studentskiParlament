@@ -9,7 +9,7 @@ require('dotenv').config();
 
   try {
     // Step 1: Navigate to the login page
-    await driver.get('http://localhost:3000/login');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/login`);
 
     // Step 2: Fill in the login form
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
@@ -20,10 +20,10 @@ require('dotenv').config();
     await passwordInput.sendKeys(process.env.REACT_APP_ADMIN_PASSWORD);
     await loginButton.click();
 
-    await driver.wait(until.urlIs('http://localhost:3000/'), 15000);
+    await driver.wait(until.urlIs(`${process.env.REACT_APP_FRONTEND_LINK}/`), 15000);
 
     // Step 3: Navigate to the user panel
-    await driver.get('http://localhost:3000/user-panel');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/user-panel`);
 
     // Step 4: Click on the 'Create News' button
     const createNewsButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Прављење нових вести']]"));
@@ -91,7 +91,7 @@ require('dotenv').config();
 
     await driver.sleep(500)
 
-    await driver.get('http://localhost:3000');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}`);
 
     await driver.sleep(500)
 
@@ -165,7 +165,7 @@ require('dotenv').config();
       await submitButton.click();
     }
 
-    await driver.get('http://localhost:3000/news');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/news`);
 
     const deleteButtons = await driver.findElements(By.css('.all-news img.news-delete'));
     if (deleteButtons.length === 0) {

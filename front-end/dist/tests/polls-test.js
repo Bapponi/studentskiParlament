@@ -7,7 +7,7 @@ require('dotenv').config();
 
   try {
     // Step 1: Navigate to the login page
-    await driver.get('http://localhost:3000/login');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/login`);
 
     // Step 2: Fill in the login form
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
@@ -18,9 +18,9 @@ require('dotenv').config();
     await passwordInput.sendKeys(process.env.REACT_APP_ADMIN_PASSWORD);
     await loginButton.click();
 
-    await driver.wait(until.urlIs('http://localhost:3000/'), 15000);
+    await driver.wait(until.urlIs(`${process.env.REACT_APP_FRONTEND_LINK}/`), 15000);
 
-    await driver.get('http://localhost:3000/user-panel');
+    await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/user-panel`);
 
     const createPollButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Прављење новог гласања']]"));
     await createPollButton.click();

@@ -102,8 +102,6 @@ require('dotenv').config();
     const changeBannerButton = await driver.findElement(By.xpath("//div[contains(@class, 'news-banner__buttons')]//div[1]"));
     await changeBannerButton.click();
 
-    // await driver.sleep(5000)
-
     const newBannerFilePath = path.resolve(__dirname, '../tests/test-image.jpg');
     const newBannerInput = await driver.findElement(By.css('input[type="file"]'));
 
@@ -144,8 +142,8 @@ require('dotenv').config();
     ];
   
     for (let detail of updateDetails) {
-      await driver.sleep(3000)
       const changeButton = await driver.findElement(By.xpath(detail.changeButtonXpath));
+      await driver.executeScript("arguments[0].scrollIntoView(true);", changeButton);
       await changeButton.click();
   
       if (detail.inputCss && detail.value) {
@@ -167,8 +165,18 @@ require('dotenv').config();
       await submitButton.click();
     }
 
+    await driver.get('http://localhost:3000/news');
 
-    await driver.sleep(3000)
+    const deleteButtons = await driver.findElements(By.css('.all-news img.news-delete'));
+    if (deleteButtons.length === 0) {
+      throw new Error('Није пронађено дугме за брисање члана');
+    }
+
+    const lastDeleteButton = deleteButtons[0];
+    await lastDeleteButton.click();
+
+    const confirmButton = await driver.wait(until.elementLocated(By.css('.conformation-dialog__button:nth-child(1)')), 10000);
+    await confirmButton.click();
     
     console.log("Успешно одрађен тест за вести");
 

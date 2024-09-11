@@ -99,13 +99,15 @@ require('dotenv').config();
       if (finalLinkText.includes('Ново име линка')) {
         throw new Error('Линк неуспешно обрисан');
       }
-      
-      console.log("Успешно одрађен тест за линкове!");
 
     } else {
       throw new Error('Није пронађена слика за линк');
     }
 
+    console.log("УСПЕХ: Одрађен тест за линкове!");
+
+  } catch (error) {
+    console.error('ГРЕШКА: ', error.message);
   } finally {
     await driver.quit();
   }

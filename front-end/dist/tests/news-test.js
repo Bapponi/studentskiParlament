@@ -176,8 +176,10 @@ require('dotenv').config();
     const confirmButton = await driver.wait(until.elementLocated(By.css('.conformation-dialog__button:nth-child(1)')), 10000);
     await confirmButton.click();
     
-    console.log("Успешно одрађен тест за вести");
+    console.log("УСПЕХ: Одрађен тест за вести");
 
+  } catch (error) {
+    console.error('ГРЕШКА: ', error.message);
   } finally {
     await driver.quit();
   }

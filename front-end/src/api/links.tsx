@@ -37,7 +37,7 @@ export const createLinkAPI = async ({
   try {
 
     if (!file) {
-      throw new Error("Молим Вас да унесете фајл")      
+      throw new Error("Молим Вас да унесете лого")      
     }
   
     const formData = new FormData();

@@ -93,8 +93,10 @@ require('dotenv').config();
       console.error('Није пронађена ниједна анкета');
     }
 
-    console.log("Успешно одрађен тест за гласања/анкете");
+    console.log("УСПЕХ: Одрађен тест за гласања/анкете");
 
+  } catch (error) {
+    console.error('ГРЕШКА: ', error.message);
   } finally {
     await driver.quit();
   }

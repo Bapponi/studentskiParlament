@@ -8,6 +8,7 @@ require('dotenv').config();
   let driver = await new Builder().forBrowser('chrome').build();
 
   try {
+    console.log('Пријављивање за категорију администратора...');
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/login`);
 
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
@@ -20,12 +21,13 @@ require('dotenv').config();
 
     await driver.wait(until.urlIs(`${process.env.REACT_APP_FRONTEND_LINK}/`), 15000);
 
+    console.log('Преглед свих чланова...');
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/members`);
-
     await driver.wait(until.elementLocated(By.css('.create-member')), 10000);
 
+    console.log('Креирање новог члана...');
     const filePath = path.resolve(__dirname, '../tests/test-image.jpg');
-    console.log('Uploading file from path:', filePath);
+    console.log('Качење фајла са путање:', filePath);
 
     if (fs.existsSync(filePath)) {
       const fileInput = await driver.findElement(By.css('input[type="file"]'));
@@ -79,6 +81,7 @@ require('dotenv').config();
       const lastEditButton = editButtons[editButtons.length - 1];
       await lastEditButton.click();
 
+      console.log('Ажурирање члана...');
       const popups = await driver.findElements(By.css('.popup'));
       const targetPopup = popups[popups.length - 1];
       await driver.wait(until.elementIsVisible(targetPopup), 10000);
@@ -128,6 +131,7 @@ require('dotenv').config();
         throw new Error('Члан неуспешно ажуриран');
       }
 
+      console.log('Брисање члана...');
       const deleteButtons = await driver.findElements(By.css('.main-members img.member-delete'));
       if (deleteButtons.length === 0) {
         throw new Error('Није пронађено дугме за брисање члана');
@@ -141,10 +145,13 @@ require('dotenv').config();
       
       const finalMemberList = await driver.findElement(By.css('.main-members'));
       const finalMemberText = await finalMemberList.getText();
-      console.log("Успешно одрађен тест за чланове");
+      
       if (finalMemberText.includes('Ново Име Презиме')) {
         throw new Error('Члан неуспешно обрисан');
       }
+
+      console.log("Успешно одрађен тест за чланове!");
+
     } else {
       throw new Error('Није пронађена слика члана');
     }

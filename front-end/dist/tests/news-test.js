@@ -4,14 +4,13 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
-(async function createPollTest() {
+(async function newsTest() {
   let driver = await new Builder().forBrowser('chrome').build();
 
   try {
-    // Step 1: Navigate to the login page
+    console.log('Пријављивање за категорију администратора...');
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/login`);
 
-    // Step 2: Fill in the login form
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
     const passwordInput = await driver.findElement(By.css('input[placeholder="Унеси шифру овде"]'));
     const loginButton = await driver.findElement(By.css('div.login-button'));
@@ -22,14 +21,13 @@ require('dotenv').config();
 
     await driver.wait(until.urlIs(`${process.env.REACT_APP_FRONTEND_LINK}/`), 15000);
 
-    // Step 3: Navigate to the user panel
+    console.log("Прелаз на компоненту за креирање нове вести у корисничком панелу...");
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/user-panel`);
 
-    // Step 4: Click on the 'Create News' button
+    console.log("Креирање нове вести...")
     const createNewsButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Прављење нових вести']]"));
     await createNewsButton.click();
 
-    // Step 5: Fill in the news title and clip
     const titleInput = await driver.findElement(By.css('input[placeholder="Унесите наслов вести овде"]'));
     const clipInput = await driver.findElement(By.css('textarea[placeholder="Унети максимално 200 карактера"]'));
     const bannerInput = await driver.findElement(By.css('.news-part input[type="file"]'));
@@ -44,24 +42,20 @@ require('dotenv').config();
         throw new Error('Није пронађена слика члана');
     }
 
-    // Step 6: Add new elements (Header, Text, Picture, Video)
     const addElementButton = await driver.findElement(By.xpath("//div[@class='new-element__button']"));
     await addElementButton.click();
 
-    // Add a header
     const headerOption = await driver.findElement(By.xpath("//div[@class='add-option' and .//h2[text()='Заглавље']]"));
     await headerOption.click();
     const headerInput = await driver.findElement(By.css('input[placeholder="Унесите заглавље овде"]'));
     await headerInput.sendKeys('Заглавље вести');
 
-    // Add text
     await addElementButton.click();
     const textOption = await driver.findElement(By.xpath("//div[@class='add-option' and .//h2[text()='Текст']]"));
     await textOption.click();
     const textInput = await driver.findElement(By.css('textarea[placeholder="Унесите текст параграфа овде"]'));
     await textInput.sendKeys('Овде иде текст параграфа.');
 
-    // Add a picture
     await addElementButton.click();
     const pictureOption = await driver.findElement(By.xpath("//div[@class='add-option' and .//h2[text()='Слика']]"));
     await pictureOption.click();
@@ -89,14 +83,16 @@ require('dotenv').config();
     const publishButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Објави вест']]"));
     await publishButton.click();
 
+    console.log("Прелаз на почетну страницу где се иде на детаље ново креиране вести...");
+
     await driver.sleep(500)
-
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}`);
-
     await driver.sleep(500)
 
     const moreDetailsLink = await driver.findElement(By.xpath("//div[contains(@class, 'news-clip')]//a[contains(@class, 'news_panel__more')]"));
     await moreDetailsLink.click();
+
+    console.log("Ажурирање вести...");
 
     await driver.wait(until.elementLocated(By.css('.news-banner__buttons div')), 10000);
     const changeBannerButton = await driver.findElement(By.xpath("//div[contains(@class, 'news-banner__buttons')]//div[1]"));
@@ -164,6 +160,8 @@ require('dotenv').config();
       const submitButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Пошаљи измену']]"));
       await submitButton.click();
     }
+
+    console.log("Брисање вести на страници са свим вестима...");
 
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/news`);
 

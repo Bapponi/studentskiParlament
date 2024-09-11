@@ -8,24 +8,26 @@ require('dotenv').config();
   let driver = await new Builder().forBrowser('chrome').build();
 
   try {
+    console.log('Пријављивање за категорију администратора...');
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/login`);
 
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
     const passwordInput = await driver.findElement(By.css('input[placeholder="Унеси шифру овде"]'));
     const loginButton = await driver.findElement(By.css('div.login-button'));
 
-    await emailInput.sendKeys(`${process.env.REACT_APP_ADMIN_MAIL}`);
-    await passwordInput.sendKeys(`${process.env.REACT_APP_ADMIN_PASSWORD}`);
+    await emailInput.sendKeys(process.env.REACT_APP_ADMIN_MAIL);
+    await passwordInput.sendKeys(process.env.REACT_APP_ADMIN_PASSWORD);
     await loginButton.click();
 
     await driver.wait(until.urlIs(`${process.env.REACT_APP_FRONTEND_LINK}/`), 15000);
 
+    console.log('Преглед свих материјала са странице...');
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/materials`);
-
     await driver.wait(until.elementLocated(By.css('.create-material')), 10000);
 
+    console.log('Креирање новог материјала...');
     const filePath = path.resolve(__dirname, '../tests/test-document.pdf');
-    console.log('Качење фајла са путање:', filePath);
+    console.log(`Качење фајла са путање: ${filePath}`);
 
     if (fs.existsSync(filePath)) {
       const fileInput = await driver.findElement(By.css('input[type="file"]'));
@@ -33,7 +35,6 @@ require('dotenv').config();
       const addButton = await driver.wait(until.elementLocated(By.css('div.button-container')), 10000);
 
       await fileInput.sendKeys(filePath);
-
       await titleInput.sendKeys('Назив материјала');
 
       await driver.wait(until.elementIsVisible(addButton), 10000);
@@ -49,10 +50,10 @@ require('dotenv').config();
       if (editButtons.length === 0) {
         throw new Error('Није пронађено дугме за ажурирање података.');
       }
-
       const lastEditButton = editButtons[editButtons.length - 1];
       await lastEditButton.click();
 
+      console.log('Ажурирање материјала...');
       const popups = await driver.findElements(By.css('.popup'));
       const targetPopup = popups[popups.length - 1];
       await driver.wait(until.elementIsVisible(targetPopup), 10000);
@@ -74,6 +75,7 @@ require('dotenv').config();
         throw new Error('Материјал неуспешно ажуриран');
       }
 
+      console.log('Брисање новог материјала...');
       const deleteButtons = await driver.findElements(By.css('img.material-delete'));
       if (deleteButtons.length === 0) {
         throw new Error('Није пронађено дугме за брисање података');
@@ -84,17 +86,21 @@ require('dotenv').config();
 
       const confirmButton = await driver.wait(until.elementLocated(By.css('.conformation-dialog__button:nth-child(1)')), 10000);
       await confirmButton.click();
-      
+
       const finalMaterialList = await driver.findElement(By.css('.materials'));
       const finalMaterialText = await finalMaterialList.getText();
-      console.log("Успешно одрађен тест за материјале");
       if (finalMaterialText.includes('Нови назив материјала')) {
         throw new Error('Материјал неуспешно обрисан');
       }
+
     } else {
       throw new Error('Није пронађен фајл за материјал');
     }
 
+    console.log('УСПЕХ: Одрађен тест за материјале!');
+
+  } catch (error) {
+    console.error('ГРЕШКА: ', error.message);
   } finally {
     await driver.quit();
   }

@@ -8,9 +8,9 @@ require('dotenv').config();
   let driver = await new Builder().forBrowser('chrome').build();
 
   try {
+    console.log('Пријављивање за категорију администратора...');
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/login`);
 
-    // Fill in the login form
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
     const passwordInput = await driver.findElement(By.css('input[placeholder="Унеси шифру овде"]'));
     const loginButton = await driver.findElement(By.css('div.login-button'));
@@ -23,9 +23,10 @@ require('dotenv').config();
 
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/links`);
 
+    console.log("Преглед свиг линкова са странице...");
     await driver.wait(until.elementLocated(By.css('.create-link')), 10000);
-
     const filePath = path.resolve(__dirname, '../tests/test-image.jpg');
+
     console.log('Качење фајла са путање: ', filePath);
     
     if (fs.existsSync(filePath)) {
@@ -35,15 +36,14 @@ require('dotenv').config();
       const addButton = await driver.wait(until.elementLocated(By.css('div.button-container')), 10000);
 
       await fileInput.sendKeys(filePath);
-
       await nameInput.sendKeys('Име линка');
       await websiteInput.sendKeys('https://example.com');
-
       await driver.wait(until.elementIsVisible(addButton), 10000);
       await addButton.click();
 
       const linkList = await driver.findElement(By.css('.links'));
       const linkText = await linkList.getText();
+
       if (!linkText.includes('Име линка')) {
         throw new Error('Неуспешно креирање новог линка');
       }
@@ -56,6 +56,7 @@ require('dotenv').config();
       const lastEditButton = editButtons[editButtons.length - 1];
       await lastEditButton.click();
 
+      console.log('Ажурирање линка...');
       const popups = await driver.findElements(By.css('.popup'));
       const targetPopup = popups[popups.length - 1];
       await driver.wait(until.elementIsVisible(targetPopup), 10000);
@@ -80,6 +81,7 @@ require('dotenv').config();
         throw new Error('Линк неуспешно ажуриран');
       }
 
+      console.log('Брисање линка...');
       const deleteButtons = await driver.findElements(By.css('img.link-delete'));
       if (deleteButtons.length === 0) {
         throw new Error('Није пронађено дугме за брисање података');
@@ -93,10 +95,13 @@ require('dotenv').config();
       
       const finalLinkList = await driver.findElement(By.css('.links'));
       const finalLinkText = await finalLinkList.getText();
-      console.log("Успешно одрађен тест за линкове");
+      
       if (finalLinkText.includes('Ново име линка')) {
-        throw new Error('Линк неуспешно ажуриран');
+        throw new Error('Линк неуспешно обрисан');
       }
+      
+      console.log("Успешно одрађен тест за линкове!");
+
     } else {
       throw new Error('Није пронађена слика за линк');
     }

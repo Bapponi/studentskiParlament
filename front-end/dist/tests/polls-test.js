@@ -6,10 +6,9 @@ require('dotenv').config();
   let driver = await new Builder().forBrowser('chrome').build();
 
   try {
-    // Step 1: Navigate to the login page
+    console.log('Пријављивање за категорију администратора...');
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/login`);
 
-    // Step 2: Fill in the login form
     const emailInput = await driver.findElement(By.css('input[placeholder="Унеси мејл овде"]'));
     const passwordInput = await driver.findElement(By.css('input[placeholder="Унеси шифру овде"]'));
     const loginButton = await driver.findElement(By.css('div.login-button'));
@@ -20,8 +19,10 @@ require('dotenv').config();
 
     await driver.wait(until.urlIs(`${process.env.REACT_APP_FRONTEND_LINK}/`), 15000);
 
+    console.log("Прелаз на компоненту за креирање новог гласања/ankete у корисничком панелу...");
     await driver.get(`${process.env.REACT_APP_FRONTEND_LINK}/user-panel`);
 
+    console.log("Креирање новoг гласања...");
     const createPollButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Прављење новог гласања']]"));
     await createPollButton.click();
 
@@ -48,11 +49,13 @@ require('dotenv').config();
     const publishButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Објави ново гласање']]"));
     await publishButton.click();
 
+    console.log("Преглед свих гласања на делу корисничког панела за то...");
     const allPollsButton = await driver.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Преглед свих гласања']]"));
     await allPollsButton.click();
 
     await driver.sleep(1000);
 
+    console.log("Гласање на ново креираној анкети...");
     const polls = await driver.findElements(By.css('.poll-container'));
     if (polls.length > 0) {
       const latestPoll = polls[0];
@@ -69,10 +72,12 @@ require('dotenv').config();
       const submitVoteButton = await latestPoll.findElement(By.xpath("//div[contains(@class, 'button-container') and .//h2[text()='Пошаљи глас']]"));
       await submitVoteButton.click();
 
+      console.log("Деактивирање гласања...");
       const deactivateButton = await latestPoll.findElement(By.xpath("//button[contains(@class, 'poll-toggle__active') and .//h3[text()='Деактивирај']]"));      await deactivateButton.click();
       await deactivateButton.click();
       await deactivateButton.click();
 
+      console.log("Брисање гласања...");
       const deleteButtons = await driver.findElements(By.css('img.poll-delete'));
       if (deleteButtons.length === 0) {
         throw new Error('Није пронађено дугме за брисање члана');

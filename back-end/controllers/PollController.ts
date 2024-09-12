@@ -136,6 +136,10 @@ export class PollController {
 
   public async createPoll(req: Request, res: Response) {
     const { title, optionValues } = req.body;
+
+    if(!title){
+      return res.status(400).send('Потребно је унети наслов анкете!');
+    }
     
     if(Object.keys(optionValues).length < 2){
       return res.status(400).send('Морају да постоје минимун две опције у склопу анкете!');

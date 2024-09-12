@@ -230,6 +230,11 @@ export class MemberController {
 
     public async loginMember(req: Request, res: Response) {
       const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).send('Нису унети креденцијали');
+      }
+
       const query = 'SELECT * FROM members WHERE email = $1';
       const values = [email];
     

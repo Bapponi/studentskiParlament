@@ -47,7 +47,7 @@ export const createMemberAPI = async ({
   try {
 
     if (!file && roleId == 1) {
-      throw new Error("Молим Вас да унесете фајл")  
+      throw new Error("Молим Вас да унесете слику")  
     }
 
     const formData = new FormData();

@@ -120,7 +120,7 @@ export class MemberController {
             client.query(query, values, (err, result) => {
                 if (err) {
                     console.error(err);
-                    return res.status(500).send('Greška u bazi!');
+                    return res.status(500).send('Грешка у бази!');
                 } else {
                     const camelCaseLinks = result.rows.map(convertKeysToCamelCase);
                     return res.status(201).send(camelCaseLinks[0]);

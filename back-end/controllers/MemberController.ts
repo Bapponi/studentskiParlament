@@ -241,13 +241,13 @@ export class MemberController {
       try {
         const result = await client.query(query, values);
         if (result.rows.length === 0) {
-          return res.status(400).send('Нетачни креденцијали!');
+          return res.status(400).send('Нетачни кориснички мејл!');
         }
     
         const user = result.rows[0];
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-          return res.status(400).send('Нетачни креденцијали!');
+          return res.status(400).send('Нетачна корисничка шифра!');
         }
     
         const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });

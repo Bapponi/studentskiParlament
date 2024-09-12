@@ -25,7 +25,7 @@ return (
       {infoType == MessageBoxTypes.Error && (
         <div className='message-box__container'>
           <img src="../warning.png" alt="warning" className='message-box__icon'/>
-          <h2 style={{color: "var(--primary-color)"}}>{text}</h2>
+          <h2 style={{color: "var(--primary-color)"}} className='message-box__error'>{text}</h2>
         </div>
       )}
       {infoType == MessageBoxTypes.Loading && (

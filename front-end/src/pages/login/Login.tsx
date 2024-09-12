@@ -40,13 +40,18 @@ function Login() {
   };
 
   const sendLoginInfo = async () => {
-    await postLoginInfo({email, password});
+    const result = await postLoginInfo({ email, password });
 
-    if(loginError == undefined){
-      setTimeout(() => {
-        navigate("/")
-      }, 3000);
-    }
+  if (result && result.success === false && result.error) {
+    console.log("Login error: ", result.error);
+    return;
+  }
+
+  if (result && result.success === true) {
+    setTimeout(() => {
+      navigate("/");
+    }, 3000);
+  }
   };
 
   const resetPassword = async () => {

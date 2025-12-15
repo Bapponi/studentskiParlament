@@ -1,0 +1,22 @@
+INSERT INTO public.members ("position", name, bio, member_img, role_id, email, password) VALUES
+('члан', 'Соња Војиновић', NULL, NULL, 3, 'korisnik5', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Рајко Лапчевић', NULL, NULL, 3, 'korisnik2', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Анастасија Глигоров', NULL, NULL, 3, 'korisnik3', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Лука Царевић', NULL, NULL, 3, 'korisnik4', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Лазар Вујчић', NULL, NULL, 3, 'korisnik6', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Ена Грубор', NULL, NULL, 3, 'korisnik7', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Милица Стефановић', NULL, NULL, 3, 'korisnik8', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Андреј Донев', NULL, NULL, 3, 'korisnik9', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Лазар Бељић', NULL, NULL, 3, 'korisnik10', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Анђела Нинковић', NULL, NULL, 3, 'korisnik11', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Вукашин Јевремовић', NULL, NULL, 3, 'korisnik12', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Милан Тошић', NULL, NULL, 3, 'korisnik13', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Лука Томовић', NULL, NULL, 3, 'korisnik14', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Сара Гојковић', NULL, NULL, 3, 'korisnik15', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Босиљка Радовановић', NULL, NULL, 3, 'korisnik16', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Вељко Гајић', NULL, NULL, 3, 'korisnik17', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Томислав Беновић', NULL, NULL, 3, 'korisnik1@gmail.com', NULL),
+('председник', 'Станко Вуковић', 'Биографија корисника овде треба да се налази и да се састоји од око 2 реченице, не више.', 'http://localhost:8000/uploads/members/1720624305175-person.png', 1, 'aleksandarbubalo99@gmail.com', '$2a$10$XrmeMpjuApbrajUwAAGXyOf3.f2GZZlT0R4AclAQC6s461qM7GJgW'),
+('заменик председник', 'Душан Калуђеровић', 'Биографија корисника овде треба да се налази и да се састоји од око 2 реченице, не више.', 'http://localhost:8000/uploads/members/1720553429283-person.png', 1, 'pr@awdad.com', '$2a$10$gM1na5QXz.L755CFwvl.I.iVcDwjhAM5XsdV9Xu3M8anDQ/P4A8.K'),
+('члан', 'Никола Лапчевић', NULL, NULL, 3, 'markobubalo1605@gmail.com', '$2a$10$w4pqqL4Gc7dMNDtqDw8RHuxMievfkFgHEnp58q4mM9jQJ3nTdkJfC');
+SELECT setval('member_id_seq', (SELECT MAX(id) FROM public.members));

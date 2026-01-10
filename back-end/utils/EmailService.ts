@@ -2,20 +2,20 @@ import nodemailer from 'nodemailer';
 
 export const sendEmail = async (to: string, subject: string, text: string) => {
   const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // e.g., smtp.gmail.com for Gmail
+    host: 'smtp.gmail.com',
     port: 587,
-    secure: false, // true for 465, false for other ports
+    secure: false,
     auth: {
-      user: 'aleksandarbubalo99@gmail.com', // your email
-      pass: 'sbuq obks iiul xvio', // app password
+      user: 'studentskiparlament@etf.rs',
+      pass: 'pmmb iuuv jmof njkr',
     },
   });
 
   const mailOptions = {
-    from: '"Studentski Parlament ETF-a" <studentski.parlament.etf@gmail.com>', // sender address
-    to: to, // list of receivers
-    subject: subject, // Subject line
-    text: text, // plain text body
+    from: '"Studentski Parlament ETF-a"',
+    to: to,
+    subject: subject,
+    text: text,
   };
 
   try {

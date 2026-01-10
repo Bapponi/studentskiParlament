@@ -1,0 +1,10 @@
+CREATE SEQUENCE links_id_seq START 1;
+CREATE SEQUENCE materials_id_seq START 1;
+CREATE SEQUENCE member_id_seq START 1;
+CREATE SEQUENCE news_id_seq START 1;
+CREATE SEQUENCE news_section_id_seq START 1;
+CREATE SEQUENCE password_reset_tokens_id_seq START 1;
+CREATE SEQUENCE poll_options_id_seq START 1;
+CREATE SEQUENCE polls_id_seq START 1;
+CREATE SEQUENCE userrole_id_seq START 1;
+CREATE SEQUENCE votes_id_seq START 1;
